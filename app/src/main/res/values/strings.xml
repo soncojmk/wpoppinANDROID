@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">What\'s Poppin</string>
+
+    <string-array name="navigation_drawer_items_array">
+        <item>Music</item>
+        <item>Sports</item>
+        <item>Arts</item>
+        <item>Academics</item>
+        <item>Fundraisers</item>
+    </string-array>
+</resources>
