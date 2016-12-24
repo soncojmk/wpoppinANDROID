@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/What'sPoppin.iml" filepath="$PROJECT_DIR$/What'sPoppin.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wpoppinANDROID.iml" filepath="$PROJECT_DIR$/wpoppinANDROID.iml" />
     </modules>
   </component>
 </project>

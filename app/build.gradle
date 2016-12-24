@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.wpoppin.whatspoppin"
-        minSdkVersion 9
+        minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -30,6 +30,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.support:design:24.2.0'
     compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 
 
 
