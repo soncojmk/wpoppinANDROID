@@ -3,6 +3,7 @@ package com.wpoppin.whatspoppin;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnMenuTabSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +49,7 @@ public class JSON extends ActionBarActivity {
     private Toolbar toolbar;
     private CustomListAdapter adapter;
     private DrawerLayout drawerLayout;
+    private View profile;
 
 
     @Override
@@ -74,9 +78,53 @@ public class JSON extends ActionBarActivity {
         pDialog.setMessage("Loading...");
         pDialog.show();
 
-        toolbar = (Toolbar) findViewById(R.id.main_menu); // Attaching the layout to the toolbar object
-        setSupportActionBar(toolbar);
 
+        //toolbar = (Toolbar) findViewById(R.id.main_menu); // Attaching the layout to the toolbar object
+        //setSupportActionBar(toolbar);
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
+        //bottomBar.setActiveTabColor("#FFA500");
+        bottomBar.setItemsFromMenu(R.menu.menu_main, new OnMenuTabSelectedListener() {
+            @Override
+            public void onMenuItemSelected(int itemId) {
+                switch (itemId) {
+                    case R.id.recent_item:
+                        sports = (View) findViewById(R.id.recent_item);
+
+                        sports.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(JSON.this, JSON.class));
+                            }
+                        });
+                        break;
+                    case R.id.location_item:
+                        profile = (View) findViewById(R.id.location_item);
+
+                        profile.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(JSON.this, Explore.class));
+                            }
+                        });
+                        break;
+                    case R.id.favorite_item:
+                        profile = (View) findViewById(R.id.favorite_item);
+
+                        profile.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(JSON.this, Profile.class));
+                            }
+                        });
+                        break;
+                }
+            }
+        });
 
         fetchPosts();
     }
@@ -97,6 +145,8 @@ public class JSON extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+
+        /*
         if (id == R.id.action_search) {
 
             sports = (View) findViewById(R.id.action_search);
@@ -109,6 +159,21 @@ public class JSON extends ActionBarActivity {
                 }
             });
         }
+
+        else if (id == R.id.action_profile) {
+
+            profile = (View) findViewById(R.id.action_profile);
+
+            profile.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(JSON.this, Profile.class));
+                }
+            });
+        }
+        */
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -159,12 +224,9 @@ public class JSON extends ActionBarActivity {
             catch (Exception e) {
                 e.printStackTrace();
 
-
             }
 
             adapter.notifyDataSetChanged();
-
-
 
         }
     };

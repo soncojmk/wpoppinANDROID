@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class sports extends ActionBarActivity {
+public class sports extends AppCompatActivity {
 
     private static final String ENDPOINT = "http://www.wpoppin.com/api/sports.json";
 
@@ -94,6 +95,7 @@ public class sports extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        /*
         if (id == R.id.action_search) {
 
             sports = (View) findViewById(R.id.action_search);
@@ -106,6 +108,7 @@ public class sports extends ActionBarActivity {
                 }
             });
         }
+        */
 
         return super.onOptionsItemSelected(item);
     }
