@@ -16,4 +16,6 @@ public class User {
 
     public URL profile_picture;
 
+    public String token;
+
 }
