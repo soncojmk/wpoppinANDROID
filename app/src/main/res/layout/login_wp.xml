@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:id="@+id/loginButton"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/password"
+        android:layout_alignLeft="@+id/password"
+        android:layout_alignStart="@+id/password" />
+
+    <EditText
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:id = "@+id/username"
+        android:hint = "Username"
+        android:focusable = "true"
+        android:textColorHighlight = "#ff7eff15"
+        android:textColorHint = "#ffff25e6"
+        android:layout_marginTop = "168dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/password"
+        android:layout_alignStart="@+id/password"
+        android:layout_alignRight="@+id/password"
+        android:layout_alignEnd="@+id/password" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/password"
+        android:textColorHint="#ffff299f"
+        android:hint="Password"
+        android:layout_marginLeft="72dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/username"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/password"
+        android:layout_alignLeft="@+id/username"
+        android:layout_alignStart="@+id/username"
+        android:layout_marginBottom="66dp"
+        android:id="@+id/error"
+        android:textColor="@color/red"
+        />
+</RelativeLayout>
