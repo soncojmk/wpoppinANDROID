@@ -21,10 +21,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
@@ -41,12 +47,20 @@ import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -63,6 +77,12 @@ public class login extends AppCompatActivity {
     private CallbackManager callbackManager;
     private TextView info;
     User user;
+    private static final String TAG = "login";
+    private static final String ENDPOINT = "http://www.wpoppin.com/api/sports.json";
+    String data = " ";
+    private RequestQueue requestQueue;
+    private Gson gson;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +115,7 @@ public class login extends AppCompatActivity {
 
         explore.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(login.this, JSON.class));
+                startActivity(new Intent(login.this, LoginWP.class));
             }
         });
 
@@ -104,11 +124,11 @@ public class login extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-                AccessToken accessToken = loginResult.getAccessToken();
+                final AccessToken accessToken = loginResult.getAccessToken();
                 String UserID = accessToken.getUserId();
 
-                String access = accessToken.getToken();
-                Log.i("AccessToken", access);
+                final String token = accessToken.getToken();
+                Log.i("AccessToken", token);
 
 
                 GraphRequest request = GraphRequest.newMeRequest(
@@ -131,6 +151,9 @@ public class login extends AppCompatActivity {
                                     SharedPreferences.Editor editor = preferences.edit();
                                     editor.putString("username",user.username);
                                     editor.apply();
+
+                                    convertToken(token);
+
 
                                 }catch (Exception e){
                                     e.printStackTrace();
@@ -161,8 +184,42 @@ public class login extends AppCompatActivity {
                 info.setText("Login attempt failed.");
             }
         });
-
     }
+
+
+    private void convertToken(final String accessToken) {
+        StringRequest strreq = new StringRequest(Request.Method.POST,
+                "http://www.wpoppin.com/api/auth/convert-token",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "RESPONDE" + Response.toString());
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("grant_type", "convert_token");
+                params.put("client_id", "ALovBuA6sReToET7LnGJwIV2FU7Q3RWGXk8PdkD0");
+                params.put("client_secret", "Bu0cY65cY7mIYC0nqL7YAy9naeAwx5gwO0hHdxZ03GzddNIZ1NXy4SpmOOnhEz7zy4v1FxuE3iFDqCsF114lkMBY7XihkKIB9ZGusTMq16kmr6zErYOylUDhhGku5ybu");
+                params.put("backend", "facebook");
+                params.put("token", accessToken);
+
+                return params;
+
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
