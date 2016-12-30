@@ -6,6 +6,11 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+/*
+    Custom class that allows saving objects to sharedPreferences using
+    GSON (Google JSON Library)
+ */
+
 public class ComplexPreferences {
 
     private static ComplexPreferences complexPreferences;

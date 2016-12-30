@@ -4,6 +4,13 @@ package com.wpoppin.whatspoppin;
  * Created by joseph on 12/24/2016.
  */
 
+
+/*This method handles the saving of the User.java class in shared preferences to keep track of who the user is
+    Logout is also possible
+
+
+ */
+
 import android.content.Context;
 
 public class PrefUtils {

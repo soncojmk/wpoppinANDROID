@@ -8,6 +8,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+/*
+    The appController class adds requests to a queue to be sent via HTTP
+     to the API
+
+ */
+
 public class AppController extends Application {
 
     public static final String TAG = AppController.class.getSimpleName();

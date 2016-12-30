@@ -2,6 +2,7 @@ package com.wpoppin.whatspoppin;
 
 /**
  * Created by joseph on 12/24/2016.
+ * This is the user profile page where the user can logout and see their info
  */
 
 import android.app.Activity;

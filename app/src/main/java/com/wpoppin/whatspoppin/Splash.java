@@ -11,6 +11,10 @@ import static android.R.attr.key;
 
 /**
  * Created by joseph on 12/24/2016.
+ *
+ *
+ * This class is the initial activity that is loaded while android waits for the app to load.
+ * It displays the What'sPoppin Logo
  */
 
 public class Splash extends AppCompatActivity {

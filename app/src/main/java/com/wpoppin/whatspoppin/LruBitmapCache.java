@@ -1,5 +1,10 @@
 package com.wpoppin.whatspoppin;
 
+/*
+This class caches the image when called in order to limit the hits to our server
+
+ */
+
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 

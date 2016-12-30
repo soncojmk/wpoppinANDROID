@@ -65,6 +65,9 @@ import java.util.Map;
 
 /**
  * Created by joseph on 12/22/2016.
+ * This class allows the user to login with facebook which we get a token from facebook that is saved in a variable
+ * and sent to What'sPoppin server to be converted to a What'sPoppin user token
+ * or to be redirected to login or sign up
  */
 
 public class login extends AppCompatActivity {

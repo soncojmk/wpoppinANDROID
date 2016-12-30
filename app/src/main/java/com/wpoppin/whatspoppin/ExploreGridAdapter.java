@@ -16,6 +16,9 @@ import java.util.ArrayList;
 
 /**
  * Created by joseph on 12/29/2016.
+ *
+ * This adapter feeds the Explore gridView with images that allow the user
+ * to select an event category
  */
 
 public class ExploreGridAdapter extends BaseAdapter {

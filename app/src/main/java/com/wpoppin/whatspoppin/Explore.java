@@ -20,6 +20,9 @@ import java.util.ArrayList;
 
 /**
  * Created by joseph on 12/25/2016.
+ * This class allows users to explore the different categories of events
+ * in a gridView fed from ExploreGridAdapter.java
+ *
  */
 
 public class Explore extends Activity {

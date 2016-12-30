@@ -1,5 +1,10 @@
 package com.wpoppin.whatspoppin;
 
+
+/*
+This is the Post class that the objects pulled from our API are saved to
+ */
+
 public class Post {
 
 

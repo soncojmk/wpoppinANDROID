@@ -6,6 +6,8 @@ import android.widget.ImageView;
 
 /**
  * Created by joseph on 12/29/2016.
+ * This class extends the ImageView class in order to maintain a square at all times
+ * This class is used in the Explore class in GridView
  */
 
 public class SquareImageView extends ImageView {

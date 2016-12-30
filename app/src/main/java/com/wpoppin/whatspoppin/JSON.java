@@ -30,6 +30,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+/*
+    This class calls the What'sPoppin api and parses the json to pass the data
+    to the activity_json.xml file
+
+ */
+
 public class JSON extends ActionBarActivity {
 
     private static final String ENDPOINT = "http://www.wpoppin.com/api/events.json";

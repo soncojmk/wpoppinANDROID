@@ -23,6 +23,8 @@ import static com.wpoppin.whatspoppin.AppController.TAG;
 
 /**
  * Created by joseph on 12/27/2016.
+ * This class allows a user to login with their What'sPoppin username and password.
+ * The API is pinged and returns a What'sPoppin user token if the user exists
  */
 
 public class LoginWP extends AppCompatActivity {
