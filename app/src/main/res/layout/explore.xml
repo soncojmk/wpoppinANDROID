@@ -1,22 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
 
+    tools:context=".Explore" >
 
     <TextView
-        android:text="Explore"
-        android:layout_width="wrap_content"
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="50dp"
-        android:id="@+id/title"
-        android:textColor="@color/colorPrimary"
-        android:layout_weight="0.99"
-        android:layout_marginTop="15dp"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:text=" Explore"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        />
+
+    <GridView
+        android:id="@+id/gridView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:verticalSpacing="15dp"
+        android:horizontalSpacing="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="4dp"
+        android:stretchMode="columnWidth"
+        android:layout_below="@+id/textView1"
+        android:numColumns="2" >
+
+    </GridView>
 
 
+    <include
+        android:id="@+id/main_menu"
+        layout="@layout/main_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="0dp"
+        />
 
 
-</RelativeLayout>
+</LinearLayout>

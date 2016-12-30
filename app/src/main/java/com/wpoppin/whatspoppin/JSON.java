@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +51,7 @@ public class JSON extends ActionBarActivity {
     private CustomListAdapter adapter;
     private DrawerLayout drawerLayout;
     private View profile;
+    private BottomBar bottomBar;
 
 
     @Override
@@ -83,7 +85,7 @@ public class JSON extends ActionBarActivity {
         //setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
+        bottomBar = BottomBar.attach(this, savedInstanceState);
         //bottomBar.setActiveTabColor("#FFA500");
         bottomBar.setItemsFromMenu(R.menu.menu_main, new OnMenuTabSelectedListener() {
             @Override
@@ -97,6 +99,7 @@ public class JSON extends ActionBarActivity {
                             @Override
                             public void onClick(View v) {
                                 startActivity(new Intent(JSON.this, JSON.class));
+                                overridePendingTransition(0,0);
                             }
                         });
                         break;
@@ -108,6 +111,7 @@ public class JSON extends ActionBarActivity {
                             @Override
                             public void onClick(View v) {
                                 startActivity(new Intent(JSON.this, Explore.class));
+                                overridePendingTransition(0,0);
                             }
                         });
                         break;
@@ -119,6 +123,7 @@ public class JSON extends ActionBarActivity {
                             @Override
                             public void onClick(View v) {
                                 startActivity(new Intent(JSON.this, Profile.class));
+                                overridePendingTransition(0,0);
                             }
                         });
                         break;
@@ -127,8 +132,22 @@ public class JSON extends ActionBarActivity {
         });
 
         fetchPosts();
+
+        bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorPrimary));
+        bottomBar.mapColorForTab(1, 0xFF5D4037);
+        bottomBar.mapColorForTab(2, "#7B1FA2");
+
+
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Necessary to restore the BottomBar's state, otherwise we would
+        // lose the current tab on orientation change.
+        bottomBar.onSaveInstanceState(outState);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,6 +196,7 @@ public class JSON extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
     private void fetchPosts() {
