@@ -26,12 +26,13 @@ public class ExploreGridAdapter extends BaseAdapter {
     String [] result;
     Context context;
     int [] imageId;
+
     private static LayoutInflater inflater=null;
     public ExploreGridAdapter(Explore ex, String[] prgmNameList, int[] prgmImages) {
-        // TODO Auto-generated constructor stub
-        result=prgmNameList;
-        context=ex;
-        imageId=prgmImages;
+
+        result = prgmNameList;
+        context = ex;
+        imageId = prgmImages;
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -39,19 +40,19 @@ public class ExploreGridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
+
         return result.length;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
@@ -60,9 +61,12 @@ public class ExploreGridAdapter extends BaseAdapter {
         TextView tv;
         ImageView img;
     }
+
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
+
         Holder holder=new Holder();
         View rowView;
 
@@ -73,14 +77,16 @@ public class ExploreGridAdapter extends BaseAdapter {
         holder.tv.setText(result[position]);
         holder.img.setImageResource(imageId[position]);
 
-        rowView.setOnClickListener(new View.OnClickListener() {
+        /*rowView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Toast.makeText(context, "You Clicked "+result[position], Toast.LENGTH_LONG).show();
+
+
+
+                Toast.makeText(context, "You Clicked "+ result[position], Toast.LENGTH_LONG).show();
             }
-        });
+        }); */
 
         return rowView;
     }

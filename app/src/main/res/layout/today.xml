@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".JSON"
-    android:background="@color/background">
+    tools:context=".Today"
+    android:background="#FFFFFF">
 
     <include
         android:id="@+id/day"
@@ -14,16 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></LinearLayout>
 
-     <ListView
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="488dp"
-            android:divider="@color/title"
-            android:background="@color/background"
-         >
-     </ListView>
+    <ListView
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:id="@+id/sportsView"
+        android:layout_width="match_parent"
+        android:layout_height="488dp"
+        android:divider="@color/title">
+    </ListView>
 
     <include
         android:id="@+id/main_menu"

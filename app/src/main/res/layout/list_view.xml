@@ -1,7 +1,8 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@color/background">
 
 
     <TextView
@@ -14,7 +15,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/title"
-        android:layout_marginTop="26dp" />
+        android:layout_marginTop="5dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="26sp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,17 +32,22 @@
         android:id="@+id/description"
         android:layout_marginTop="26dp" />
 
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/thumbnail"
-        android:layout_width="400dp"
-        android:layout_height="200dp"
-        android:layout_marginRight="8dp"
-        android:scaleType="fitXY"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/date"
         android:layout_marginTop="26dp" />
 
-</LinearLayout>
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="400dp"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+        android:layout_below="@+id/author"
+        android:layout_toRightOf="@+id/author"
+        android:layout_toEndOf="@+id/author"
+        android:layout_marginLeft="41dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="107dp" />
+
+</RelativeLayout>

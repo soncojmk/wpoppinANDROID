@@ -17,6 +17,22 @@
 
 
             <Button
+                android:id="@+id/all_events"
+                android:layout_width="100dip"
+                android:layout_height="40dip"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:clickable="true"
+                android:gravity="bottom|center_horizontal"
+                android:paddingBottom="15dip"
+                android:text="All Events"
+                android:textColor="#707070"
+                android:textColorHighlight="#ffffff"
+                android:textSize="9dip"
+                android:textStyle="bold" />
+
+            <Button
                 android:id="@+id/today"
                 android:layout_width="100dip"
                 android:layout_height="40dip"

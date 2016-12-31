@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class sports extends AppCompatActivity {
+public class PerformingArts extends AppCompatActivity {
 
-    private static final String ENDPOINT = "http://www.wpoppin.com/api/sports.json";
+    private static final String ENDPOINT = "http://www.wpoppin.com/api/performing_arts.json";
 
     private RequestQueue requestQueue;
     private Gson gson;
@@ -72,6 +72,8 @@ public class sports extends AppCompatActivity {
         // Showing progress dialog before making http request
         pDialog.setMessage("Loading...");
         pDialog.show();
+
+        AppController.getInstance().getRequestQueue().getCache().invalidate(ENDPOINT, true);
 
         toolbar = (Toolbar) findViewById(R.id.main_menu); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);

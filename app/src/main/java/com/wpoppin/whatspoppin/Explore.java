@@ -11,6 +11,7 @@ import android.view.Menu;
 
 
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.roughike.bottombar.BottomBar;
@@ -42,6 +43,45 @@ public class Explore extends Activity {
         setContentView(R.layout.explore);
         gv=(GridView) findViewById(R.id.gridView1);
         gv.setAdapter(new ExploreGridAdapter(this, prgmNameList,prgmImages));
+
+        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // start-media code could go in fragment or adapter
+                switch(position){
+                    case 0:
+                        startActivity(new Intent(Explore.this, Music.class));
+                        overridePendingTransition(0,0);
+                        break;
+
+                    case 1:
+                        startActivity(new Intent(Explore.this, PerformingArts.class));
+                        overridePendingTransition(0,0);
+                        break;
+
+                    case 2:
+                        startActivity(new Intent(Explore.this, Art.class));
+                        overridePendingTransition(0,0);
+                        break;
+
+                    case 3:
+                        startActivity(new Intent(Explore.this, Comedy.class));
+                        overridePendingTransition(0,0);
+                        break;
+
+                    case 4:
+                        startActivity(new Intent(Explore.this, Poetry.class));
+                        overridePendingTransition(0,0);
+                        break;
+
+                    case 5:
+                        startActivity(new Intent(Explore.this, Fundraisers.class));
+                        overridePendingTransition(0,0);
+                        break;
+
+                }
+            }
+        });
 
         bottomBar = BottomBar.attach(this, savedInstanceState);
         //bottomBar.setActiveTabColor("#FFA500");

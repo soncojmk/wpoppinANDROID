@@ -3,16 +3,13 @@ package com.wpoppin.whatspoppin;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,16 +28,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-/*
-    This class calls the What'sPoppin api and parses the json to pass the data
-    to the activity_json.xml file
-
+/**
+ * Created by joseph on 12/30/2016.
  */
 
-public class JSON extends ActionBarActivity {
+public class Tomorrow extends AppCompatActivity {
 
-    private static final String ENDPOINT = "http://www.wpoppin.com/api/events.json";
+    private static final String ENDPOINT = "http://www.wpoppin.com/api/events_tomorrow.json";
 
     private RequestQueue requestQueue;
     private Gson gson;
@@ -61,11 +55,11 @@ public class JSON extends ActionBarActivity {
     private View profile;
     private BottomBar bottomBar;
 
-    private Button all_events;
+/*    private Button all_events;
     private Button today;
     private Button tomorrow;
     private Button this_week;
-    private Button this_month;
+    private Button this_month; */
 
 
     @Override
@@ -94,9 +88,6 @@ public class JSON extends ActionBarActivity {
         pDialog.setMessage("Loading...");
         pDialog.show();
 
-        all_events = (Button) findViewById(R.id.day).findViewById(R.id.all_events);
-        all_events.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-
         View all_events = (View) findViewById(R.id.day).findViewById(R.id.all_events);
         View today = (View) findViewById(R.id.day).findViewById(R.id.today);
         View tomorrow = (View) findViewById(R.id.day).findViewById(R.id.tomorrow);
@@ -106,40 +97,40 @@ public class JSON extends ActionBarActivity {
         all_events.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                startActivity(new Intent(JSON.this, JSON.class));
-                overridePendingTransition(0,0);
+                startActivity(new Intent(Tomorrow.this, JSON.class));
+                overridePendingTransition(0, 0);
             }
         });
 
         today.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                startActivity(new Intent(JSON.this, Today.class));
-                overridePendingTransition(0,0);
+                startActivity(new Intent(Tomorrow.this, Today.class));
+                overridePendingTransition(0, 0);
             }
         });
 
         tomorrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                startActivity(new Intent(JSON.this, Tomorrow.class));
-                overridePendingTransition(0,0);
+                startActivity(new Intent(Tomorrow.this, Tomorrow.class));
+                overridePendingTransition(0, 0);
             }
         });
 
         this_week.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                startActivity(new Intent(JSON.this, ThisWeek.class));
-                overridePendingTransition(0,0);
+                startActivity(new Intent(Tomorrow.this, ThisWeek.class));
+                overridePendingTransition(0, 0);
             }
         });
 
         this_month.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                startActivity(new Intent(JSON.this, ThisMonth.class));
-                overridePendingTransition(0,0);
+                startActivity(new Intent(Tomorrow.this, ThisMonth.class));
+                overridePendingTransition(0, 0);
             }
         });
 
@@ -160,8 +151,8 @@ public class JSON extends ActionBarActivity {
 
                             @Override
                             public void onClick(View v) {
-                                startActivity(new Intent(JSON.this, JSON.class));
-                                overridePendingTransition(0,0);
+                                startActivity(new Intent(Tomorrow.this, JSON.class));
+                                overridePendingTransition(0, 0);
                             }
                         });
                         break;
@@ -172,8 +163,8 @@ public class JSON extends ActionBarActivity {
 
                             @Override
                             public void onClick(View v) {
-                                startActivity(new Intent(JSON.this, Explore.class));
-                                overridePendingTransition(0,0);
+                                startActivity(new Intent(Tomorrow.this, Explore.class));
+                                overridePendingTransition(0, 0);
                             }
                         });
                         break;
@@ -184,8 +175,8 @@ public class JSON extends ActionBarActivity {
 
                             @Override
                             public void onClick(View v) {
-                                startActivity(new Intent(JSON.this, sports.class));
-                                overridePendingTransition(0,0);
+                                startActivity(new Intent(Tomorrow.this, sports.class));
+                                overridePendingTransition(0, 0);
                             }
                         });
                         break;
@@ -213,10 +204,6 @@ public class JSON extends ActionBarActivity {
     }
 
 
-
-
-
-
     private void fetchPosts() {
         StringRequest request = new StringRequest(Request.Method.GET, ENDPOINT, onPostsLoaded, onPostsError);
 
@@ -232,10 +219,9 @@ public class JSON extends ActionBarActivity {
             hidePDialog();
 
 
-
             try {
                 for (Post post : posts) {
-                    data += post.author + ": " + post.title + ": " + post.image +"\n";
+                    data += post.author + ": " + post.title + ": " + post.image + "\n";
                     Post event = new Post();
 
                     event.setCategory(post.category);
@@ -257,9 +243,7 @@ public class JSON extends ActionBarActivity {
                 //output.setText(data);
 
 
-            }
-
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
 
             }
@@ -291,7 +275,7 @@ public class JSON extends ActionBarActivity {
             pDialog.dismiss();
 
 
-             pDialog = null;
+            pDialog = null;
         }
     }
 }

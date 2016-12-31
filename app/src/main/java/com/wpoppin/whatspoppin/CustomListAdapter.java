@@ -17,22 +17,22 @@ import java.util.List;
 public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Post> movieItems;
+    private List<Post> Items;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public CustomListAdapter(Activity activity, List<Post> movieItems) {
+    public CustomListAdapter(Activity activity, List<Post> Items) {
         this.activity = activity;
-        this.movieItems = movieItems;
+        this.Items = Items;
     }
 
     @Override
     public int getCount() {
-        return movieItems.size();
+        return Items.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return movieItems.get(location);
+        return Items.get(location);
     }
 
     @Override
@@ -61,11 +61,11 @@ public class CustomListAdapter extends BaseAdapter {
         TextView date = (TextView) convertView.findViewById(R.id.date);
 
         // getting movie data for the row
-        Post m = movieItems.get(position);
+        Post m = Items.get(position);
 
         // thumbnail image
         thumbNail.setImageUrl(m.getImage(), imageLoader);
-
+        thumbNail.setImageUrl(m.getImage(), imageLoader);
 
         author.setText(m.getAuthor());
         title.setText(m.getTitle() + "   " + m.getCategory());
@@ -73,14 +73,10 @@ public class CustomListAdapter extends BaseAdapter {
         description.setText(m.getDescription());
         date.setText(m.getDate() + m.getTime());
 
-
-
-
         // rating
         //rating.setText("Rating: " + String.valueOf(m.getRating()));
 
         // genre
-
 
         return convertView;
     }

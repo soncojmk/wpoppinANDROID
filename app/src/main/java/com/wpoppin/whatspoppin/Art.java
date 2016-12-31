@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class sports extends AppCompatActivity {
+public class Art extends AppCompatActivity {
 
-    private static final String ENDPOINT = "http://www.wpoppin.com/api/sports.json";
+    private static final String ENDPOINT = "http://www.wpoppin.com/api/art.json";
 
     private RequestQueue requestQueue;
     private Gson gson;
