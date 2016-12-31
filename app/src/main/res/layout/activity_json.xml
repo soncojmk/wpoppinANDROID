@@ -20,8 +20,10 @@
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="488dp"
-            android:divider="@color/title"
+            android:divider="@color/background"
             android:background="@color/background"
+
+            android:dividerHeight="20.0sp"
          >
      </ListView>
 
