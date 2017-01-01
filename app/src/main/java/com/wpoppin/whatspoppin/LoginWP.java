@@ -1,7 +1,9 @@
 package com.wpoppin.whatspoppin;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +37,7 @@ public class LoginWP extends AppCompatActivity {
     private String username;
     private String password;
     private TextView error;
+    private User user;
 
 
     @Override
@@ -47,12 +50,13 @@ public class LoginWP extends AppCompatActivity {
         submit = (Button) findViewById(R.id.loginButton);
         error = (TextView) findViewById(R.id.error);
 
+        user = new User();
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 username = userName.getText().toString();
                 password = passWord.getText().toString();
-
+                user.username = username;
                 convertToken(username, password);
             }
 
@@ -67,6 +71,13 @@ public class LoginWP extends AppCompatActivity {
                     @Override
                     public void onResponse(String Response) {
                         Log.i(TAG, "RESPONDE" + Response.toString());
+
+
+                        PrefUtils.setCurrentUser(user,LoginWP.this);
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginWP.this);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("username",user.username);
+                        editor.apply();
                         startActivity(new Intent(LoginWP.this, JSON.class));
 
 
@@ -85,7 +96,6 @@ public class LoginWP extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("username", username);
                 params.put("password", password);
-
 
                 return params;
 
