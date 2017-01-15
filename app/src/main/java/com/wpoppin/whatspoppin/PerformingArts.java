@@ -3,13 +3,19 @@ package com.wpoppin.whatspoppin;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,12 +27,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PerformingArts extends AppCompatActivity {
+public class PerformingArts extends Fragment {
 
     private static final String ENDPOINT = "http://www.wpoppin.com/api/performing_arts.json";
 
@@ -45,49 +53,61 @@ public class PerformingArts extends AppCompatActivity {
     private View sports;
     private Toolbar toolbar;
     private CustomListAdapter adapter;
+    private BottomBar bottomBar;
+    private View profile;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().overridePendingTransition(0, 0);
+    }
+
+    private View view;
+
+    public PerformingArts(){}
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sports);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_arts, container, false);
+        setHasOptionsMenu(true);
+        return view;
+    }
 
-        requestQueue = Volley.newRequestQueue(this);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
 
-        author = (TextView) findViewById(R.id.author);
-        title = (TextView) findViewById(R.id.title);
-        price = (TextView) findViewById(R.id.price);
-        description = (TextView) findViewById(R.id.description);
-        date = (TextView) findViewById(R.id.date);
+        requestQueue = Volley.newRequestQueue(getActivity());
+
+        author = (TextView) view.findViewById(R.id.author);
+        title = (TextView) view.findViewById(R.id.title);
+        price = (TextView) view.findViewById(R.id.price);
+        description = (TextView) view.findViewById(R.id.description);
+        date = (TextView) view.findViewById(R.id.date);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
 
-        sportsView = (ListView) findViewById(R.id.sportsView);
-        adapter = new CustomListAdapter(this, eventList);
+        sportsView = (ListView) view.findViewById(R.id.listView);
+        adapter = new CustomListAdapter(getActivity(), eventList);
         sportsView.setAdapter(adapter);
 
-        pDialog = new ProgressDialog(this);
+        pDialog = new ProgressDialog(getActivity());
         // Showing progress dialog before making http request
         pDialog.setMessage("Loading...");
         pDialog.show();
 
-        AppController.getInstance().getRequestQueue().getCache().invalidate(ENDPOINT, true);
-
-        toolbar = (Toolbar) findViewById(R.id.main_menu); // Attaching the layout to the toolbar object
-        setSupportActionBar(toolbar);
+        toolbar = (Toolbar) view.findViewById(R.id.main_menu); // Attaching the layout to the toolbar object
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Performing Arts Events");
 
         fetchPosts();
+        super.onActivityCreated(savedInstanceState);
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -95,26 +115,22 @@ public class PerformingArts extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        /*
-        if (id == R.id.action_search) {
-
-            sports = (View) findViewById(R.id.action_search);
-
-            sports.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(sports.this, JSON.class));
-                }
-            });
+        if (item.getItemId() == android.R.id.home) {
+            Fragment fragment = new Explore();
+            replaceFragment(fragment);
+            // close this activity and return to preview activity (if there is any)
         }
-        */
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void replaceFragment(Fragment fragment) {
 
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame, fragment);
+        fragmentTransaction.commit();
+    }
 
     private void fetchPosts() {
         StringRequest request = new StringRequest(Request.Method.GET, ENDPOINT, onPostsLoaded, onPostsError);
@@ -137,6 +153,7 @@ public class PerformingArts extends AppCompatActivity {
                     data += post.author + ": " + post.title + ": " + post.image +"\n";
                     Post event = new Post();
 
+                    event.setUrl(post.url);
                     event.setCategory(post.category);
                     event.setAuthor(post.author);
                     event.setTitle(post.title);
@@ -146,6 +163,10 @@ public class PerformingArts extends AppCompatActivity {
                     event.setDate(post.date);
                     event.setTime(post.time);
                     event.setTicket_link(post.ticket_link);
+                    event.setAddress(post.street_address);
+                    event.setCity(post.city);
+                    event.setZipcode(post.zipcode);
+                    event.setState(post.state);
 
 
                     Log.i("JSON", post.author + ": " + post.title);

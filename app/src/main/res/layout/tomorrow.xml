@@ -14,22 +14,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></LinearLayout>
 
+    <ScrollView
+        android:paddingBottom="0dp"
+        android:layout_below="@+id/main_menu"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
     <ListView
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:id="@+id/sportsView"
         android:layout_width="match_parent"
         android:layout_height="488dp"
+        android:clipToPadding="false"
+        android:dividerHeight="20.0sp"
+        android:paddingBottom="30dp"
+
         android:divider="@color/title">
     </ListView>
 
-    <include
-        android:id="@+id/main_menu"
-        layout="@layout/main_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:paddingBottom="0dp"
-        />
+    </ScrollView>
+
 
 </LinearLayout>

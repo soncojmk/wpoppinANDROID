@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/recent_item"
+        android:id="@+id/home"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Home" />
     <item
-        android:id="@+id/location_item"
+        android:id="@+id/explore"
         android:icon="@drawable/ic_explore_black_24dp"
         android:title="Explore" />
+
     <item
-        android:id="@+id/favorite_item"
+        android:id="@+id/stories"
+        android:icon="@drawable/ic_chrome_reader_mode_black_24dp"
+        android:title="Stories" />
+
+    <item
+        android:id="@+id/profile"
         android:icon="@drawable/ic_person_black_24dp"
         android:title="Profile" />
 </menu>

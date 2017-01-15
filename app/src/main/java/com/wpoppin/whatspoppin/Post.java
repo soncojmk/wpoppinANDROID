@@ -9,6 +9,7 @@ public class Post {
 
 
     public long pk;
+    public String url;
     public String title;
     public String author;
     public String description;
@@ -16,8 +17,45 @@ public class Post {
     public String category;
     public String date;
     public String time;
-    public String ticket_link;
+    public String ticket_link = null;
     public String image;
+
+    public String street_address;
+    public String city;
+    public String zipcode;
+    public String state;
+
+    public String getAddress() {
+        return street_address;
+    }
+
+    public void setAddress(String address) {
+        this.street_address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getAuthor() {return author;}
 
@@ -70,6 +108,10 @@ public class Post {
     public void setTicket_link(String ticket) {this.ticket_link = ticket;}
 
     public void setPk(long id) {this.pk = id;}
+
+    public String getUrl(){return url;}
+
+    public void setUrl(String url){this.url = url;}
 
 
 

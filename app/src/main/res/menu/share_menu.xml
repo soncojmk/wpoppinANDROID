@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/save"
+        android:icon="@drawable/ic_bookmark_border_black_24dp"
+        android:title="save" />
+
+    <item
+        android:id="@+id/share"
+        android:title="Share"
+        android:actionProviderClass="android.widget.ShareActionProvider" />
+
+
+</menu>

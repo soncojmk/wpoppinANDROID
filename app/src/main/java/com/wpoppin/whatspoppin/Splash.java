@@ -40,7 +40,7 @@ public class Splash extends AppCompatActivity {
 
 
         else {
-            Intent intent = new Intent(this, JSON.class);
+            Intent intent = new Intent(this, Main.class);
             startActivity(intent);
             finish();
         }

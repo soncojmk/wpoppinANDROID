@@ -38,6 +38,13 @@ public class LoginWP extends AppCompatActivity {
     private String password;
     private TextView error;
     private User user;
+    private TextView signup;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
+    }
 
 
     @Override
@@ -49,6 +56,8 @@ public class LoginWP extends AppCompatActivity {
         passWord = (EditText) findViewById(R.id.password);
         submit = (Button) findViewById(R.id.loginButton);
         error = (TextView) findViewById(R.id.error);
+        signup = (TextView) findViewById(R.id.link_signup);
+
 
         user = new User();
         submit.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +70,14 @@ public class LoginWP extends AppCompatActivity {
             }
 
             });
+
+        signup.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(LoginWP.this, Signup.class));
+                finish();
+
+            }
+        });
     }
 
 
@@ -78,7 +95,8 @@ public class LoginWP extends AppCompatActivity {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putString("username",user.username);
                         editor.apply();
-                        startActivity(new Intent(LoginWP.this, JSON.class));
+                        startActivity(new Intent(LoginWP.this, Main.class));
+                        finish();
 
 
                     }
@@ -100,7 +118,13 @@ public class LoginWP extends AppCompatActivity {
                 return params;
 
             }
+
+
         };
         AppController.getInstance().addToRequestQueue(strreq);
+
+
     }
+
+
 }

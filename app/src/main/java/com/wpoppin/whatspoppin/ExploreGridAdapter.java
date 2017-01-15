@@ -31,7 +31,7 @@ public class ExploreGridAdapter extends BaseAdapter {
     public ExploreGridAdapter(Explore ex, String[] prgmNameList, int[] prgmImages) {
 
         result = prgmNameList;
-        context = ex;
+        context = ex.getActivity();
         imageId = prgmImages;
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);

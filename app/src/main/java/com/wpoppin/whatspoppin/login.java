@@ -122,6 +122,12 @@ public class login extends AppCompatActivity {
             }
         });
 
+        signUp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(login.this, Signup.class));
+            }
+        });
+
 
         fbLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -162,7 +168,7 @@ public class login extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 Toast.makeText(login.this,"welcome "+user.username,Toast.LENGTH_LONG).show();
-                                Intent intent=new Intent(login.this,JSON.class);
+                                Intent intent=new Intent(login.this, Main.class);
                                 startActivity(intent);
                                 finish();
 
@@ -179,12 +185,12 @@ public class login extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                info.setText("Login attempt canceled.");
+                Log.i("Login Attempt Cancelled", "");
             }
 
             @Override
             public void onError(FacebookException e) {
-                info.setText("Login attempt failed.");
+                Log.i("Login attempt failed.", " ");
             }
         });
     }

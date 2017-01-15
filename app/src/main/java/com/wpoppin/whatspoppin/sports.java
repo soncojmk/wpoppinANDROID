@@ -135,6 +135,7 @@ public class sports extends AppCompatActivity {
                     data += post.author + ": " + post.title + ": " + post.image +"\n";
                     Post event = new Post();
 
+                    event.setUrl(post.url);
                     event.setCategory(post.category);
                     event.setAuthor(post.author);
                     event.setTitle(post.title);
