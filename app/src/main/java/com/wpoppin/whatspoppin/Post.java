@@ -66,7 +66,10 @@ public class Post {
     public int getPrice() {return price;}
 
     public String getImage(){
-        return image;
+
+        String largeImage = image.replace(".jpg", ".large.jpg");
+
+        return largeImage;
     }
 
     public String getDescription(){
@@ -110,6 +113,12 @@ public class Post {
     public void setPk(long id) {this.pk = id;}
 
     public String getUrl(){return url;}
+
+    public String getShareUrl(){
+
+        String ShareUrl = url.replace("api", "blog/blog");
+        return ShareUrl;
+    }
 
     public void setUrl(String url){this.url = url;}
 

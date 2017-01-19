@@ -79,7 +79,7 @@ public class Signup extends AppCompatActivity {
 
         });
 
-        submit.setOnClickListener(new View.OnClickListener() {
+        login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(Signup.this, LoginWP.class));
                 finish();

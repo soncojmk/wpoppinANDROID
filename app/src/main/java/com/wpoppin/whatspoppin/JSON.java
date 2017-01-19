@@ -119,7 +119,7 @@ public class JSON extends Fragment {
 
         View all_events = (View) view.findViewById(R.id.day).findViewById(R.id.all_events);
         View today = (View) view.findViewById(R.id.day).findViewById(R.id.today);
-        View tomorrow = (View) view.findViewById(R.id.day).findViewById(R.id.tomorrow);
+       // View tomorrow = (View) view.findViewById(R.id.day).findViewById(R.id.tomorrow);
         View this_week = (View) view.findViewById(R.id.day).findViewById(R.id.this_week);
         View this_month = (View) view.findViewById(R.id.day).findViewById(R.id.this_month);
 
@@ -140,6 +140,7 @@ public class JSON extends Fragment {
             }
         });
 
+        /*
         tomorrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -147,6 +148,7 @@ public class JSON extends Fragment {
                 replaceFragment(json);
             }
         });
+        */
 
         this_week.setOnClickListener(new View.OnClickListener() {
             @Override

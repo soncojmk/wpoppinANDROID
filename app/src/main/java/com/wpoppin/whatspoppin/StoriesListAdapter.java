@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.CalendarContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,14 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static com.wpoppin.whatspoppin.CustomListAdapter.fixEncoding;
 
 /**
  * Created by joseph on 1/14/2017.
@@ -66,10 +71,10 @@ public class StoriesListAdapter extends BaseAdapter {
         NetworkImageView thumbNail = (NetworkImageView) convertView
                 .findViewById(R.id.thumbnail);
 
-        //TextView author = (TextView) convertView.findViewById(R.id.author);
+        TextView author = (TextView) convertView.findViewById(R.id.author);
         TextView title = (TextView) convertView.findViewById(R.id.title);
         ExpandableTextView description = (ExpandableTextView) convertView.findViewById(R.id.expand_text_view);
-        //ImageButton share = (ImageButton) convertView.findViewById(R.id.share);
+        ImageButton share = (ImageButton) convertView.findViewById(R.id.share);
 
 
         // getting movie data for the row
@@ -78,26 +83,29 @@ public class StoriesListAdapter extends BaseAdapter {
         // thumbnail image
         thumbNail.setImageUrl(m.getImage(), imageLoader);
 
-        //  author.setText("By " + m.getAuthor());
-        title.setText(m.getTitle());
+        author.setText("By " + m.getAuthor());
 
-        description.setText(m.getDescription());
+        String TITLE = fixEncoding(m.getTitle());
+        title.setText(TITLE);
+
+        String s =  fixEncoding(m.getDescription());
+        description.setText(s);
 
 
 
-/*
+
         share.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                String shareBody = m.getDescription();
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "What'sPoppin event: " + m.getTitle());
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                String shareBody = m.getShareUrl();
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,"Check out this What'sPoppin story I liked: " + m.getTitle());
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Read it at: wpoppin.com/blog" );
                 v.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));
 
             }
-        }); */
+        });
 
         // + ", " + m.getCity() + ", " + m.getState()
 

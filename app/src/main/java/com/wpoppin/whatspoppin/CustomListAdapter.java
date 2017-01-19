@@ -2,9 +2,14 @@ package com.wpoppin.whatspoppin;
 
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.provider.CalendarContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +22,14 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
@@ -82,7 +91,10 @@ public class CustomListAdapter extends BaseAdapter {
         thumbNail.setImageUrl(m.getImage(), imageLoader);
 
       //  author.setText("By " + m.getAuthor());
-        title.setText(m.getTitle());
+        String TITLE = fixEncoding(m.getTitle());
+        title.setText(TITLE);
+
+
         if(m.getPrice() == 0){
             price.setText("Free");
         }
@@ -95,7 +107,9 @@ public class CustomListAdapter extends BaseAdapter {
             price.setText(String.valueOf(m.getPrice()));
         }
 
-        description.setText(m.getDescription());
+           String s =  fixEncoding(m.getDescription());
+           description.setText("By " + m.getAuthor() + ": " + s);
+
 
         String dateString = m.getDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -113,7 +127,7 @@ public class CustomListAdapter extends BaseAdapter {
         String timeString = m.getTime();
         Date dateObj = new Date();
         try {
-             SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
              dateObj = sdf.parse(timeString);
 
         } catch ( ParseException e) {
@@ -121,18 +135,34 @@ public class CustomListAdapter extends BaseAdapter {
         }
 
         final String outputTime = new SimpleDateFormat("h:mm aa").format(dateObj);
+        final String intentTime = new SimpleDateFormat("HH:mm:ss").format(dateObj);
 
         date.setText(newFormat);
-        address.setText(m.getAddress() );
-        time.setText(outputTime.toString());
+
+
+        String x = fixEncoding(m.getAddress());
+            address.setText(x);
+
+
+        time.setText(outputTime);
+
+        final String calendarObject = m.getDate() + " " + m.getTime();
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        try {
+            Date date1 = sdf.parse(calendarObject);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                Calendar beginTime = sdf.getCalendar();
                 Intent intent = new Intent(Intent.ACTION_EDIT);
                 intent.setType("vnd.android.cursor.item/event");
 
-                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, outputTime);
+                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
                 //intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,endTime);
                 intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
                 intent.putExtra(CalendarContract.Events.TITLE, m.getTitle());
@@ -151,16 +181,69 @@ public class CustomListAdapter extends BaseAdapter {
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 String shareBody = m.getDescription();
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "What'sPoppin event: " + m.getTitle());
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this What'sPoppin event I liked: " + m.getTitle());
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 v.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));
 
             }
         });
 
+        // routine to add reminders with the event
         // + ", " + m.getCity() + ", " + m.getState()
 
         return convertView;
+    }
+
+    public static String fixEncoding(String latin1) {
+        try {
+            byte[] bytes = latin1.getBytes("ISO-8859-1");
+            if (!validUTF8(bytes))
+                return latin1;
+            return new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // Impossible, throw unchecked
+            throw new IllegalStateException("No Latin1 or UTF-8: " + e.getMessage());
+        }
+
+    }
+
+    public static boolean validUTF8(byte[] input) {
+        int i = 0;
+        // Check for BOM
+        if (input.length >= 3 && (input[0] & 0xFF) == 0xEF
+                && (input[1] & 0xFF) == 0xBB & (input[2] & 0xFF) == 0xBF) {
+            i = 3;
+        }
+
+        int end;
+        for (int j = input.length; i < j; ++i) {
+            int octet = input[i];
+            if ((octet & 0x80) == 0) {
+                continue; // ASCII
+            }
+
+            // Check for UTF-8 leading byte
+            if ((octet & 0xE0) == 0xC0) {
+                end = i + 1;
+            } else if ((octet & 0xF0) == 0xE0) {
+                end = i + 2;
+            } else if ((octet & 0xF8) == 0xF0) {
+                end = i + 3;
+            } else {
+                // Java only supports BMP so 3 is max
+                return false;
+            }
+
+            while (i < end) {
+                i++;
+                octet = input[i];
+                if ((octet & 0xC0) != 0x80) {
+                    // Not a valid trailing byte
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }

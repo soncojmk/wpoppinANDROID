@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -98,6 +99,10 @@ public class Stories extends Fragment {
         pDialog.setMessage("Loading...");
         pDialog.show();
 
+
+        toolbar = (Toolbar) view.findViewById(R.id.main_menu); // Attaching the layout to the toolbar object
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((TextView) view.findViewById(R.id.main_toolbar_title)).setText("What'sPoppin Stories");
 
         fetchPosts();
         super.onActivityCreated(savedInstanceState);

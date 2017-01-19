@@ -6,11 +6,15 @@ package com.wpoppin.whatspoppin;
  */
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -22,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +47,10 @@ public class Profile extends Fragment {
     private ImageView profileImage;
     Bitmap bitmap;
     private TextView name;
-    private TextView post;
+    private LinearLayout post;
+    private AlertDialog pDialog;
+    private LinearLayout invite;
+    private LinearLayout privacy;
 
     @Override
     public void onPause() {
@@ -69,20 +77,23 @@ public class Profile extends Fragment {
         user=PrefUtils.getCurrentUser(getActivity());
         profileImage= (ImageView) view.findViewById(R.id.profileImage);
         name = (TextView) view.findViewById(R.id.username);
-        post = (TextView) view.findViewById(R.id.post);
+        post = (LinearLayout) view.findViewById(R.id.post);
+        invite = (LinearLayout) view.findViewById(R.id.invite);
+        privacy = (LinearLayout) view.findViewById(R.id.privacy);
 
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "To Post an event, go to wpoppin.com. This is to prevent spam",Toast.LENGTH_LONG);
+
+                pDialog = new AlertDialog.Builder(getActivity()).create();
+                // Showing progress dialog before making http request
+                pDialog.setMessage("In order to limit spam, event hosts can only post events through our website at wpoppin.com");
+                pDialog.show();
             }
         });
 
 
-        SharedPreferences prefs = getActivity().getPreferences(MODE_PRIVATE);
-        String restoredText = prefs.getString("username", null);
-
-        name.setText(restoredText);
+        name.setText(user.username);
 
 
         // fetching facebook's profile picture
@@ -91,7 +102,7 @@ public class Profile extends Fragment {
             protected Void doInBackground(Void... params) {
                 URL imageURL = null;
                 try {
-                    imageURL = new URL("https://graph.facebook.com/" + "1435767690067161" + "/picture?type=large");
+                    imageURL = new URL("https://graph.facebook.com/" + user.facebookID + "/picture?type=large");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -110,6 +121,27 @@ public class Profile extends Fragment {
                 profileImage.setImageBitmap(bitmap);
             }
         }.execute();
+
+        invite.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = "Football season is over, now what?. Download the app to discover What'sPoppin around campus: wpoppin.com";
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "A What'sPoppin user is inviting you to join:");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                v.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));
+
+            }
+        });
+
+        privacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.wpoppin.com"));
+                startActivity(browserIntent);
+            }
+        });
 
 
         btnLogout = (TextView) view.findViewById(R.id.btnLogout);
@@ -134,4 +166,6 @@ public class Profile extends Fragment {
         });
         super.onActivityCreated(savedInstanceState);
     }
+
+
 }

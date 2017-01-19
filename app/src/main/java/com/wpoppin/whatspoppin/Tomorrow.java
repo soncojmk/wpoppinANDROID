@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -103,13 +104,13 @@ public class Tomorrow extends Fragment {
         // Showing progress dialog before making http request
         pDialog.setMessage("Loading...");
         pDialog.show();
-        tomorrow = (Button) view.findViewById(R.id.day).findViewById(R.id.tomorrow);
+       // tomorrow = (Button) view.findViewById(R.id.day).findViewById(R.id.tomorrow);
         tomorrow.setBackgroundColor(getResources().getColor(R.color.orange));
         tomorrow.setTextColor(getResources().getColor(R.color.white));
 
         View all_events = (View) view.findViewById(R.id.day).findViewById(R.id.all_events);
         View today = (View) view.findViewById(R.id.day).findViewById(R.id.today);
-        View tomorrow = (View) view.findViewById(R.id.day).findViewById(R.id.tomorrow);
+       // View tomorrow = (View) view.findViewById(R.id.day).findViewById(R.id.tomorrow);
         View this_week = (View) view.findViewById(R.id.day).findViewById(R.id.this_week);
         View this_month = (View) view.findViewById(R.id.day).findViewById(R.id.this_month);
 
@@ -130,6 +131,7 @@ public class Tomorrow extends Fragment {
             }
         });
 
+        /*
         tomorrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -137,6 +139,7 @@ public class Tomorrow extends Fragment {
                 replaceFragment(json);
             }
         });
+        */
 
         this_week.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,6 +194,13 @@ public class Tomorrow extends Fragment {
             Log.i("JSON", posts.size() + " posts loaded.");
 
             hidePDialog();
+
+            AlertDialog.Builder alertdialog = new AlertDialog.Builder(getActivity());
+            AlertDialog alert = alertdialog.create();
+            if(posts.size() == 0){
+                alert.setMessage(":( There are no events Tomorrow. Check the this week page.");
+                alert.show();
+            }
 
 
             try {

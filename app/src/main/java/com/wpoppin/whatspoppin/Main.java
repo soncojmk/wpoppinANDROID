@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -26,6 +27,9 @@ import com.roughike.bottombar.OnTabSelectListener;
 public class Main extends AppCompatActivity {
 
     private int current;
+    private BottomNavigationView bottomNavigation;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +38,7 @@ public class Main extends AppCompatActivity {
         Fragment fragment = new JSON();
         replaceFragment(fragment);
 
-        BottomNavigationView bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomBar);
+        bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomBar);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigation);
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -52,6 +56,8 @@ public class Main extends AppCompatActivity {
                     Fragment json = new Profile();
                     replaceFragment(json);
                 }
+
+                updateNavigationBarState(item.getItemId());
                 return true;
 
             }
@@ -63,7 +69,18 @@ public class Main extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment);
-        fragmentTransaction.commit();
+            getFragmentManager().popBackStack();
+
+            fragmentTransaction.commit();
+    }
+
+    private void updateNavigationBarState(int actionId){
+        Menu menu = bottomNavigation.getMenu();
+
+        for (int i = 0, size = menu.size(); i < size; i++) {
+            MenuItem item = menu.getItem(i);
+            item.setChecked(item.getItemId() == actionId);
+        }
     }
 }
 

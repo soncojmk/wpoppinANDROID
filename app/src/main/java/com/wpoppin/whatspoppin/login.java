@@ -151,9 +151,9 @@ public class login extends AppCompatActivity {
                                 Log.e("response: ", response + "");
                                 try {
                                     user = new User();
-                                    user.facebookID = object.getString("id").toString();
-                                    user.email = object.getString("email").toString();
-                                    user.username = object.getString("name").toString();
+                                    user.facebookID = object.getString("id");
+                                    user.email = object.getString("email");
+                                    user.username = object.getString("name");
                                     PrefUtils.setCurrentUser(user,login.this);
 
                                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(login.this);

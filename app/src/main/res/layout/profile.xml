@@ -3,52 +3,134 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<LinearLayout
+<RelativeLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_gravity="center"
     android:background="@color/background"
     android:layout_height="230dp">
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/profileImage"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/blue"
+        android:textColor="@color/colorPrimary"
+        android:paddingTop="10dp"
+        android:gravity="center"
+        android:layout_below="@+id/profileImage"
         android:textSize="25sp"
         android:id="@+id/username"
         />
 
-    <ImageView
+</RelativeLayout>
+
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/post"
+    android:baselineAligned="false"
+    android:paddingTop="16dp">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:src="@drawable/ic_add_circle_outline_black_24dp"
+        />
+
+    <TextView android:text="Post your event"
         android:layout_gravity="center"
-        android:id="@+id/profileImage"
+        android:paddingLeft="10dp"
+        android:textColor="#000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 </LinearLayout>
 
-    <TextView
-        android:text="Post An Event"
-        android:id="@+id/post"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:id="@+id/invite"
+        android:paddingTop="10dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@null"
+            android:src="@drawable/ic_share_black_24dp"
+            />
+
+    <TextView android:text="Spread the fun! Invite your friends."
         android:layout_gravity="center"
-        android:padding="7dp"
-        android:layout_width="wrap_content"
+        android:paddingLeft="10dp"
+        android:textColor="#000"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:id="@+id/privacy"
+        android:paddingTop="10dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/ic_info_outline_black_24dp"
+            />
+
+    <TextView android:text="Terms and Privacy"
+        android:layout_gravity="center"
+        android:paddingLeft="10dp"
+        android:textColor="#000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/darker_gray"/>
 
     <TextView android:text="Logout"
-        android:layout_marginTop="16dp"
         android:id="@+id/btnLogout"
         android:layout_gravity="center"
-        android:padding="16dp"
-        android:background="#494949"
-        android:textColor="#fff"
-        android:layout_width="wrap_content"
+        android:padding="10dp"
+        android:textColor="#000"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/name"
-        android:layout_marginBottom="67dp" />
 
 </LinearLayout>

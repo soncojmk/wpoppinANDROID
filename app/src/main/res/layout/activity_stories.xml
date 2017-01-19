@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@color/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/main_menu"
+        android:paddingTop="1dp"
+        layout="@layout/stories_menu"/>
+
 
     <ListView
 
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@color/background"
+        android:divider="@color/white"
         android:clipToPadding="false"
         android:dividerHeight="20.0sp">
     </ListView>

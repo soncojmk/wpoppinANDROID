@@ -14,10 +14,50 @@ public class User {
 
     public String email;
 
-    public String facebookID;
+    public String facebookID = "1435767690067161";
 
     public URL profile_picture;
 
     public String token;
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFacebookID() {
+        return facebookID;
+    }
+
+    public void setFacebookID(String facebookID) {
+        this.facebookID = facebookID;
+    }
+
+    public URL getProfile_picture() {
+        return profile_picture;
+    }
+
+    public void setProfile_picture(URL profile_picture) {
+        this.profile_picture = profile_picture;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
+

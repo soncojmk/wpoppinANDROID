@@ -1,29 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@drawable/bottom_layer"
+    app:itemIconTint="@color/item_bg"
+    app:itemTextColor="@color/item_bg"
     android:layout_height="match_parent">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/frame">
+
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_height="200dp"
         android:scaleType="fitXY" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="#66344152"
+
+            android:layout_height="match_parent">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/title"
-        android:textSize="23sp"
+        android:textSize="22sp"
+        android:layout_marginTop="130dp"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:textColor="@color/white"
-        android:paddingLeft="5dp"
+        android:paddingLeft="3dp"
         />
 
+        </LinearLayout>
+</FrameLayout>
     <com.ms.square.android.expandabletextview.ExpandableTextView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
         android:id="@+id/expand_text_view"
-        android:paddingTop="-5dp"
+        android:paddingTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         expandableTextView:maxCollapsedLines="3"
@@ -34,8 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:lineSpacingExtra="5dp"
             android:textSize="16sp"
-            android:textColor="#666666"
+            android:textColor="#444444"
             />
 
         <ImageButton
@@ -44,8 +67,44 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_gravity="right|bottom"
+            android:paddingRight="10dp"
             android:background="@android:color/transparent"/>
     </com.ms.square.android.expandabletextview.ExpandableTextView>
 
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:paddingTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="match_parent">
+
+
+
+        <TextView
+        android:id="@id/author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="16sp"
+        android:textColor="#444"
+        />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/share"
+            android:background="@null"
+            android:src="@drawable/ic_share_black_24dp"
+            android:layout_gravity="end|bottom"
+            android:layout_alignParentRight="true"
+            android:textColor="#f6f6f6"
+            android:actionProviderClass=
+                "android.widget.ShareActionProvider"
+            />
+
+</LinearLayout>
 </LinearLayout>

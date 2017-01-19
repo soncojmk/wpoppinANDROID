@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -111,7 +112,7 @@ public class ThisWeek extends Fragment {
 
         View all_events = (View) view.findViewById(R.id.day).findViewById(R.id.all_events);
         View today = (View) view.findViewById(R.id.day).findViewById(R.id.today);
-        View tomorrow = (View) view.findViewById(R.id.day).findViewById(R.id.tomorrow);
+        //View tomorrow = (View) view.findViewById(R.id.day).findViewById(R.id.tomorrow);
         View this_week = (View) view.findViewById(R.id.day).findViewById(R.id.this_week);
         View this_month = (View) view.findViewById(R.id.day).findViewById(R.id.this_month);
 
@@ -132,6 +133,7 @@ public class ThisWeek extends Fragment {
             }
         });
 
+        /*
         tomorrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -139,6 +141,7 @@ public class ThisWeek extends Fragment {
                 replaceFragment(json);
             }
         });
+        */
 
         this_week.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,6 +197,12 @@ public class ThisWeek extends Fragment {
 
             hidePDialog();
 
+            AlertDialog.Builder alertdialog = new AlertDialog.Builder(getActivity());
+            AlertDialog alert = alertdialog.create();
+            if(posts.size() == 0){
+                alert.setMessage(":( There are no events This Week. Check the this month page.");
+                alert.show();
+            }
 
 
             try {
