@@ -145,7 +145,7 @@ public class Fundraisers extends Fragment {
         @Override
         public void onResponse(String response) {
             List<Post> posts = Arrays.asList(gson.fromJson(response, Post[].class));
-            Log.i("JSON", posts.size() + " posts loaded.");
+          //  Log.i("JSON", posts.size() + " posts loaded.");
 
             hidePDialog();
 
@@ -172,7 +172,7 @@ public class Fundraisers extends Fragment {
                     event.setState(post.state);
 
                     eventList.add(event);
-                    Log.i("JSON", post.author + ": " + post.title);
+                //    Log.i("JSON", post.author + ": " + post.title);
 
 
                 }

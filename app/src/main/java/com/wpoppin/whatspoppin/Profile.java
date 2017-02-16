@@ -93,8 +93,8 @@ public class Profile extends Fragment {
         });
 
 
-        name.setText(user.username);
 
+            name.setText(user.username);
 
         // fetching facebook's profile picture
         new AsyncTask<Void,Void,Void>(){
@@ -102,7 +102,9 @@ public class Profile extends Fragment {
             protected Void doInBackground(Void... params) {
                 URL imageURL = null;
                 try {
+
                     imageURL = new URL("https://graph.facebook.com/" + user.facebookID + "/picture?type=large");
+
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -127,8 +129,8 @@ public class Profile extends Fragment {
 
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                String shareBody = "Football season is over, now what?. Download the app to discover What'sPoppin around campus: wpoppin.com";
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "A What'sPoppin user is inviting you to join:");
+                String shareBody = "I really like this events app called What'sPoppin. I think you'd like it too. Check it out: bit.ly/2jrcOhw";
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Hey check this app out:");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 v.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));
 

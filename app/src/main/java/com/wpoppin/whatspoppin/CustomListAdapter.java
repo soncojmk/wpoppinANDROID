@@ -91,7 +91,7 @@ public class CustomListAdapter extends BaseAdapter {
         thumbNail.setImageUrl(m.getImage(), imageLoader);
 
       //  author.setText("By " + m.getAuthor());
-        String TITLE = fixEncoding(m.getTitle());
+        final String TITLE = fixEncoding(m.getTitle());
         title.setText(TITLE);
 
 
@@ -107,7 +107,7 @@ public class CustomListAdapter extends BaseAdapter {
             price.setText(String.valueOf(m.getPrice()));
         }
 
-           String s =  fixEncoding(m.getDescription());
+          final String s =  fixEncoding(m.getDescription());
            description.setText("By " + m.getAuthor() + ": " + s);
 
 
@@ -165,8 +165,8 @@ public class CustomListAdapter extends BaseAdapter {
                 intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
                 //intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,endTime);
                 intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-                intent.putExtra(CalendarContract.Events.TITLE, m.getTitle());
-                intent.putExtra(CalendarContract.Events.DESCRIPTION, m.getDescription());
+                intent.putExtra(CalendarContract.Events.TITLE, TITLE);
+                intent.putExtra(CalendarContract.Events.DESCRIPTION, s);
                 intent.putExtra(CalendarContract.Events.EVENT_LOCATION, m.getAddress() +", " + m.getCity() + ", " + m.getState());
                 intent.putExtra(CalendarContract.Events.RRULE, false);
 
@@ -180,8 +180,8 @@ public class CustomListAdapter extends BaseAdapter {
 
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                String shareBody = m.getDescription();
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this What'sPoppin event I liked: " + m.getTitle());
+                String shareBody = "What'sPoppin event: " + s + '\n' + m.getEventShareUrl();
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Do you wanna go to this? " + TITLE);
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 v.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));
 

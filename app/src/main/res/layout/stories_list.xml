@@ -33,10 +33,10 @@
         android:layout_height="match_parent"
         android:id="@+id/title"
         android:textSize="22sp"
-        android:layout_marginTop="130dp"
+        android:layout_marginTop="126dp"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:paddingLeft="3dp"
+        android:layout_marginLeft="10dp"
         />
 
         </LinearLayout>

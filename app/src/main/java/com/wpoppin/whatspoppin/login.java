@@ -149,11 +149,12 @@ public class login extends AppCompatActivity {
                                     GraphResponse response) {
 
                                 Log.e("response: ", response + "");
+                                JSONObject json = response.getJSONObject();
                                 try {
                                     user = new User();
-                                    user.facebookID = object.getString("id");
-                                    user.email = object.getString("email");
-                                    user.username = object.getString("name");
+                                    user.facebookID = json.getString("id");
+                                    //user.email = json.getString("email");
+                                    user.username = json.getString("name");
                                     PrefUtils.setCurrentUser(user,login.this);
 
                                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(login.this);
@@ -167,7 +168,7 @@ public class login extends AppCompatActivity {
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }
-                                Toast.makeText(login.this,"welcome "+user.username,Toast.LENGTH_LONG).show();
+                               // Toast.makeText(login.this,"welcome "+ user.username,Toast.LENGTH_LONG).show();
                                 Intent intent=new Intent(login.this, Main.class);
                                 startActivity(intent);
                                 finish();
@@ -177,7 +178,7 @@ public class login extends AppCompatActivity {
                         });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email,gender, birthday");
+                parameters.putString("fields", "id, name, email, gender, birthday");
                 request.setParameters(parameters);
                 request.executeAsync();
 
@@ -185,12 +186,12 @@ public class login extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                Log.i("Login Attempt Cancelled", "");
+                //Log.i("Login Attempt Cancelled", "");
             }
 
             @Override
             public void onError(FacebookException e) {
-                Log.i("Login attempt failed.", " ");
+               // Log.i("Login attempt failed.", " ");
             }
         });
     }
@@ -202,7 +203,7 @@ public class login extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String Response) {
-                        Log.i(TAG, "RESPONDE" + Response.toString());
+                     //   Log.i(TAG, "RESPONDE" + Response.toString());
 
 
                     }

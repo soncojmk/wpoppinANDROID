@@ -10,7 +10,7 @@ import java.net.URL;
 
 public class User {
 
-    public String username;
+    public String username = null;
 
     public String email;
 

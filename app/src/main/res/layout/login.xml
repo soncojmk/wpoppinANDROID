@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/arts"
+    android:background="@color/colorPrimary"
     android:weightSum="1">
 
     <TextView
@@ -10,10 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="50dp"
+        android:textSize="50sp"
         android:id="@+id/login"
         android:textColor="#fff"
         android:layout_weight="0.56"
+        android:textStyle="bold"
         android:layout_marginTop="55dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -23,7 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="15dp"
+        android:textSize="15sp"
+        android:textStyle="bold"
         android:id="@+id/description"
         android:textColor="#fff"
         android:layout_weight="0.56"
@@ -45,15 +47,6 @@
         android:layout_marginRight="21dp"
         android:layout_marginEnd="21dp" />
 
-    <com.facebook.login.widget.LoginButton
-        android:layout_width="235dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:id="@+id/fb_login"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/explore"
-        android:layout_centerHorizontal="true" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,18 +59,6 @@
         android:layout_alignLeft="@+id/fb_login"
         android:layout_alignStart="@+id/fb_login" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:id="@+id/signup"
-        android:background="@color/orange"
-        android:textColor="#fff"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/description"
-        android:layout_alignRight="@+id/fb_login"
-        android:layout_alignEnd="@+id/fb_login" />
-
     <TextView
         android:text=""
         android:layout_width="wrap_content"
@@ -88,5 +69,28 @@
         android:id="@+id/info"
         android:layout_toLeftOf="@+id/or"
         android:layout_toStartOf="@+id/or" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/signup"
+        android:background="@color/orange"
+        android:textColor="#fff"
+        android:layout_below="@+id/description"
+        android:layout_alignRight="@+id/fb_login"
+        android:layout_alignEnd="@+id/fb_login"
+        android:layout_marginTop="166dp" />
+
+    <com.facebook.login.widget.LoginButton
+        android:layout_width="235dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/fb_login"
+        android:layout_marginTop="25dp"
+        android:background="@color/white"
+        android:textColor="@color/colorPrimary"
+        android:layout_below="@+id/explore"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

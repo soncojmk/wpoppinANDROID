@@ -114,9 +114,17 @@ public class Post {
 
     public String getUrl(){return url;}
 
-    public String getShareUrl(){
+    public String getBlogShareUrl(){
 
-        String ShareUrl = url.replace("api", "blog/blog");
+        String shareUrl = url.replace("api/blog", "stories/post");
+        shareUrl = shareUrl.replace(".json", "");
+        return shareUrl;
+    }
+
+    public String getEventShareUrl(){
+
+        String ShareUrl = url.replace("api/events", "post/post");
+        ShareUrl = ShareUrl.replace(".json", "");
         return ShareUrl;
     }
 

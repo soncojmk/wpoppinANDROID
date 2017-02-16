@@ -17,7 +17,7 @@
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="210dp"
             android:scaleType="fitXY" />
 
         <LinearLayout
@@ -68,6 +68,7 @@
                     android:id="@+id/title"
                     android:textSize="23sp"
                     android:textStyle="bold"
+                    android:layout_marginTop="13dp"
                     android:textColor="@color/white"
                     android:paddingLeft="5dp"
                      />

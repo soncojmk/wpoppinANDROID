@@ -87,7 +87,7 @@ public class LoginWP extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String Response) {
-                        Log.i(TAG, "RESPONDE" + Response.toString());
+                     //   Log.i(TAG, "RESPONDE" + Response.toString());
 
 
                         PrefUtils.setCurrentUser(user,LoginWP.this);

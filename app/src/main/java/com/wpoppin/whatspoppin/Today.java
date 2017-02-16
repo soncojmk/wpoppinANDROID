@@ -196,7 +196,7 @@ public class Today extends Fragment {
         @Override
         public void onResponse(String response) {
             List<Post> posts = Arrays.asList(gson.fromJson(response, Post[].class));
-            Log.i("JSON", posts.size() + " posts loaded.");
+          //  Log.i("JSON", posts.size() + " posts loaded.");
 
             hidePDialog();
 
@@ -231,7 +231,7 @@ public class Today extends Fragment {
                     event.setState(post.state);
 
 
-                    Log.i("JSON", post.author + ": " + post.title);
+                  //  Log.i("JSON", post.author + ": " + post.title);
                     eventList.add(event);
 
 
@@ -254,8 +254,7 @@ public class Today extends Fragment {
     private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e("JS" +
-                    "ON", error.toString());
+           // Log.e("JS" + "ON", error.toString());
             data = error.toString();
             //output.setText(data);
         }

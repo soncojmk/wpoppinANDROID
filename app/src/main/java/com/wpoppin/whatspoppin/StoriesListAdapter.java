@@ -85,7 +85,7 @@ public class StoriesListAdapter extends BaseAdapter {
 
         author.setText("By " + m.getAuthor());
 
-        String TITLE = fixEncoding(m.getTitle());
+        final String TITLE = fixEncoding(m.getTitle());
         title.setText(TITLE);
 
         String s =  fixEncoding(m.getDescription());
@@ -99,9 +99,9 @@ public class StoriesListAdapter extends BaseAdapter {
 
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                String shareBody = m.getShareUrl();
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,"Check out this What'sPoppin story I liked: " + m.getTitle());
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Read it at: wpoppin.com/blog" );
+                String shareBody = m.getBlogShareUrl();
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,"Hey, I think you'd like this What'sPoppin Story");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "What'sPoppin Story: " + TITLE + '\n' + m.getBlogShareUrl());
                 v.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));
 
             }

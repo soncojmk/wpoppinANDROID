@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "159893300399",
+    "firebase_url": "https://wpoppin-157119.firebaseio.com",
+    "project_id": "wpoppin-157119",
+    "storage_bucket": "wpoppin-157119.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159893300399:android:f3eafffb83afac18",
+        "android_client_info": {
+          "package_name": "com.wpoppin.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "159893300399-9mgn5iaebpojrv5r0odr7tcbchnbd1j0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm7FKTqKh81_f1FiPQZfOt7tHsf801wgY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159893300399:android:005f3a7825a8e3a2",
+        "android_client_info": {
+          "package_name": "com.wpoppin.whatspoppin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "159893300399-9mgn5iaebpojrv5r0odr7tcbchnbd1j0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm7FKTqKh81_f1FiPQZfOt7tHsf801wgY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
