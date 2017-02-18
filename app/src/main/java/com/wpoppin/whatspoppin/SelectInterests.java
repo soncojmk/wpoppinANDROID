@@ -1,6 +1,8 @@
 package com.wpoppin.whatspoppin;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,13 +37,12 @@ public class SelectInterests extends AppCompatActivity {
     private int[] interests;
     private int i;
 
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectinterests);
 
-
-        music = (TextView)findViewById(R.id.music);
+        /*
+        music = (TextView) findViewById(R.id.music);
         dance = (TextView) findViewById(R.id.dance);
         performing_arts = (TextView) findViewById(R.id.performing_arts);
         films = (TextView) findViewById(R.id.films);
@@ -68,7 +69,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) music.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 1;
+                interests[i] = 1;
                 i++;
                 music.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -81,7 +82,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) dance.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 4;
+                interests[i] = 4;
                 i++;
                 dance.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -93,7 +94,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) performing_arts.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 6;
+                interests[i] = 6;
                 i++;
                 performing_arts.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -106,7 +107,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) films.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 12;
+                interests[i] = 12;
                 i++;
                 films.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -118,7 +119,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) sports.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 2;
+                interests[i] = 2;
                 i++;
                 sports.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
@@ -129,7 +130,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) poetry.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 14;
+                interests[i] = 14;
                 i++;
                 poetry.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
@@ -140,7 +141,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) art.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 8;
+                interests[i] = 8;
                 i++;
                 art.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -152,7 +153,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) debates.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 18;
+                interests[i] = 18;
                 i++;
                 debates.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
@@ -164,7 +165,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) comedy.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 13;
+                interests[i] = 13;
                 i++;
                 comedy.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
@@ -175,7 +176,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) philanthropy.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 3;
+                interests[i] = 3;
                 i++;
                 philanthropy.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -188,7 +189,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) professional.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 11;
+                interests[i] = 11;
                 i++;
                 professional.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
@@ -200,7 +201,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) lectures.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 17;
+                interests[i] = 17;
                 i++;
                 lectures.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
@@ -212,7 +213,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) health.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 19;
+                interests[i] = 19;
                 i++;
                 health.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
@@ -224,7 +225,7 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) gaming.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 20;
+                interests[i] = 20;
                 i++;
                 gaming.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
@@ -235,26 +236,35 @@ public class SelectInterests extends AppCompatActivity {
                 ColorDrawable buttonColor = (ColorDrawable) politics.getBackground();
                 int colorId = buttonColor.getColor();
 
-                interests [i] = 21;
+                interests[i] = 21;
                 i++;
                 politics.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
         });
-
+        */
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                PrefUtils.getCurrentUser(SelectInterests.this).addInterests(interests, i);
-                Intent intent=new Intent(SelectInterests.this, Main.class);
+                User c = PrefUtils.getCurrentUser(SelectInterests.this);
+                c.addInterests(interests, i);
+                PrefUtils.setCurrentUser(c, SelectInterests.this);
+                Intent intent = new Intent(SelectInterests.this, Main.class);
                 startActivity(intent);
                 finish();
             }
         });
 
 
+    }
 
 
+    public void UpdateArray(View v)
+    {
+        ColorDrawable buttonColor = (ColorDrawable) v.getBackground();
+        int colorId = buttonColor.getColor();
 
+        interests[i] = Integer.parseInt(v.getTag().toString());
+        i++;
+        v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
     }
 
 

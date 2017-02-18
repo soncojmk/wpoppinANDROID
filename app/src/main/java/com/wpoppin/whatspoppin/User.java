@@ -1,5 +1,6 @@
 package com.wpoppin.whatspoppin;
 
+
 import java.net.URL;
 
 /**
@@ -29,7 +30,7 @@ public class User {
         for(int i=0; i < size; i++){
             this.interests[i] = interests[i];
         }
-        interestSet = true;
+        this.interestSet = true;
     }
 
     public int[] getInterests(){
