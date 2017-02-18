@@ -1,28 +1,18 @@
 package com.wpoppin.whatspoppin;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,13 +23,10 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.wpoppin.whatspoppin.R.layout.activity_json;
 
 
 /*
@@ -48,7 +35,7 @@ import static com.wpoppin.whatspoppin.R.layout.activity_json;
 
  */
 
-public class JSON extends Fragment {
+public class AllEvents extends Fragment {
 
     private static final String ENDPOINT = "http://www.wpoppin.com/api/events.json";
 
@@ -79,7 +66,7 @@ public class JSON extends Fragment {
 
     private View view;
 
-    public JSON(){}
+    public AllEvents(){}
 
 
     @Override
@@ -127,7 +114,7 @@ public class JSON extends Fragment {
         all_events.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Fragment json = new JSON();
+                Fragment json = new AllEvents();
                 replaceFragment(json);
 
             }

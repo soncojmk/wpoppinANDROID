@@ -220,8 +220,10 @@ public class Profile extends Fragment {
                 }
                 else
                 {
-                    interest.remove(interest.indexOf(Integer.parseInt(v.getTag().toString())));
-                    v.setBackgroundColor(Color.WHITE);
+                    if(interest.size() >= 6) {
+                        interest.remove(interest.indexOf(Integer.parseInt(v.getTag().toString())));
+                        v.setBackgroundColor(Color.WHITE);
+                    }
                 }
 
                 while(interest.contains(0)) {

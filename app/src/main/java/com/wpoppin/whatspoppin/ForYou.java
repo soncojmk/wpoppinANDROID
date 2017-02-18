@@ -37,48 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 
 
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static com.wpoppin.whatspoppin.R.layout.activity_json;
-
-
 /*
     This class calls the What'sPoppin api and parses the json to pass the data
     to the activity_json.xml file
@@ -117,6 +75,8 @@ public class ForYou extends Fragment {
 
     private View view;
 
+    private ArrayList<Integer> interest = new ArrayList<Integer>();
+
     public ForYou(){}
 
 
@@ -129,6 +89,12 @@ public class ForYou extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
+        int[] temp = PrefUtils.getCurrentUser(getActivity()).getInterests();
+        for (int index = 0; index < temp.length; index++)
+        {
+            interest.add(temp[index]);
+        }
 
         requestQueue = Volley.newRequestQueue(getActivity());
 
@@ -164,7 +130,7 @@ public class ForYou extends Fragment {
         all_events.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Fragment json = new JSON();
+                Fragment json = new AllEvents();
                 replaceFragment(json);
 
             }
@@ -250,27 +216,27 @@ public class ForYou extends Fragment {
             try {
                 for (Post post : posts) {
                     data += post.author + ": " + post.title + ": " + post.image +"\n";
-                    Post event = new Post();
+                    if(interest.contains(Integer.parseInt(post.getCategory()))) {
+                        Post event = new Post();
+                        event.setUrl(post.url);
+                        event.setCategory(post.category);
+                        event.setAuthor(post.author);
+                        event.setTitle(post.title);
+                        event.setPrice(post.price);
+                        event.setThumbnailUrl(post.image);
+                        event.setDescription(post.description);
+                        event.setDate(post.date);
+                        event.setTime(post.time);
+                        event.setTicket_link(post.ticket_link);
+                        event.setAddress(post.street_address);
+                        event.setCity(post.city);
+                        event.setZipcode(post.zipcode);
+                        event.setState(post.state);
 
-                    event.setUrl(post.url);
-                    event.setCategory(post.category);
-                    event.setAuthor(post.author);
-                    event.setTitle(post.title);
-                    event.setPrice(post.price);
-                    event.setThumbnailUrl(post.image);
-                    event.setDescription(post.description);
-                    event.setDate(post.date);
-                    event.setTime(post.time);
-                    event.setTicket_link(post.ticket_link);
-                    event.setAddress(post.street_address);
-                    event.setCity(post.city);
-                    event.setZipcode(post.zipcode);
-                    event.setState(post.state);
 
-
-                    // Log.i("JSON", post.author + ": " + post.title);
-                    eventList.add(event);
-
+                        // Log.i("JSON", post.author + ": " + post.title);
+                        eventList.add(event);
+                    }
 
                 }
                 //output.setText(data);
