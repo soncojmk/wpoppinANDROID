@@ -90,6 +90,7 @@ public class CustomListAdapter extends BaseAdapter {
         // thumbnail image
         thumbNail.setImageUrl(m.getImage(), imageLoader);
 
+
       //  author.setText("By " + m.getAuthor());
         final String TITLE = fixEncoding(m.getTitle());
         title.setText(TITLE);
