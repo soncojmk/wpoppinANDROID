@@ -169,7 +169,7 @@ public class login extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                // Toast.makeText(login.this,"welcome "+ user.username,Toast.LENGTH_LONG).show();
-                                Intent intent=new Intent(login.this, Main.class);
+                                Intent intent=new Intent(login.this, SelectInterests.class);
                                 startActivity(intent);
                                 finish();
 

@@ -109,6 +109,7 @@ public class ForYou extends Fragment {
     private BottomBar bottomBar;
 
     private Button all_events;
+    private Button for_you;
     private Button today;
     private Button tomorrow;
     private Button this_week;
@@ -150,9 +151,9 @@ public class ForYou extends Fragment {
         pDialog.setMessage("Loading...");
         pDialog.show();
 
-        all_events = (Button) view.findViewById(R.id.day).findViewById(R.id.all_events);
-        all_events.setBackgroundColor(getResources().getColor(R.color.orange));
-        all_events.setTextColor(getResources().getColor(R.color.white));
+        for_you = (Button) view.findViewById(R.id.day).findViewById(R.id.for_you);
+        for_you.setBackgroundColor(getResources().getColor(R.color.orange));
+        for_you.setTextColor(getResources().getColor(R.color.white));
 
         View all_events = (View) view.findViewById(R.id.day).findViewById(R.id.all_events);
         View today = (View) view.findViewById(R.id.day).findViewById(R.id.today);

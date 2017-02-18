@@ -132,5 +132,175 @@
         android:layout_height="wrap_content" />
 
 
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+
+                <Button android:id="@+id/music"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:tag="1"
+                    android:layout_marginBottom="24dp"
+                    android:background="@color/white"
+                    android:text="Music"
+                    android:gravity="center"
+                    android:textSize="16dip"/>
+
+                <Button android:id="@+id/dance"
+                    android:layout_width="fill_parent"
+                    android:tag="4"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@color/white"
+                    android:text="Dance"
+                    android:gravity="center"
+                    android:textSize="16dip" />
+
+                <Button android:id="@+id/performing_arts"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:tag="6"
+                    android:layout_marginBottom="24dp"
+                    android:background="@color/white"
+                    android:text="Performing Arts"
+                    android:gravity="center"
+                    android:textSize="16dip" />
+
+                <Button android:id="@+id/films"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:tag="12"
+                    android:background="@color/white"
+                    android:text="Films"
+                    android:gravity="center"
+                    android:textSize="16dip"/>
+
+
+                <Button android:id="@+id/sports"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:tag="2"
+                    android:background="@color/white"
+                    android:text="Sports"
+                    android:gravity="center"
+                    android:textSize="16dip" />
+
+                <Button android:id="@+id/art"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:tag="8"
+                    android:layout_marginBottom="24dp"
+                    android:background="@color/white"
+                    android:text="Art"
+                    android:gravity="center"
+                    android:textSize="16dip" />
+
+                <Button android:id="@+id/philanthropy"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:tag="3"
+                    android:background="@color/white"
+                    android:text="Philanthropy"
+                    android:gravity="center"
+                    android:textSize="16dip"/>
+
+                <Button android:id="@+id/politics"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@color/white"
+                    android:tag="21"
+                    android:text="Politics"
+                    android:gravity="center"
+                    android:textSize="16dip" />
+
+                <Button android:id="@+id/health"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@color/white"
+                    android:tag="19"
+                    android:text="Health/Wellbeing"
+                    android:gravity="center"
+                    android:textSize="16dip"/>
+
+                <Button android:id="@+id/lectures"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:tag="17"
+                    android:background="@color/white"
+                    android:text="Lectures"
+                    android:gravity="center"
+                    android:textSize="16dip"/>
+
+
+                <Button android:id="@+id/debates"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@color/white"
+                    android:tag="18"
+                    android:text="Debates"
+                    android:gravity="center"
+                    android:textSize="16dip"/>
+
+
+                <Button android:id="@+id/comedy"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@color/white"
+                    android:tag="13"
+                    android:text="Comedy"
+                    android:gravity="center"
+                    android:textSize="16dip" />
+
+                <Button android:id="@+id/poetry"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:tag="14"
+                    android:background="@color/white"
+                    android:text="Poetry"
+                    android:gravity="center"
+                    android:textSize="16dip" />
+
+
+                <Button android:id="@+id/professional"
+                    android:layout_width="fill_parent"
+                    android:tag="11"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@color/white"
+                    android:text="Professional"
+                    android:gravity="center"
+                    android:textSize="16dip" />
+
+
+                <Button android:id="@+id/gaming"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="24dp"
+                    android:tag="20"
+                    android:background="@color/white"
+                    android:text="Gaming"
+                    android:gravity="center"
+                    android:textSize="16dip" />
+
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+
 
 </LinearLayout>

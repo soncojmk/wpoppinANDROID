@@ -40,18 +40,19 @@ public class SelectInterests extends AppCompatActivity {
 
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                User c = PrefUtils.getCurrentUser(SelectInterests.this);
-                int[] interests = new int[20];
-                for(int i = 0; i < interest.size(); i++)
-                {
-                    interests[i] = interest.get(i);
-                }
+                if(interest.size() >= 8) {
+                    User c = PrefUtils.getCurrentUser(SelectInterests.this);
+                    int[] interests = new int[20];
+                    for (int i = 0; i < interest.size(); i++) {
+                        interests[i] = interest.get(i);
+                    }
+                    c.addInterests(interests, interest.size());
+                    PrefUtils.setCurrentUser(c, SelectInterests.this);
 
-                c.addInterests(interests, interest.size());
-                PrefUtils.setCurrentUser(c, SelectInterests.this);
-                Intent intent = new Intent(SelectInterests.this, Main.class);
-                startActivity(intent);
-                finish();
+                    Intent intent = new Intent(SelectInterests.this, Main.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
@@ -72,6 +73,7 @@ public class SelectInterests extends AppCompatActivity {
         }
 
     }
+
 
 
 

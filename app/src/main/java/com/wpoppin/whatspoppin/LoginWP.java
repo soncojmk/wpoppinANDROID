@@ -95,7 +95,7 @@ public class LoginWP extends AppCompatActivity {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putString("username",user.username);
                         editor.apply();
-                        startActivity(new Intent(LoginWP.this, Main.class));
+                        startActivity(new Intent(LoginWP.this, SelectInterests.class));
                         finish();
 
 

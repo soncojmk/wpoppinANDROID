@@ -103,7 +103,7 @@ public class Signup extends AppCompatActivity {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putString("username",user.username);
                         editor.apply();
-                        startActivity(new Intent(Signup.this, Main.class));
+                        startActivity(new Intent(Signup.this, SelectInterests.class));
                         finish();
 
 

@@ -14,17 +14,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +39,8 @@ import com.facebook.login.LoginManager;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -51,6 +56,9 @@ public class Profile extends Fragment {
     private AlertDialog pDialog;
     private LinearLayout invite;
     private LinearLayout privacy;
+
+
+    private ArrayList<Integer> interest = new ArrayList<Integer>();
 
     @Override
     public void onPause() {
@@ -81,6 +89,39 @@ public class Profile extends Fragment {
         invite = (LinearLayout) view.findViewById(R.id.invite);
         privacy = (LinearLayout) view.findViewById(R.id.privacy);
 
+        Button[] interestButtons = new Button[15];
+        interestButtons[0] = (Button) view.findViewById(R.id.music);
+        interestButtons[1] = (Button) view.findViewById(R.id.dance);
+        interestButtons[2] = (Button) view.findViewById(R.id.professional);
+        interestButtons[3] = (Button) view.findViewById(R.id.performing_arts);
+        interestButtons[4] = (Button) view.findViewById(R.id.art);
+        interestButtons[5] = (Button) view.findViewById(R.id.films);
+        interestButtons[6] = (Button) view.findViewById(R.id.sports);
+        interestButtons[7] = (Button) view.findViewById(R.id.health);
+        interestButtons[8] = (Button) view.findViewById(R.id.gaming);
+        interestButtons[9] = (Button) view.findViewById(R.id.debates);
+        interestButtons[10] = (Button) view.findViewById(R.id.poetry);
+        interestButtons[11] = (Button) view.findViewById(R.id.politics);
+        interestButtons[12] = (Button) view.findViewById(R.id.comedy);
+        interestButtons[13] = (Button) view.findViewById(R.id.philanthropy);
+        interestButtons[14] = (Button) view.findViewById(R.id.lectures);
+
+        for(Button b: interestButtons)
+        {
+            b.setOnClickListener(InterestSelection());
+        }
+
+        int[] temp = user.getInterests();
+        for (int index = 0; index < temp.length; index++)
+        {
+            interest.add(temp[index]);
+            for(Button b : interestButtons)
+            {
+                if(Integer.parseInt(b.getTag().toString()) == temp[index])
+                    b.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            }
+        }
+
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +132,6 @@ public class Profile extends Fragment {
                 pDialog.show();
             }
         });
-
 
 
             name.setText(user.username);
@@ -168,6 +208,40 @@ public class Profile extends Fragment {
         });
         super.onActivityCreated(savedInstanceState);
     }
+
+    public View.OnClickListener InterestSelection()
+    {
+        View.OnClickListener listener =  new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if (!interest.contains(Integer.parseInt(v.getTag().toString()))) {
+                    interest.add(Integer.parseInt(v.getTag().toString()));
+                    v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                }
+                else
+                {
+                    interest.remove(interest.indexOf(Integer.parseInt(v.getTag().toString())));
+                    v.setBackgroundColor(Color.WHITE);
+                }
+
+                while(interest.contains(0)) {
+                    interest.remove(interest.indexOf(0));
+                }
+
+                int[] interests = new int[20];
+                for (int i = 0; i < interest.size(); i++) {
+                    interests[i] = interest.get(i);
+                }
+                user.addInterests(interests, interests.length);
+                PrefUtils.setCurrentUser(user, getActivity());
+            }
+        };
+
+
+
+        return listener;
+    }
+
 
 
 }
