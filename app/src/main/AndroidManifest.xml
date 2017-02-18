@@ -90,6 +90,11 @@
             android:name=".LoginWP"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".SelectInterests"
+            android:screenOrientation="portrait" >
+        </activity>
+
 
 
         <activity android:name="com.facebook.FacebookActivity"

@@ -20,6 +20,22 @@ public class User {
 
     public String token;
 
+    public int interests[] = new int[20];
+
+    public boolean interestSet;
+
+    public void addInterests(int interests[], int size){
+
+        for(int i=0; i < size; i++){
+            this.interests[i] = interests[i];
+        }
+        interestSet = true;
+    }
+
+    public int[] getInterests(){
+        return interests;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -27,6 +43,8 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
+
 
     public String getEmail() {
         return email;

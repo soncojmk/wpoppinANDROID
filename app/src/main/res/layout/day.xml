@@ -17,6 +17,23 @@
             android:weightSum="1" >
 
 
+
+            <Button
+                android:id="@+id/for_you"
+                android:layout_width="100dip"
+                android:layout_height="40dip"
+                android:clickable="true"
+                android:gravity="bottom|center_horizontal"
+                android:paddingBottom="15dip"
+                android:text="For you"
+                android:textColor="#707070"
+                android:textColorHighlight="#ffffff"
+                android:textSize="9dip"
+                android:textStyle="bold"
+                android:background="@color/white"
+                />
+
+
             <Button
                 android:id="@+id/all_events"
                 android:layout_width="100dip"
@@ -45,7 +62,6 @@
                 android:textSize="9dip"
                 android:textStyle="bold"
                 android:background="@color/white"/>
-
 
 
 

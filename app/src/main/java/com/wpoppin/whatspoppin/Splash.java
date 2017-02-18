@@ -74,11 +74,18 @@ public class Splash extends AppCompatActivity {
         if (PrefUtils.getCurrentUser(Splash.this) == null) {
 
             Intent homeIntent = new Intent(Splash.this, login.class);
-
             startActivity(homeIntent);
-
             finish();
-        } else {
+        }
+
+        else if(!PrefUtils.getCurrentUser(Splash.this).interestSet){
+            Intent intent = new Intent(Splash.this, SelectInterests.class);
+            startActivity(intent);
+            finish();
+        }
+
+
+        else {
             Intent intent = new Intent(this, Main.class);
             startActivity(intent);
             finish();
