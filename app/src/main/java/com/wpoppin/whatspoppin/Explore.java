@@ -50,6 +50,7 @@ public class Explore extends Fragment {
 
     public static String [] prgmNameList={"MUSIC","PERFORMING ARTS","ART","COMEDY","POETRY","FUNDRAISERS"};
     public static int [] prgmImages={R.drawable.music,R.drawable.arts,R.drawable.gallery,R.drawable.comedy,R.drawable.poetry,R.drawable.fundraisers};
+    public static String selection;
 
     public Explore(){}
 
@@ -72,37 +73,50 @@ public class Explore extends Fragment {
                 // start-media code could go in fragment or adapter
                 switch(position){
                     case 0:
-                        fragment = new Music();
-                        replaceFragment(fragment);
+                        selection = "Music";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/music.json");
+                        ///fragment = new Music();
+                        ///replaceFragment(fragment);
                         break;
 
                     case 1:
-                        fragment = new PerformingArts();
-                        replaceFragment(fragment);
+                        selection = "Performing Arts";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/performing_arts.json");
+                        //fragment = new PerformingArts();
+                        //replaceFragment(fragment);
                         break;
 
                     case 2:
-                        fragment = new Art();
-                        replaceFragment(fragment);
+                        selection = "Art";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/art.json");
+                        //fragment = new Art();
+                        //replaceFragment(fragment);
                         break;
 
                     case 3:
-                        fragment = new Comedy();
-                        replaceFragment(fragment);
+                        selection = "Comedy";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/comedy.json");
+                        //fragment = new Comedy();
+                        //replaceFragment(fragment);
                         break;
 
                     case 4:
-                        fragment = new Poetry();
-                        replaceFragment(fragment);
+                        selection = "Poetry";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/poetry.json");
+                        //fragment = new Poetry();
+                        //replaceFragment(fragment);
                         break;
 
                     case 5:
-                        fragment = new Fundraisers();
-                        replaceFragment(fragment);
+                        selection = "Fundraisers";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/charity.json");
+                        //fragment = new Fundraisers();
+                        //replaceFragment(fragment);
                         break;
 
                 }
-
+                fragment = new ExploreSelectionHandler();
+                replaceFragment(fragment);
 
             }
         });
@@ -112,6 +126,12 @@ public class Explore extends Fragment {
 
 
     }
+
+    public static String getSelection()
+    {
+        return selection;
+    }
+
     public void replaceFragment(Fragment fragment) {
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
