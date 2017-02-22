@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SearchViewCompat;
-import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.android.volley.toolbox.Volley;
@@ -34,7 +33,7 @@ import java.util.List;
 
 public class TopNavigationHandler extends Fragment {
 
-    private String endpoint;
+    private String endpoint = "http://www.wpoppin.com/api/events.json"; //initially for you
     private View currentView;
     private ProgressDialog pDialog;
     private CustomListAdapter adapter;
@@ -43,6 +42,7 @@ public class TopNavigationHandler extends Fragment {
     private RequestQueue requestQueue;
     private List<Post> eventList = new ArrayList<Post>();
     private ListView listView;
+    private ArrayList<Integer> interest = new ArrayList<Integer>();
 
     private TextView author;
     private TextView title;
@@ -50,10 +50,10 @@ public class TopNavigationHandler extends Fragment {
     private TextView description;
     private TextView date;
 
-    private View today;
-    private View this_week;
-    private View this_month;
-    private View for_you;
+    private Button today;
+    private Button this_week;
+    private Button this_month;
+    private Button for_you;
 
     private int response = 0;
 
@@ -68,20 +68,40 @@ public class TopNavigationHandler extends Fragment {
     }
 
     public void customResponsePerPage(List<Post> posts) {
-        switch (response){
-            case 0: //FOR YOU
-                //// TODO: 2/22/2017
-                break;
-            case 1: //TODAY
-                //TODO
-                break;
-            case 2: //THIS WEEK
-                //TODO
-                break;
-            case 3: //THIS MONTH
-                //TODO
-                break;
+
+        for (Post post : posts) {
+            switch (response) {
+                case 0: //FOR YOU
+                    if (interest.contains(Integer.parseInt(post.getCategory()))) {
+                        addEvent(post);
+                    }
+                    break;
+                default: //TODAY, THIS WEEK, THIS MONTH
+                    addEvent(post);
+                    break;
+            }
         }
+    }
+
+    public void addEvent(Post post)
+    {
+        Post event = new Post();
+        event.setUrl(post.url);
+        event.setCategory(post.category);
+        event.setAuthor(post.author);
+        event.setTitle(post.title);
+        event.setPrice(post.price);
+        event.setThumbnailUrl(post.image);
+        event.setDescription(post.description);
+        event.setDate(post.date);
+        event.setTime(post.time);
+        event.setTicket_link(post.ticket_link);
+        event.setAddress(post.street_address);
+        event.setCity(post.city);
+        event.setZipcode(post.zipcode);
+        event.setState(post.state);
+
+        eventList.add(event);
     }
 
 
@@ -89,6 +109,13 @@ public class TopNavigationHandler extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
 
         requestQueue = Volley.newRequestQueue(getActivity());
+
+        //GET INTERESTS
+        int[] temp = PrefUtils.getCurrentUser(getActivity()).getInterests();
+        for (int index = 0; index < temp.length; index++)
+        {
+            interest.add(temp[index]);
+        }
 
         author = (TextView) currentView.findViewById(R.id.author);
         title = (TextView) currentView.findViewById(R.id.title);
@@ -109,23 +136,76 @@ public class TopNavigationHandler extends Fragment {
         pDialog.setMessage("Loading...");
         pDialog.show();
 
-        today = (View) currentView.findViewById(R.id.day).findViewById(R.id.today);
-        this_week = (View) currentView.findViewById(R.id.day).findViewById(R.id.this_week);
-        this_month = (View) currentView.findViewById(R.id.day).findViewById(R.id.this_month);
-        for_you = (View) currentView.findViewById(R.id.day).findViewById(R.id.for_you);
+        //get all of the buttons
+        today = (Button) currentView.findViewById(R.id.day).findViewById(R.id.today);
+        this_week = (Button) currentView.findViewById(R.id.day).findViewById(R.id.this_week);
+        this_month = (Button) currentView.findViewById(R.id.day).findViewById(R.id.this_month);
+        for_you = (Button) currentView.findViewById(R.id.day).findViewById(R.id.for_you);
+        for_you.setBackgroundColor(getResources().getColor(R.color.orange));
+        for_you.setTextColor(getResources().getColor(R.color.white));
 
+        View.OnClickListener list = buttonNavigation();
 
+        today.setOnClickListener(list);
+        this_week.setOnClickListener(list);
+        this_month.setOnClickListener(list);
+        for_you.setOnClickListener(list);
 
         fetchPosts();
         super.onActivityCreated(savedInstanceState);
     }
 
-    private View.OnClickListener onClickListener()
+    //If one of the top buttons is selectes
+    private View.OnClickListener buttonNavigation()
     {
         View.OnClickListener here = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //SET WHICH RESPONSE
+                eventList.clear();
+                requestQueue = Volley.newRequestQueue(getActivity());
+
+                this_month.setBackgroundColor(getResources().getColor(R.color.white));
+                this_month.setTextColor(getResources().getColor(R.color.black));
+                this_week.setBackgroundColor(getResources().getColor(R.color.white));
+                this_week.setTextColor(getResources().getColor(R.color.black));
+                today.setBackgroundColor(getResources().getColor(R.color.white));
+                today.setTextColor(getResources().getColor(R.color.black));
+                for_you.setBackgroundColor(getResources().getColor(R.color.white));
+                for_you.setTextColor(getResources().getColor(R.color.black));
+
+                if(v.getTag().equals("foryou"))
+                {
+                    response = 0;
+                    SetURL("http://www.wpoppin.com/api/events.json");
+                    for_you.setBackgroundColor(getResources().getColor(R.color.orange));
+                    for_you.setTextColor(getResources().getColor(R.color.white));
+                }
+                else if (v.getTag().equals("today"))
+                {
+                    response = 1;
+                    SetURL("http://www.wpoppin.com/api/events_today.json");
+                    today.setBackgroundColor(getResources().getColor(R.color.orange));
+                    today.setTextColor(getResources().getColor(R.color.white));
+                }
+                else if(v.getTag().equals("week"))
+                {
+                    response = 2;
+                    SetURL("http://www.wpoppin.com/api/events_this_week.json");
+                    this_week.setBackgroundColor(getResources().getColor(R.color.orange));
+                    this_week.setTextColor(getResources().getColor(R.color.white));
+                }
+                else if(v.getTag().equals("month"))
+                {
+                    response = 3;
+                    SetURL("http://www.wpoppin.com/api/events_this_month.json");
+                    this_month.setBackgroundColor(getResources().getColor(R.color.orange));
+                    this_month.setTextColor(getResources().getColor(R.color.white));
+                }
+                pDialog = new ProgressDialog(getActivity());
+                // Showing progress dialog before making http request
+                pDialog.setMessage("Loading...");
+                pDialog.show();
                 fetchPosts();
             }
         };
@@ -175,7 +255,7 @@ public class TopNavigationHandler extends Fragment {
         public void onResponse(String response) {
             List<Post> posts = Arrays.asList(gson.fromJson(response, Post[].class));
             hidePDialog();
-
+            Log.e("RESPONSE", endpoint);
             customResponsePerPage(posts);
 
 

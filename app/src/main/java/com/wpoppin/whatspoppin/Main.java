@@ -27,7 +27,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottombar);
 
-        Fragment fragment = new ForYou();
+        Fragment fragment = new TopNavigationHandler();
         replaceFragment(fragment);
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomBar);
