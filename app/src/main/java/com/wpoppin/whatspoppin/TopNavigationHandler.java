@@ -29,6 +29,8 @@ import java.util.List;
 
 /**
  * Created by Abby on 2/21/2017.
+ * This page handles when the user selects "For You", "Today", "This Week", or "This Month"
+ * It loads the correct lists and updates the adapter to show the users the correct data
  */
 
 public class TopNavigationHandler extends Fragment {

@@ -33,6 +33,8 @@ import java.util.List;
 
 /**
  * Created by Abby on 2/21/2017.
+ * This page handles all of the events. The Explore page tells this one what event was selected
+ * This page then loads the correct data per selection and throws it into the listview
  */
 
 public class ExploreSelectionHandler extends Fragment {
