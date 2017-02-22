@@ -251,7 +251,6 @@ public class TopNavigationHandler extends Fragment {
 
     private void fetchPosts() {
         StringRequest request = new StringRequest(Request.Method.GET, endpoint, onPostsLoaded, onPostsError);
-
         requestQueue.add(request);
     }
 
@@ -260,21 +259,15 @@ public class TopNavigationHandler extends Fragment {
         public void onResponse(String response) {
             List<Post> posts = Arrays.asList(gson.fromJson(response, Post[].class));
             hidePDialog();
-            Log.e("RESPONSE", endpoint);
             customResponsePerPage(posts);
-
-
             adapter.notifyDataSetChanged();
-
         }
     };
 
     private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            // Log.e("JS" + "ON", error.toString());
             data = error.toString();
-            //output.setText(data);
         }
     };
 
@@ -288,8 +281,6 @@ public class TopNavigationHandler extends Fragment {
     private void hidePDialog() {
         if (pDialog != null) {
             pDialog.dismiss();
-
-
             pDialog = null;
         }
     }
