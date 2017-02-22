@@ -103,13 +103,14 @@ public class ThisWeek extends Fragment {
         this_week.setTextColor(getResources().getColor(R.color.white));
 
 
-        View all_events = (View) view.findViewById(R.id.day).findViewById(R.id.all_events);
+        //View all_events = (View) view.findViewById(R.id.day).findViewById(R.id.all_events);
         View today = (View) view.findViewById(R.id.day).findViewById(R.id.today);
         //View tomorrow = (View) view.findViewById(R.id.day).findViewById(R.id.tomorrow);
         View this_week = (View) view.findViewById(R.id.day).findViewById(R.id.this_week);
         View this_month = (View) view.findViewById(R.id.day).findViewById(R.id.this_month);
         View for_you = (View) view.findViewById(R.id.day).findViewById(R.id.for_you);
 
+        /*
         all_events.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -118,6 +119,8 @@ public class ThisWeek extends Fragment {
 
             }
         });
+
+        */
 
         today.setOnClickListener(new View.OnClickListener() {
             @Override

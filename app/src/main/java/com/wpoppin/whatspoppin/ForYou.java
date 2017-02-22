@@ -37,12 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 
 
-/*
-    This class calls the What'sPoppin api and parses the json to pass the data
-    to the activity_json.xml file
-
- */
-
 public class ForYou extends Fragment {
 
     private static final String ENDPOINT = "http://www.wpoppin.com/api/events.json";
@@ -121,20 +115,20 @@ public class ForYou extends Fragment {
         for_you.setBackgroundColor(getResources().getColor(R.color.orange));
         for_you.setTextColor(getResources().getColor(R.color.white));
 
-        View all_events = (View) view.findViewById(R.id.day).findViewById(R.id.all_events);
+        //View all_events = (View) view.findViewById(R.id.day).findViewById(R.id.all_events);
         View today = (View) view.findViewById(R.id.day).findViewById(R.id.today);
         // View tomorrow = (View) view.findViewById(R.id.day).findViewById(R.id.tomorrow);
         View this_week = (View) view.findViewById(R.id.day).findViewById(R.id.this_week);
         View this_month = (View) view.findViewById(R.id.day).findViewById(R.id.this_month);
 
-        all_events.setOnClickListener(new View.OnClickListener() {
+      /*  all_events.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 Fragment json = new AllEvents();
                 replaceFragment(json);
 
             }
-        });
+        }); */
 
         today.setOnClickListener(new View.OnClickListener() {
             @Override

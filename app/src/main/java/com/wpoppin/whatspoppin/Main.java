@@ -27,7 +27,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottombar);
 
-        Fragment fragment = new AllEvents();
+        Fragment fragment = new ForYou();
         replaceFragment(fragment);
 
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottomBar);
@@ -36,7 +36,7 @@ public class Main extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.home) {
-                    Fragment json = new AllEvents();
+                    Fragment json = new ForYou();
                     replaceFragment(json);
                 } else if (item.getItemId() == R.id.explore) {
                     Fragment json = new Explore();

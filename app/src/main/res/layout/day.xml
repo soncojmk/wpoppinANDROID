@@ -33,7 +33,7 @@
                 android:background="@color/white"
                 />
 
-
+<!--
             <Button
                 android:id="@+id/all_events"
                 android:layout_width="100dip"
@@ -48,6 +48,8 @@
                 android:textStyle="bold"
                 android:background="@color/white"
                 />
+
+                -->
 
             <Button
                 android:id="@+id/today"
