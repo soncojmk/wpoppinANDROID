@@ -55,6 +55,8 @@ public class TopNavigationHandler extends Fragment {
     private Button this_month;
     private Button for_you;
 
+    private ArrayList<Button> topBottons = new ArrayList<Button>();
+
     private int response = 0;
 
 
@@ -67,6 +69,10 @@ public class TopNavigationHandler extends Fragment {
         this.endpoint = url;
     }
 
+    /**
+     * Get list based off of what tab is selected
+     * @param posts loaded from website
+     */
     public void customResponsePerPage(List<Post> posts) {
 
         for (Post post : posts) {
@@ -138,18 +144,23 @@ public class TopNavigationHandler extends Fragment {
 
         //get all of the buttons
         today = (Button) currentView.findViewById(R.id.day).findViewById(R.id.today);
+        topBottons.add(today);
         this_week = (Button) currentView.findViewById(R.id.day).findViewById(R.id.this_week);
+        topBottons.add(this_week);
         this_month = (Button) currentView.findViewById(R.id.day).findViewById(R.id.this_month);
+        topBottons.add(this_month);
         for_you = (Button) currentView.findViewById(R.id.day).findViewById(R.id.for_you);
+        topBottons.add(for_you);
+
+        //Initially on for you
         for_you.setBackgroundColor(getResources().getColor(R.color.orange));
         for_you.setTextColor(getResources().getColor(R.color.white));
 
-        View.OnClickListener list = buttonNavigation();
-
-        today.setOnClickListener(list);
-        this_week.setOnClickListener(list);
-        this_month.setOnClickListener(list);
-        for_you.setOnClickListener(list);
+        //set the onclick listener
+        for( Button b: topBottons)
+        {
+            b.setOnClickListener(buttonNavigation());
+        }
 
         fetchPosts();
         super.onActivityCreated(savedInstanceState);
@@ -161,49 +172,43 @@ public class TopNavigationHandler extends Fragment {
         View.OnClickListener here = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //SET WHICH RESPONSE
                 eventList.clear();
                 requestQueue = Volley.newRequestQueue(getActivity());
 
-                this_month.setBackgroundColor(getResources().getColor(R.color.white));
-                this_month.setTextColor(getResources().getColor(R.color.black));
-                this_week.setBackgroundColor(getResources().getColor(R.color.white));
-                this_week.setTextColor(getResources().getColor(R.color.black));
-                today.setBackgroundColor(getResources().getColor(R.color.white));
-                today.setTextColor(getResources().getColor(R.color.black));
-                for_you.setBackgroundColor(getResources().getColor(R.color.white));
-                for_you.setTextColor(getResources().getColor(R.color.black));
+                //reset button colors
+                for (Button b : topBottons) {
+                    b.setBackgroundColor(getResources().getColor(R.color.white));
+                    b.setTextColor(getResources().getColor(R.color.black));
+                }
 
+                //set selected button to orange
+                v.setBackgroundColor(getResources().getColor(R.color.orange));
+                ((Button)v).setTextColor(getResources().getColor(R.color.white));
+
+                //SET WHICH TAB
                 if(v.getTag().equals("foryou"))
                 {
                     response = 0;
                     SetURL("http://www.wpoppin.com/api/events.json");
-                    for_you.setBackgroundColor(getResources().getColor(R.color.orange));
-                    for_you.setTextColor(getResources().getColor(R.color.white));
                 }
                 else if (v.getTag().equals("today"))
                 {
                     response = 1;
                     SetURL("http://www.wpoppin.com/api/events_today.json");
-                    today.setBackgroundColor(getResources().getColor(R.color.orange));
-                    today.setTextColor(getResources().getColor(R.color.white));
                 }
                 else if(v.getTag().equals("week"))
                 {
                     response = 2;
                     SetURL("http://www.wpoppin.com/api/events_this_week.json");
-                    this_week.setBackgroundColor(getResources().getColor(R.color.orange));
-                    this_week.setTextColor(getResources().getColor(R.color.white));
                 }
                 else if(v.getTag().equals("month"))
                 {
                     response = 3;
                     SetURL("http://www.wpoppin.com/api/events_this_month.json");
-                    this_month.setBackgroundColor(getResources().getColor(R.color.orange));
-                    this_month.setTextColor(getResources().getColor(R.color.white));
                 }
+
+                //Restart process to update list
                 pDialog = new ProgressDialog(getActivity());
-                // Showing progress dialog before making http request
                 pDialog.setMessage("Loading...");
                 pDialog.show();
                 fetchPosts();
