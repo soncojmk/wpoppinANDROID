@@ -44,12 +44,6 @@ public class TopNavigationHandler extends Fragment {
     private ListView listView;
     private ArrayList<Integer> interest = new ArrayList<Integer>();
 
-    private TextView author;
-    private TextView title;
-    private TextView price;
-    private TextView description;
-    private TextView date;
-
     private Button today;
     private Button this_week;
     private Button this_month;
@@ -122,12 +116,6 @@ public class TopNavigationHandler extends Fragment {
         {
             interest.add(temp[index]);
         }
-
-        author = (TextView) currentView.findViewById(R.id.author);
-        title = (TextView) currentView.findViewById(R.id.title);
-        price = (TextView) currentView.findViewById(R.id.price);
-        description = (TextView) currentView.findViewById(R.id.description);
-        date = (TextView) currentView.findViewById(R.id.date);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
