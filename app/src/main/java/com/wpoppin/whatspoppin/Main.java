@@ -36,7 +36,7 @@ public class Main extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.home) {
-                    Fragment json = new ForYou();
+                    Fragment json = new TopNavigationHandler();
                     replaceFragment(json);
                 } else if (item.getItemId() == R.id.explore) {
                     Fragment json = new Explore();
