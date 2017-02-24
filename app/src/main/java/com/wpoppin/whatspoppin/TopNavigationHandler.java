@@ -29,6 +29,8 @@ import java.util.List;
 
 /**
  * Created by Abby on 2/21/2017.
+ * This page handles when the user selects "For You", "Today", "This Week", or "This Month"
+ * It loads the correct lists and updates the adapter to show the users the correct data
  */
 
 public class TopNavigationHandler extends Fragment {
@@ -43,12 +45,6 @@ public class TopNavigationHandler extends Fragment {
     private List<Post> eventList = new ArrayList<Post>();
     private ListView listView;
     private ArrayList<Integer> interest = new ArrayList<Integer>();
-
-    private TextView author;
-    private TextView title;
-    private TextView price;
-    private TextView description;
-    private TextView date;
 
     private Button today;
     private Button this_week;
@@ -122,12 +118,6 @@ public class TopNavigationHandler extends Fragment {
         {
             interest.add(temp[index]);
         }
-
-        author = (TextView) currentView.findViewById(R.id.author);
-        title = (TextView) currentView.findViewById(R.id.title);
-        price = (TextView) currentView.findViewById(R.id.price);
-        description = (TextView) currentView.findViewById(R.id.description);
-        date = (TextView) currentView.findViewById(R.id.date);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
