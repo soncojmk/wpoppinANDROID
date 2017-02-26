@@ -2,12 +2,16 @@ package com.wpoppin.whatspoppin;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.android.volley.toolbox.Volley;
@@ -15,7 +19,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,6 +57,7 @@ public class TopNavigationHandler extends Fragment {
     private Button this_week;
     private Button this_month;
     private Button for_you;
+    private Button btnLoadMore;
 
     private View view;
 
@@ -153,6 +160,37 @@ public class TopNavigationHandler extends Fragment {
         adapter = new CustomListAdapter(getActivity(), eventList);
         listView.setAdapter(adapter);
 
+
+        // LoadMore button
+        btnLoadMore = new Button(getContext());
+        btnLoadMore.setText("Add More Interests");
+        btnLoadMore.setBackgroundColor(Color.WHITE);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 0, 0, 50);
+        btnLoadMore.setLayoutParams(layoutParams);
+        btnLoadMore.setBackgroundColor(getResources().getColor(R.color.orange));
+        btnLoadMore.setTextColor(Color.WHITE);
+
+        btnLoadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SelectInterests.class);
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, new TopNavigationHandler());
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+                startActivity(intent);
+            }
+        });
+        listView.addFooterView(btnLoadMore);
+
+
+
         pDialog = new ProgressDialog(getActivity());
         // Showing progress dialog before making http request
         pDialog.setMessage("Loading...");
@@ -214,21 +252,26 @@ public class TopNavigationHandler extends Fragment {
                 if(v.getTag().equals("foryou"))
                 {
                     response = 0;
+                    listView.removeFooterView(btnLoadMore);
+                    listView.addFooterView(btnLoadMore);
                     SetURL("http://www.wpoppin.com/api/events.json");
                 }
                 else if (v.getTag().equals("today"))
                 {
                     response = 1;
+                    listView.removeFooterView(btnLoadMore);
                     SetURL("http://www.wpoppin.com/api/events_today.json");
                 }
                 else if(v.getTag().equals("week"))
                 {
                     response = 2;
+                    listView.removeFooterView(btnLoadMore);
                     SetURL("http://www.wpoppin.com/api/events_this_week.json");
                 }
                 else if(v.getTag().equals("month"))
                 {
                     response = 3;
+                    listView.removeFooterView(btnLoadMore);
                     SetURL("http://www.wpoppin.com/api/events_this_month.json");
                 }
 

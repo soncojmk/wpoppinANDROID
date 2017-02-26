@@ -74,11 +74,11 @@ public class SelectInterests extends AppCompatActivity {
                 interest.add(num);
                 try {
                     (findViewById(R.id.interest_view)).findViewWithTag(num + "").setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
+                    ((TextView)((findViewById(R.id.interest_view)).findViewWithTag(num + ""))).setTextColor(Color.WHITE);
                 }
                 catch (Exception e)
                 {
                     Log.e("ERROR", num + "");
-
                 }
             }
         }
