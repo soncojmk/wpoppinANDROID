@@ -65,7 +65,6 @@ public class Splash extends AppCompatActivity {
 
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         String restoredText = prefs.getString("username", null);
-
        // android_id = Secure.getString(this.getContentResolver(),Secure.ANDROID_ID);
 
         android_id = FirebaseInstanceId.getInstance().getToken();
@@ -160,14 +159,11 @@ public class Splash extends AppCompatActivity {
                     @Override
                     public void onResponse(String Response) {
                         Log.i(TAG, "RESPONDE" + Response.toString());
-
-
-                            User user = PrefUtils.getCurrentUser(Splash.this);
-                            username = user.getUsername();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError e) {
+                Log.i("ERROR RESPONDE", username + " " + token + " " +  e.toString());
                 e.printStackTrace();
             }
         }) {
@@ -175,6 +171,8 @@ public class Splash extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
+                User user = PrefUtils.getCurrentUser(Splash.this);
+                username = user.getUsername();
                 params.put("name", username);
                 params.put("registration_id", token);
 
@@ -183,6 +181,7 @@ public class Splash extends AppCompatActivity {
             }
 
         };
+        AppController.getInstance().addToRequestQueue(strreq);
 
     }
 }

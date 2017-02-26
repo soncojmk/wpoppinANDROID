@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -36,12 +37,15 @@ public class SelectInterests extends AppCompatActivity {
         submit = (Button) findViewById(R.id.submit);
         interest = new ArrayList<Integer>();
 
+        final User currentUser = PrefUtils.getCurrentUser(SelectInterests.this);
+        int[] temp = currentUser.getInterests();
+        setOriginalInterests(temp);
+
         originalColor = Color.WHITE;
 
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(interest.size() >= 6) {
-                    User currentUser = PrefUtils.getCurrentUser(SelectInterests.this);
                     int[] interests = new int[20];
                     for (int i = 0; i < interest.size(); i++) {
                         interests[i] = interest.get(i);
@@ -56,7 +60,28 @@ public class SelectInterests extends AppCompatActivity {
             }
         });
 
+        if(interest.size() >= 6){
+            submit.setBackgroundColor(getResources().getColor(R.color.orange));
+            submit.setTextColor(originalColor);
+        }
 
+    }
+
+    public void setOriginalInterests(int[] temp)
+    {
+        for(int num : temp) {
+            if (num != 0) {
+                interest.add(num);
+                try {
+                    (findViewById(R.id.interest_view)).findViewWithTag(num + "").setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
+                }
+                catch (Exception e)
+                {
+                    Log.e("ERROR", num + "");
+
+                }
+            }
+        }
     }
 
 
