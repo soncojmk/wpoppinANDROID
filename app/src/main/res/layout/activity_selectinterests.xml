@@ -199,7 +199,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/submit"
-        android:text="Submit (8 required)"
+        android:text="Submit (6 required)"
         android:onClick="UpdateArray"
         android:background="@color/white" />
     </LinearLayout>

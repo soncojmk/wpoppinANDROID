@@ -40,14 +40,14 @@ public class SelectInterests extends AppCompatActivity {
 
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(interest.size() >= 8) {
-                    User c = PrefUtils.getCurrentUser(SelectInterests.this);
+                if(interest.size() >= 6) {
+                    User currentUser = PrefUtils.getCurrentUser(SelectInterests.this);
                     int[] interests = new int[20];
                     for (int i = 0; i < interest.size(); i++) {
                         interests[i] = interest.get(i);
                     }
-                    c.addInterests(interests, interest.size());
-                    PrefUtils.setCurrentUser(c, SelectInterests.this);
+                    currentUser.addInterests(interests, interest.size());
+                    PrefUtils.setCurrentUser(currentUser, SelectInterests.this);
 
                     Intent intent = new Intent(SelectInterests.this, Main.class);
                     startActivity(intent);
@@ -64,12 +64,24 @@ public class SelectInterests extends AppCompatActivity {
     {
         if (!interest.contains(Integer.parseInt(v.getTag().toString()))) {
             interest.add(Integer.parseInt(v.getTag().toString()));
-            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            v.setBackgroundColor(getResources().getColor(R.color.wallet_holo_blue_light));
+            ((TextView)v).setTextColor(originalColor);
+            if(interest.size() >= 6){
+                submit.setBackgroundColor(getResources().getColor(R.color.orange));
+                submit.setTextColor(originalColor);
+            }
+
+
         }
         else
         {
             interest.remove(interest.indexOf(Integer.parseInt(v.getTag().toString())));
             v.setBackgroundColor(originalColor);
+            ((TextView)v).setTextColor(getResources().getColor(R.color.black));
+            if(interest.size() < 6){
+                submit.setBackgroundColor(originalColor);
+                submit.setTextColor(getResources().getColor(R.color.black));
+            }
         }
 
     }

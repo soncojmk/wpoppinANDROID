@@ -13,7 +13,6 @@
         android:layout_alignParentTop="true"
         layout="@layout/day"/>
 
-
      <ListView
 
             android:id="@+id/listView"

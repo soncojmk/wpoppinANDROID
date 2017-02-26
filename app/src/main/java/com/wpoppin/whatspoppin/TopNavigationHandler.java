@@ -144,6 +144,7 @@ public class TopNavigationHandler extends Fragment {
         for_you.setBackgroundColor(getResources().getColor(R.color.orange));
         for_you.setTextColor(getResources().getColor(R.color.white));
 
+
         //set the onclick listener
         for( Button b: topBottons)
         {
@@ -154,7 +155,7 @@ public class TopNavigationHandler extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    //If one of the top buttons is selectes
+    //If one of the top buttons is selected
     private View.OnClickListener buttonNavigation()
     {
         View.OnClickListener here = new View.OnClickListener() {
