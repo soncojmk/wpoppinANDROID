@@ -4,12 +4,17 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
 
+    dexOptions {
+        javaMaxHeapSize "7g"
+    }
+
     defaultConfig {
         applicationId "com.wpoppin.whatspoppin"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 6
         versionName "1.1"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -38,6 +43,7 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:10.0.1'
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.android.gms:play-services:10.0.1'
+    compile 'com.android.support:multidex:1.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

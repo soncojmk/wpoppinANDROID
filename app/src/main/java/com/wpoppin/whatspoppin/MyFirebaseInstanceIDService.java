@@ -91,7 +91,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("name", username);
-                params.put("device_id", token);
+                params.put("registration_id", token);
 
                 return params;
 
