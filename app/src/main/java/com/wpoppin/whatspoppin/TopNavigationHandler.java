@@ -5,11 +5,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.android.volley.toolbox.Volley;
@@ -43,12 +41,11 @@ public class TopNavigationHandler extends Fragment {
     private View currentView;
     private ProgressDialog pDialog;
     private CustomListAdapter adapter;
-    private String data = "";
     private Gson gson;
     private RequestQueue requestQueue;
-    private List<Post> eventList = new ArrayList<Post>();
+    private List<Post> eventList = new ArrayList<>();
     private ListView listView;
-    private ArrayList<Integer> interest = new ArrayList<Integer>();
+    private ArrayList<Integer> interest = new ArrayList<>();
 
     private Button today;
     private Button this_week;
@@ -311,7 +308,7 @@ public class TopNavigationHandler extends Fragment {
     private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            data = error.toString();
+            error.toString();
         }
     };
 

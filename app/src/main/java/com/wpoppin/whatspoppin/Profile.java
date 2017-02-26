@@ -56,6 +56,7 @@ public class Profile extends Fragment {
     private AlertDialog pDialog;
     private LinearLayout invite;
     private LinearLayout privacy;
+    private LinearLayout interests;
 
 
     private ArrayList<Integer> interest = new ArrayList<Integer>();
@@ -88,39 +89,7 @@ public class Profile extends Fragment {
         post = (LinearLayout) view.findViewById(R.id.post);
         invite = (LinearLayout) view.findViewById(R.id.invite);
         privacy = (LinearLayout) view.findViewById(R.id.privacy);
-
-        Button[] interestButtons = new Button[15];
-        interestButtons[0] = (Button) view.findViewById(R.id.music);
-        interestButtons[1] = (Button) view.findViewById(R.id.dance);
-        interestButtons[2] = (Button) view.findViewById(R.id.professional);
-        interestButtons[3] = (Button) view.findViewById(R.id.performing_arts);
-        interestButtons[4] = (Button) view.findViewById(R.id.art);
-        interestButtons[5] = (Button) view.findViewById(R.id.films);
-        interestButtons[6] = (Button) view.findViewById(R.id.sports);
-        interestButtons[7] = (Button) view.findViewById(R.id.health);
-        interestButtons[8] = (Button) view.findViewById(R.id.gaming);
-        interestButtons[9] = (Button) view.findViewById(R.id.debates);
-        interestButtons[10] = (Button) view.findViewById(R.id.poetry);
-        interestButtons[11] = (Button) view.findViewById(R.id.politics);
-        interestButtons[12] = (Button) view.findViewById(R.id.comedy);
-        interestButtons[13] = (Button) view.findViewById(R.id.philanthropy);
-        interestButtons[14] = (Button) view.findViewById(R.id.lectures);
-
-        for(Button b: interestButtons)
-        {
-            b.setOnClickListener(InterestSelection());
-        }
-
-        int[] temp = user.getInterests();
-        for (int index = 0; index < temp.length; index++)
-        {
-            interest.add(temp[index]);
-            for(Button b : interestButtons)
-            {
-                if(Integer.parseInt(b.getTag().toString()) == temp[index])
-                    b.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            }
-        }
+        interests = (LinearLayout) view.findViewById(R.id.interests);
 
         post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,6 +175,16 @@ public class Profile extends Fragment {
                 getActivity().finish();
             }
         });
+
+        interests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SelectInterests.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
         super.onActivityCreated(savedInstanceState);
     }
 
