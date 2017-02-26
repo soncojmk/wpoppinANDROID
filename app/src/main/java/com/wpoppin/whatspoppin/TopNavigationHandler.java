@@ -1,10 +1,15 @@
 package com.wpoppin.whatspoppin;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.android.volley.toolbox.Volley;
@@ -14,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -49,6 +55,10 @@ public class TopNavigationHandler extends Fragment {
     private Button this_month;
     private Button for_you;
 
+    private View view;
+
+    SQLSaveEvents db = new SQLSaveEvents(getContext());
+
     private ArrayList<Button> topBottons = new ArrayList<Button>();
 
     private int response = 0;
@@ -83,6 +93,26 @@ public class TopNavigationHandler extends Fragment {
         }
     }
 
+    public void noInternetSQL()
+    {
+        String saved;
+        if(view != null)
+            saved = db.getRequest(view.getTag().toString());
+        else
+            saved = db.getRequest("foryou");
+        List<Post> posts = null;
+        if(saved != null && !saved.equals(""))
+            posts = Arrays.asList(gson.fromJson(saved, Post[].class));
+        hidePDialog();
+        if(posts != null &&posts.size() != 0) {
+            Toast.makeText(getContext(), "Connect to the internet for updated information", Toast.LENGTH_LONG).show();
+            customResponsePerPage(posts);
+        }
+        else
+            Toast.makeText(getContext(), "No data loaded, please check internet connection", Toast.LENGTH_LONG).show();
+        adapter.notifyDataSetChanged();
+    }
+
     public void addEvent(Post post)
     {
         Post event = new Post();
@@ -102,12 +132,13 @@ public class TopNavigationHandler extends Fragment {
         event.setState(post.state);
 
         eventList.add(event);
+
     }
 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
+        db = new SQLSaveEvents(getContext());
         requestQueue = Volley.newRequestQueue(getActivity());
 
         //GET INTERESTS
@@ -150,7 +181,13 @@ public class TopNavigationHandler extends Fragment {
             b.setOnClickListener(buttonNavigation());
         }
 
-        fetchPosts();
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if(activeNetworkInfo != null && activeNetworkInfo.isConnected())
+            fetchPosts();
+        else
+            noInternetSQL();
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -162,6 +199,8 @@ public class TopNavigationHandler extends Fragment {
             public void onClick(View v) {
                 eventList.clear();
                 requestQueue = Volley.newRequestQueue(getActivity());
+
+                view = v;
 
                 //reset button colors
                 for (Button b : topBottons) {
@@ -199,7 +238,14 @@ public class TopNavigationHandler extends Fragment {
                 pDialog = new ProgressDialog(getActivity());
                 pDialog.setMessage("Loading...");
                 pDialog.show();
-                fetchPosts();
+
+                ConnectivityManager connectivityManager
+                        = (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if(activeNetworkInfo != null && activeNetworkInfo.isConnected())
+                    fetchPosts();
+                else
+                    noInternetSQL();
             }
         };
         return here;
@@ -245,6 +291,14 @@ public class TopNavigationHandler extends Fragment {
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
+            if(view != null) {
+                db.deleteRequest(view.getTag().toString());
+                db.addRequest(view.getTag().toString(), response);
+            }
+            else {
+                db.deleteRequest("foryou");
+                db.addRequest("foryou", response);
+            }
             List<Post> posts = Arrays.asList(gson.fromJson(response, Post[].class));
             hidePDialog();
             customResponsePerPage(posts);
