@@ -82,11 +82,6 @@
 
 
         <activity
-            android:name=".sports"
-            android:screenOrientation="portrait" />
-
-
-        <activity
             android:name=".LoginWP"
             android:screenOrientation="portrait" />
 
