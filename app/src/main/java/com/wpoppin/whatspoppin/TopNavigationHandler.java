@@ -246,6 +246,7 @@ public class TopNavigationHandler extends Fragment {
                     fetchPosts();
                 else
                     noInternetSQL();
+                listView.setSelectionAfterHeaderView();
             }
         };
         return here;
