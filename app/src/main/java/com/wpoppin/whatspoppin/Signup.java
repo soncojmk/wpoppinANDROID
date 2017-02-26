@@ -1,7 +1,10 @@
 package com.wpoppin.whatspoppin;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -112,7 +115,13 @@ public class Signup extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError e) {
                 e.printStackTrace();
-                error.setText("Invalid Username, email or Password");
+                ConnectivityManager connectivityManager
+                        = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if(activeNetworkInfo == null || !activeNetworkInfo.isConnected())
+                    error.setText("No Internet Connection");
+                else
+                    error.setText("Invalid Username, Email, or Password");
 
             }
         }) {

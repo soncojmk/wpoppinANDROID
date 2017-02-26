@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -78,13 +80,7 @@ public class login extends AppCompatActivity {
     private Button signUp;
     private LoginButton fbLogin;
     private CallbackManager callbackManager;
-    private TextView info;
     User user;
-    private static final String TAG = "login";
-    private static final String ENDPOINT = "http://www.wpoppin.com/api/sports.json";
-    String data = " ";
-    private RequestQueue requestQueue;
-    private Gson gson;
 
 
     @Override
@@ -113,8 +109,6 @@ public class login extends AppCompatActivity {
 
         fbLogin = (LoginButton) findViewById(R.id.fb_login);
         fbLogin.setText("Login with Facebook");
-
-        info = (TextView)findViewById(R.id.info);
 
         explore.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
