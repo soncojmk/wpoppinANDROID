@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.vision.text.Line;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -49,7 +50,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Profile extends Fragment {
 
-    private TextView btnLogout;
     private User user;
     private ImageView profileImage;
     Bitmap bitmap;
@@ -59,6 +59,7 @@ public class Profile extends Fragment {
     private LinearLayout invite;
     private LinearLayout privacy;
     private LinearLayout interests;
+    private LinearLayout btnLogout;
 
 
     private ArrayList<Integer> interest = new ArrayList<Integer>();
@@ -157,7 +158,7 @@ public class Profile extends Fragment {
         });
 
 
-        btnLogout = (TextView) view.findViewById(R.id.btnLogout);
+        btnLogout = (LinearLayout)view.findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

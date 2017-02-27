@@ -1,178 +1,200 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 <RelativeLayout
-    android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_height="230dp"
     android:background="@color/background"
-    android:layout_height="230dp">
+    android:orientation="vertical">
 
     <ImageView
-        android:layout_gravity="center_horizontal"
         android:id="@+id/profileImage"
-        android:layout_marginTop="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
-        android:paddingTop="10dp"
-        android:gravity="center"
-        android:layout_below="@+id/profileImage"
-        android:textSize="25sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp" />
+
+    <TextView
         android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileImage"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="25sp"
         />
 
 </RelativeLayout>
 
 
-
-<LinearLayout
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/post"
-    android:baselineAligned="false"
-    android:paddingTop="16dp">
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:src="@drawable/ic_add_circle_outline_black_24dp"
-        />
-
-    <TextView android:text="Post your event"
-        android:layout_gravity="center"
-        android:paddingLeft="10dp"
-        android:textColor="#000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
-
-    <View
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height=".5dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="5dp"
-        android:background="@android:color/darker_gray"/>
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:id="@+id/interests"
-        android:paddingTop="10dp">
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="25dp"
-            android:background="@null"
-            android:src="@drawable/ic_fingerprint"
-            />
-
-        <TextView android:text="Interests"
-            android:layout_gravity="center"
-            android:paddingLeft="10dp"
-            android:textColor="#000"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height=".5dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="5dp"
-        android:background="@android:color/darker_gray"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:id="@+id/invite"
-        android:paddingTop="10dp">
-
-        <ImageButton
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@null"
-            android:src="@drawable/ic_share_black_24dp"
-            />
+            android:orientation="vertical" >
 
-    <TextView android:text="Spread the fun! Invite your friends."
-        android:layout_gravity="center"
-        android:paddingLeft="10dp"
-        android:textColor="#000"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <LinearLayout
+            android:id="@+id/post"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingTop="16dp">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/ic_add_circle_outline_black_24dp"
+                />
+
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="10dp"
+                android:text="Post your event"
+                android:textColor="#000" />
 
         </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/darker_gray"/>
 
+            <LinearLayout
+                android:id="@+id/interests"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
 
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:minWidth="25dp"
+                    android:src="@drawable/ic_fingerprint"
+                    />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height=".5dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="5dp"
-        android:background="@android:color/darker_gray"/>
+                <TextView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingLeft="10dp"
+                    android:text="Interests"
+                    android:textColor="#000" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:id="@+id/privacy"
-        android:paddingTop="10dp">
+            </LinearLayout>
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/ic_info_outline_black_24dp"
-            />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/darker_gray"/>
 
-    <TextView android:text="Terms and Privacy"
-        android:layout_gravity="center"
-        android:paddingLeft="10dp"
-        android:textColor="#000"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <LinearLayout
+                android:id="@+id/invite"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
 
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:orientation="vertical"
+                    android:src="@drawable/ic_share_black_24dp"
+                    />
+
+            <TextView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="10dp"
+                android:text="Spread the fun! Invite your friends."
+                android:textColor="#000" />
+
+                </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/darker_gray"/>
+
+            <LinearLayout
+                android:id="@+id/privacy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/ic_info_outline_black_24dp"
+                    />
+
+            <TextView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="10dp"
+                android:text="Terms and Privacy"
+                android:textColor="#000" />
+
+                </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/darker_gray"/>
+
+        <LinearLayout
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@android:drawable/ic_lock_power_off"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:text="Logout"
+                android:textColor="#000" />
         </LinearLayout>
-
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height=".5dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="5dp"
-        android:background="@android:color/darker_gray"/>
-
-    <TextView android:text="Logout"
-        android:id="@+id/btnLogout"
-        android:layout_gravity="center"
-        android:padding="10dp"
-        android:textColor="#000"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/darker_gray"/>
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

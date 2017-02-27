@@ -165,11 +165,6 @@ public class TopNavigationHandler extends Fragment {
         btnLoadMore = new Button(getContext());
         btnLoadMore.setText("Add More Interests");
         btnLoadMore.setBackgroundColor(Color.WHITE);
-
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, 0, 0, 50);
-        btnLoadMore.setLayoutParams(layoutParams);
         btnLoadMore.setBackgroundColor(getResources().getColor(R.color.orange));
         btnLoadMore.setTextColor(Color.WHITE);
 
