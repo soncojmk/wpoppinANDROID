@@ -48,8 +48,8 @@ public class Explore extends Fragment {
         getActivity().overridePendingTransition(0, 0);
     }
 
-    public static String [] prgmNameList={"MUSIC","PERFORMING ARTS","ART","COMEDY","POETRY","FUNDRAISERS"};
-    public static int [] prgmImages={R.drawable.music,R.drawable.arts,R.drawable.gallery,R.drawable.comedy,R.drawable.poetry,R.drawable.fundraisers};
+    public static String [] prgmNameList={"MUSIC","PERFORMING ARTS","ART","SPORTS","FUNDRAISERS","HEALTH / WELL-BEING", "GAMING", "FILMS", "THINK"};
+    public static int [] prgmImages={R.drawable.music,R.drawable.arts,R.drawable.gallery, 0,R.drawable.fundraisers, 0, 0, 0, 0};
     public static String selection;
 
     public Explore(){}
@@ -94,22 +94,43 @@ public class Explore extends Fragment {
                         break;
 
                     case 3:
-                        selection = "Comedy";
-                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/comedy.json");
+                        selection = "Sports";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/sports.json");
                         //fragment = new Comedy();
                         //replaceFragment(fragment);
                         break;
 
                     case 4:
-                        selection = "Poetry";
-                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/poetry.json");
+                        selection = "Fundraisers";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/charity.json");
                         //fragment = new Poetry();
                         //replaceFragment(fragment);
                         break;
 
                     case 5:
-                        selection = "Fundraisers";
-                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/charity.json");
+                        selection = "Health and Well-Being";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/events/?format=json");
+                        //fragment = new Fundraisers();
+                        //replaceFragment(fragment);
+                        break;
+
+                    case 6:
+                        selection = "Gaming";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/events/?format=json");
+                        //fragment = new Fundraisers();
+                        //replaceFragment(fragment);
+                        break;
+
+                    case 7:
+                        selection = "Films";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/events/?format=json");
+                        //fragment = new Fundraisers();
+                        //replaceFragment(fragment);
+                        break;
+
+                    case 8:
+                        selection = "Think";
+                        ExploreSelectionHandler.SetEndpoint("http://www.wpoppin.com/api/think/?format=json");
                         //fragment = new Fundraisers();
                         //replaceFragment(fragment);
                         break;
