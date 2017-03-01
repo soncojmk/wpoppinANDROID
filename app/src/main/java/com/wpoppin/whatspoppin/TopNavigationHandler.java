@@ -105,8 +105,19 @@ public class TopNavigationHandler extends Fragment {
         else
             saved = db.getRequest("foryou");
         List<Post> posts = null;
-        if(saved != null && !saved.equals(""))
-            posts = Arrays.asList(gson.fromJson(saved, Post[].class));
+        if(saved != null && !saved.equals("")) {
+            try {
+                posts = Arrays.asList(gson.fromJson(saved, Post[].class));
+            } catch (Exception e)
+            {
+                if(view == null)
+                    db.deleteRequest("foryou");
+                else
+                    db.deleteRequest(view.getTag().toString());
+
+                posts = null;
+            }
+        }
         hidePDialog();
         if(posts != null &&posts.size() != 0) {
             Toast.makeText(getContext(), "Connect to the internet for updated information", Toast.LENGTH_LONG).show();
