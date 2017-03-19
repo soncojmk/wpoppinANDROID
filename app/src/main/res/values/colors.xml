@@ -13,4 +13,6 @@
     <color name="white">#fff</color>
     <color name="dark_gray">#747474</color>
     <color name="black">#000</color>
+    <color name="colorPrimaryLight">#14236b8e</color>
+    <color name="colorPrimaryDark">#1b526c</color>
 </resources>

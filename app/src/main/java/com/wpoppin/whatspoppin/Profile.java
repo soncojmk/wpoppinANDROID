@@ -20,14 +20,19 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +50,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.vision.text.Line;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -64,6 +74,7 @@ public class Profile extends Fragment {
     private ImageView profileImage;
     Bitmap bitmap;
     private TextView name;
+    private TextView school_tv;
     private LinearLayout post;
     private AlertDialog pDialog;
     private LinearLayout invite;
@@ -74,6 +85,7 @@ public class Profile extends Fragment {
 
 
     private ArrayList<Integer> interest = new ArrayList<Integer>();
+
 
     @Override
     public void onPause() {
@@ -89,6 +101,7 @@ public class Profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.profile, container, false);
+
         return view;
     }
 
@@ -100,20 +113,21 @@ public class Profile extends Fragment {
         user=PrefUtils.getCurrentUser(getActivity());
         profileImage= (ImageView) view.findViewById(R.id.profileImage);
         name = (TextView) view.findViewById(R.id.username);
-        post = (LinearLayout) view.findViewById(R.id.post);
-        invite = (LinearLayout) view.findViewById(R.id.invite);
-        privacy = (LinearLayout) view.findViewById(R.id.privacy);
-        interests = (LinearLayout) view.findViewById(R.id.interests);
+      //  post = (LinearLayout) view.findViewById(R.id.post);
+     //   invite = (LinearLayout) view.findViewById(R.id.invite);
+     //   privacy = (LinearLayout) view.findViewById(R.id.privacy);
+       // interests = (LinearLayout) view.findViewById(R.id.interests);
+        school_tv = (TextView)view.findViewById(R.id.school);
         bio = (TextView) view.findViewById(R.id.bio);
         bio.setText("Hi, tell us about your favorite event");
 
-        bio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                convertToken(user.getId(), user.getToken());
-            }
-        });
+        convertToken(user.getId(), user.getToken());
 
+
+
+
+
+        /*
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +138,7 @@ public class Profile extends Fragment {
                 pDialog.show();
             }
         });
-
+*/
 
             name.setText(user.username);
 
@@ -156,6 +170,7 @@ public class Profile extends Fragment {
             }
         }.execute();
 
+        /*
         invite.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -176,7 +191,6 @@ public class Profile extends Fragment {
                 startActivity(browserIntent);
             }
         });
-
 
         btnLogout = (LinearLayout)view.findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +226,7 @@ public class Profile extends Fragment {
                 startActivity(intent);
             }
         });
-
+        */
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -248,6 +262,12 @@ public class Profile extends Fragment {
         return listener;
     }
 
+    String url_to;
+    String username;
+    String email;
+    String avatar;
+    String about;
+    String college;
 
     private void convertToken(final int id, final String token) {
         String url = "http://www.wpoppin.com/api/myaccount/";
@@ -257,8 +277,45 @@ public class Profile extends Fragment {
                     @Override
                     public void onResponse(String Response) {
                         Log.i(TAG, "USER" + Response.toString());
-
+                        String json = Response.toString();
                         //split the json string to get the token value then store it in local memory
+                        try {
+                            JSONArray jsonObj = new JSONArray(json);
+                            url_to = jsonObj.getJSONObject(0).getString("url");
+                            JSONObject ja = jsonObj.getJSONObject(0).getJSONObject("user");
+                            username = ja.getString("username");
+                            email = ja.getString("email");
+                            avatar = jsonObj.getJSONObject(0).getString("avatar");
+                            about = jsonObj.getJSONObject(0).getString("about");
+                            college = jsonObj.getJSONObject(0).getString("college");
+                            if(college.equals("1"))
+                                college = "Penn State University";
+                            else
+                                college = "Temple";
+
+                            if(about.equals("null"))
+                                about = "Click to enter a Bio";
+
+                            name.setText(username);
+                            bio.setText(about);
+                            school_tv.setText(college);
+
+                            bio.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Log.e("USER", "USER USER");
+                                    UpdatePatch(user.getId(), user.getToken(), url_to, "about", "UPDATE MEEE");
+                                }
+                            });
+
+                            getNumber(user.getId(), user.getToken(), url_to + "following");
+                            getNumber(user.getId(), user.getToken(), url_to + "followers");
+
+
+                        }catch (JSONException e)
+                        {
+                            Log.e(TAG, "USER " + e.toString());
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -286,5 +343,94 @@ public class Profile extends Fragment {
 
     }
 
+    private void getNumber(final int id, final String token, final String url) {
+        StringRequest strreq = new StringRequest(Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "USER" + Response.toString());
+                        String json = Response.toString();
+                        int num = 0;
+                        try {
+                            num = (new JSONArray(json)).length();
+                        }catch (Exception e)
+                        {}
+                        if(url.contains("following")) {
+                            TextView following = (TextView) view.findViewById(R.id.following);
+                            following.setText(num + " Following");
+                        }else
+                        {
+                            TextView followers = (TextView) view.findViewById(R.id.followers);
+                            followers.setText(num + " Followers");
+                        }
+                        //split the json string to get the token value then store it in local memory
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                return params;
+
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+
+    }
+
+    private void UpdatePatch(final int id, final String token, final String url, final String field, final String words) {
+
+        StringRequest strreq = new StringRequest(Request.Method.PATCH,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "USER" + Response.toString());
+                        //split the json string to get the token value then store it in local memory
+                        convertToken(user.getId(), user.getToken());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+                Log.e("USER ERROR", e.toString());
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(field, words);
+                return params;
+
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Token " + token);
+
+                return headers;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+
+    }
 
 }
