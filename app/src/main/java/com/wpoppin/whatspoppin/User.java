@@ -21,9 +21,23 @@ public class User {
 
     public String token;
 
+    public int college;
+
+    public String bio;
+
+    public int id;
+
     public int interests[] = new int[20];
 
     public boolean interestSet;
+
+    public String url;
+
+    public String getUrl(){return url;}
+
+    public void setUrl(String url){
+        this.url = url;
+    }
 
     public void addInterests(int interests[], int size){
 
@@ -45,7 +59,17 @@ public class User {
         this.username = username;
     }
 
+    public int getCollege(){return college;}
 
+    public void setCollege(int college){this.college = college;}
+
+    public String getBio(){return bio;}
+
+    public void setBio(String bio){this.bio = bio;}
+
+    public int getId(){return id;}
+
+    public void setId(int id){this.id = id;}
 
     public String getEmail() {
         return email;

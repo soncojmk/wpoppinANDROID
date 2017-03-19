@@ -12,7 +12,7 @@ android {
         applicationId "com.wpoppin.whatspoppin"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 6
+        versionCode 8
         versionName "1.1"
         multiDexEnabled true
     }

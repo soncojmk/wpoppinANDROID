@@ -82,6 +82,7 @@ public class login extends AppCompatActivity {
     private CallbackManager callbackManager;
     User user;
 
+    private String TAG = "TOKEN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +157,7 @@ public class login extends AppCompatActivity {
                                     editor.putString("username",user.username);
                                     editor.apply();
 
-                                    convertToken(token);
+                                    convertToken(token, user);
 
 
                                 }catch (Exception e){
@@ -191,14 +192,22 @@ public class login extends AppCompatActivity {
     }
 
 
-    private void convertToken(final String accessToken) {
+    private void convertToken(final String accessToken, final User user) {
         StringRequest strreq = new StringRequest(Request.Method.POST,
                 "http://www.wpoppin.com/api/auth/convert-token",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String Response) {
-                     //   Log.i(TAG, "RESPONDE" + Response.toString());
+                        Log.i(TAG, "RESPONDE" + Response.toString());
 
+                        String values[] = Response.split(",");
+                        String token = values[0];
+
+                        String keyvalue[] = token.split(":");
+                        String value = keyvalue[1].replace("\"", "");
+                        user.setToken(value);
+
+                        Log.i(TAG, "TOKEN" + " " + value);
 
                     }
                 }, new Response.ErrorListener() {

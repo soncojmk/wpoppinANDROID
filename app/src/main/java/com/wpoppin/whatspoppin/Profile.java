@@ -15,6 +15,8 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -35,6 +37,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.vision.text.Line;
@@ -44,8 +51,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.wpoppin.whatspoppin.AppController.TAG;
 
 
 public class Profile extends Fragment {
@@ -60,6 +70,7 @@ public class Profile extends Fragment {
     private LinearLayout privacy;
     private LinearLayout interests;
     private LinearLayout btnLogout;
+    private TextView bio;
 
 
     private ArrayList<Integer> interest = new ArrayList<Integer>();
@@ -93,6 +104,15 @@ public class Profile extends Fragment {
         invite = (LinearLayout) view.findViewById(R.id.invite);
         privacy = (LinearLayout) view.findViewById(R.id.privacy);
         interests = (LinearLayout) view.findViewById(R.id.interests);
+        bio = (TextView) view.findViewById(R.id.bio);
+        bio.setText("Hi, tell us about your favorite event");
+
+        bio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                convertToken(user.getId(), user.getToken());
+            }
+        });
 
         post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +188,6 @@ public class Profile extends Fragment {
                 editor.remove("username");
                 editor.apply();
 
-
                 // We can logout from facebook by calling following method
                 LoginManager.getInstance().logOut();
 
@@ -226,12 +245,46 @@ public class Profile extends Fragment {
                 PrefUtils.setCurrentUser(user, getActivity());
             }
         };
-
-
-
         return listener;
     }
 
+
+    private void convertToken(final int id, final String token) {
+        String url = "http://www.wpoppin.com/api/myaccount/";
+        StringRequest strreq = new StringRequest(Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "USER" + Response.toString());
+
+                        //split the json string to get the token value then store it in local memory
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                return params;
+
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+
+    }
 
 
 }

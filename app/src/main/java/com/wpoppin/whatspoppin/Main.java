@@ -51,7 +51,6 @@ public class Main extends AppCompatActivity {
 
                 updateNavigationBarState(item.getItemId());
                 return true;
-
             }
         });
         }

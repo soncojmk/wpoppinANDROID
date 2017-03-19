@@ -27,6 +27,18 @@
         android:textSize="25sp"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bio"
+        android:layout_below="@+id/username"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+
+        />
+
 </RelativeLayout>
 
 

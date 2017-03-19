@@ -100,6 +100,18 @@ public class Signup extends AppCompatActivity {
                     public void onResponse(String Response) {
                         Log.i(TAG, "RESPONDE" + Response.toString());
 
+                        //split the json string to get the token value then store it in local memory
+                        String values[] = Response.split(",");
+                        String email = values[0];
+                        String username = values[1];
+                        String id = values[2];
+                        String ids[] = id.split(":");
+                        ids[1] = ids[1].replace("}", "");
+                        user.setId(Integer.parseInt(ids[1]));
+
+                        Log.i(TAG, "id" + user.getId());
+
+                        getTokenAfterSignup(user.getUsername(), password);
 
                         PrefUtils.setCurrentUser(user,Signup.this);
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Signup.this);
@@ -108,8 +120,6 @@ public class Signup extends AppCompatActivity {
                         editor.apply();
                         startActivity(new Intent(Signup.this, SelectInterests.class));
                         finish();
-
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -133,6 +143,61 @@ public class Signup extends AppCompatActivity {
                 params.put("email", email);
                 params.put("password", password);
 
+                return params;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+    }
+
+ //Converts a users username and password into a token -- same as the loginwp method, but that is static so needed to redeclare
+    private void getTokenAfterSignup(final String Username, String Password) {
+        StringRequest strreq = new StringRequest(Request.Method.POST,
+                "http://www.wpoppin.com/token-auth/",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "RESPONDE" + Response.toString());
+
+                        //split the json string to get the token value then store it in local memory
+                        String values[] = Response.split("\":\"");
+                        String key = values[0];
+                        key = key.replace("{\"", "");
+                        String value = values[1];
+                        value = value.replace("\"}", "");
+
+                        Log.i(TAG, "KEY" + key + " " + value);
+                        user.setToken(value);
+
+                        PrefUtils.setCurrentUser(user,Signup.this);
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Signup.this);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("username",user.username);
+                        editor.apply();
+                        startActivity(new Intent(Signup.this, SelectInterests.class));
+                        finish();
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+                ConnectivityManager connectivityManager
+                        = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if(activeNetworkInfo == null || !activeNetworkInfo.isConnected())
+                    error.setText("No Internet Connection");
+                else
+                    error.setText("Invalid Username or Password");
+
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                params.put("password", password);
 
                 return params;
 

@@ -87,12 +87,27 @@ public class LoginWP extends AppCompatActivity {
 
     private void convertToken(final String Username, String Password) {
         StringRequest strreq = new StringRequest(Request.Method.POST,
-                "http://www.wpoppin.com/api-token-auth/",
+                "http://www.wpoppin.com/token-auth/",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String Response) {
-                     //   Log.i(TAG, "RESPONDE" + Response.toString());
+                        Log.i(TAG, "RESPONDE" + Response.toString());
 
+                        //split the json string to get the token value then store it in local memory
+
+                        String values[] = Response.split(",");
+                        String token = values[0];
+                        String tokenKeyvalues[] = token.split(":");
+                        String tokenValue = tokenKeyvalues[1].replace("\"", "");
+                        //get id
+                        String id = values[1];
+                        String idKeyvalues[] = id.split(":");
+                        String idValue = idKeyvalues[1].replace("\"", "");
+                        idValue = idValue.replace("}", "");
+
+                        Log.i(TAG, "KEY" + tokenValue + " " + idValue);
+                        user.setToken(tokenValue);
+                        user.setId(Integer.parseInt(idValue));
 
                         PrefUtils.setCurrentUser(user,LoginWP.this);
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginWP.this);
