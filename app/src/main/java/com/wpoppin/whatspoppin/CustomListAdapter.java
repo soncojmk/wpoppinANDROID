@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -78,7 +79,8 @@ public class CustomListAdapter extends BaseAdapter {
         TextView price = (TextView) convertView.findViewById(R.id.price);
         ExpandableTextView description = (ExpandableTextView) convertView.findViewById(R.id.expand_text_view);
         TextView date = (TextView) convertView.findViewById(R.id.date);
-        TextView address = (TextView) convertView.findViewById(R.id.address);
+        TextView address = (TextView) convertView.findViewById(
+                R.id.address);
         TextView time = (TextView) convertView.findViewById(R.id.time);
         ImageButton save = (ImageButton) convertView.findViewById(R.id.save);
         ImageButton share = (ImageButton) convertView.findViewById(R.id.share);
@@ -90,6 +92,16 @@ public class CustomListAdapter extends BaseAdapter {
         // thumbnail image
         thumbNail.setImageUrl(m.getImage(), imageLoader);
 
+        thumbNail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(activity, EventPage.class);
+                String url = m.getUrl();
+                i.putExtra("url", url);
+                i.putExtra("title",m.getTitle());
+                activity.startActivity(i);
+            }
+        });
 
       //  author.setText("By " + m.getAuthor());
         final String TITLE = fixEncoding(m.getTitle());
