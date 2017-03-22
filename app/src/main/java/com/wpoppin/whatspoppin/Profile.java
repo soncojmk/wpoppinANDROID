@@ -3,70 +3,43 @@ package com.wpoppin.whatspoppin;
 /**
  * Created by joseph on 12/24/2016.
  * This is the user profile page where the user can logout and see their info
+ *
+ *
+ * Updated 3/10/2017 by Abagail Tarosky
  */
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.google.android.gms.vision.text.Line;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.wpoppin.whatspoppin.AppController.TAG;
-
 
 public class Profile extends Fragment {
 
@@ -75,17 +48,7 @@ public class Profile extends Fragment {
     Bitmap bitmap;
     private TextView name;
     private TextView school_tv;
-    private LinearLayout post;
-    private AlertDialog pDialog;
-    private LinearLayout invite;
-    private LinearLayout privacy;
-    private LinearLayout interests;
-    private LinearLayout btnLogout;
     private TextView bio;
-
-
-    private ArrayList<Integer> interest = new ArrayList<Integer>();
-
 
     @Override
     public void onPause() {
@@ -113,34 +76,32 @@ public class Profile extends Fragment {
         user=PrefUtils.getCurrentUser(getActivity());
         profileImage= (ImageView) view.findViewById(R.id.profileImage);
         name = (TextView) view.findViewById(R.id.username);
-      //  post = (LinearLayout) view.findViewById(R.id.post);
-     //   invite = (LinearLayout) view.findViewById(R.id.invite);
-     //   privacy = (LinearLayout) view.findViewById(R.id.privacy);
-       // interests = (LinearLayout) view.findViewById(R.id.interests);
         school_tv = (TextView)view.findViewById(R.id.school);
         bio = (TextView) view.findViewById(R.id.bio);
         bio.setText("Hi, tell us about your favorite event");
 
-        convertToken(user.getId(), user.getToken());
+
+        convertToken(user.getToken());
 
 
+        FloatingActionButton settings = (FloatingActionButton)view.findViewById(R.id.settings);
 
-
-
-        /*
-        post.setOnClickListener(new View.OnClickListener() {
+        settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // custom dialog
+                Intent i = new Intent(getActivity(), Settings.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-                pDialog = new AlertDialog.Builder(getActivity()).create();
-                // Showing progress dialog before making http request
-                pDialog.setMessage("In order to limit spam, event hosts can only post events through our website at wpoppin.com");
-                pDialog.show();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                startActivity(i);
             }
         });
-*/
 
-            name.setText(user.username);
+        name.setText(user.username);
 
         // fetching facebook's profile picture
         new AsyncTask<Void,Void,Void>(){
@@ -169,97 +130,7 @@ public class Profile extends Fragment {
                 profileImage.setImageBitmap(bitmap);
             }
         }.execute();
-
-        /*
-        invite.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                String shareBody = "I really like this events app called What'sPoppin. I think you'd like it too. Check it out: bit.ly/2jrcOhw";
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Hey check this app out:");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                v.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));
-
-            }
-        });
-
-        privacy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.wpoppin.com"));
-                startActivity(browserIntent);
-            }
-        });
-
-        btnLogout = (LinearLayout)view.findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PrefUtils.clearCurrentUser(getActivity());
-                SharedPreferences mySPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                SharedPreferences.Editor editor = mySPrefs.edit();
-                editor.remove("username");
-                editor.apply();
-
-                // We can logout from facebook by calling following method
-                LoginManager.getInstance().logOut();
-
-
-                Intent i= new Intent(getActivity(), login.class);
-                startActivity(i);
-                getActivity().finish();
-            }
-        });
-
-        interests.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SelectInterests.class);
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame, new Profile());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-
-                startActivity(intent);
-            }
-        });
-        */
         super.onActivityCreated(savedInstanceState);
-    }
-
-    public View.OnClickListener InterestSelection()
-    {
-        View.OnClickListener listener =  new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                if (!interest.contains(Integer.parseInt(v.getTag().toString()))) {
-                    interest.add(Integer.parseInt(v.getTag().toString()));
-                    v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                }
-                else
-                {
-                    if(interest.size() >= 6) {
-                        interest.remove(interest.indexOf(Integer.parseInt(v.getTag().toString())));
-                        v.setBackgroundColor(Color.WHITE);
-                    }
-                }
-
-                while(interest.contains(0)) {
-                    interest.remove(interest.indexOf(0));
-                }
-
-                int[] interests = new int[20];
-                for (int i = 0; i < interest.size(); i++) {
-                    interests[i] = interest.get(i);
-                }
-                user.addInterests(interests, interests.length);
-                PrefUtils.setCurrentUser(user, getActivity());
-            }
-        };
-        return listener;
     }
 
     String url_to;
@@ -269,7 +140,7 @@ public class Profile extends Fragment {
     String about;
     String college;
 
-    private void convertToken(final int id, final String token) {
+    private void convertToken(final String token) {
         String url = "http://www.wpoppin.com/api/myaccount/";
         StringRequest strreq = new StringRequest(Request.Method.GET,
                 url,
@@ -303,13 +174,13 @@ public class Profile extends Fragment {
                             bio.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Log.e("USER", "USER USER");
-                                    UpdatePatch(user.getId(), user.getToken(), url_to, "about", "UPDATE MEEE");
+                                    Log.e("USER URL TO ", url_to);
+                                    UpdatePatch(user.getToken());
                                 }
                             });
 
-                            getNumber(user.getId(), user.getToken(), url_to + "following");
-                            getNumber(user.getId(), user.getToken(), url_to + "followers");
+                            getNumber(user.getToken(), url_to + "following");
+                            getNumber(user.getToken(), url_to + "followers");
 
 
                         }catch (JSONException e)
@@ -331,6 +202,7 @@ public class Profile extends Fragment {
 
             }
 
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -343,7 +215,7 @@ public class Profile extends Fragment {
 
     }
 
-    private void getNumber(final int id, final String token, final String url) {
+    private void getNumber(final String token, final String url) {
         StringRequest strreq = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {
@@ -358,11 +230,11 @@ public class Profile extends Fragment {
                         {}
                         if(url.contains("following")) {
                             TextView following = (TextView) view.findViewById(R.id.following);
-                            following.setText(num + " Following");
+                            following.setText(num + "");
                         }else
                         {
                             TextView followers = (TextView) view.findViewById(R.id.followers);
-                            followers.setText(num + " Followers");
+                            followers.setText(num + "");
                         }
                         //split the json string to get the token value then store it in local memory
 
@@ -393,44 +265,46 @@ public class Profile extends Fragment {
 
     }
 
-    private void UpdatePatch(final int id, final String token, final String url, final String field, final String words) {
-
-        StringRequest strreq = new StringRequest(Request.Method.PATCH,
-                url,
+    private void UpdatePatch(final String Password) {
+        StringRequest strreq = new StringRequest(Request.Method.POST,
+                "http://www.wpoppin.com/api/accounts/922/update_profile/",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String Response) {
-                        Log.i(TAG, "USER" + Response.toString());
-                        //split the json string to get the token value then store it in local memory
-                        convertToken(user.getId(), user.getToken());
+                        Log.i(TAG, "RESPONDE" + Response.toString());
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError e) {
                 e.printStackTrace();
-                Log.e("USER ERROR", e.toString());
+
             }
         }) {
 
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put(field, words);
+                params.put("about", "asd;kfj");
+
                 return params;
 
             }
+
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
                 headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Token " + token);
-
+                headers.put("Authorization", "Token " + Password);
                 return headers;
             }
+
+
         };
         AppController.getInstance().addToRequestQueue(strreq);
 
+
     }
+
 
 }
