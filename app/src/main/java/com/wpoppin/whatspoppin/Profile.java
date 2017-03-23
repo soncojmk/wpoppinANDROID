@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.wpoppin.whatspoppin.AppController.TAG;
+import static com.wpoppin.whatspoppin.PostDataToServer.UpdatePatch;
 
 public class Profile extends Fragment {
 
@@ -82,6 +83,14 @@ public class Profile extends Fragment {
 
 
         convertToken(user.getToken());
+        bio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("USER URL TO ", url_to);
+               PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "android gods pls work", 2);
+
+            }
+        });
 
 
         FloatingActionButton settings = (FloatingActionButton)view.findViewById(R.id.settings);
@@ -171,14 +180,6 @@ public class Profile extends Fragment {
                             bio.setText(about);
                             school_tv.setText(college);
 
-                            bio.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Log.e("USER URL TO ", url_to);
-                                    UpdatePatch(user.getToken());
-                                }
-                            });
-
                             getNumber(user.getToken(), url_to + "following");
                             getNumber(user.getToken(), url_to + "followers");
 
@@ -262,47 +263,6 @@ public class Profile extends Fragment {
             }
         };
         AppController.getInstance().addToRequestQueue(strreq);
-
-    }
-
-    private void UpdatePatch(final String Password) {
-        StringRequest strreq = new StringRequest(Request.Method.POST,
-                "http://www.wpoppin.com/api/accounts/922/update_profile/",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String Response) {
-                        Log.i(TAG, "RESPONDE" + Response.toString());
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError e) {
-                e.printStackTrace();
-
-            }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("about", "asd;kfj");
-
-                return params;
-
-            }
-
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Token " + Password);
-                return headers;
-            }
-
-
-        };
-        AppController.getInstance().addToRequestQueue(strreq);
-
 
     }
 
