@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.volley.AuthFailureError;
@@ -80,17 +81,41 @@ public class Profile extends Fragment {
         school_tv = (TextView)view.findViewById(R.id.school);
         bio = (TextView) view.findViewById(R.id.bio);
         bio.setText("Hi, tell us about your favorite event");
+        Button requesting = (Button) view.findViewById(R.id.requesting);
 
+        user.setUrl(url_to);
+        PrefUtils.setCurrentUser(user, getActivity());
 
         convertToken(user.getToken());
         bio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e("USER URL TO ", url_to);
-               PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "android gods pls work", 2);
+               //PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "android gods pls work", 2);
+                PostDataToServer.PostEvent(getContext(), user.getToken());
+
 
             }
         });
+
+        requesting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), FollowRequests.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+                i.putExtra("url", url_to);
+
+
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                startActivity(i);
+            }
+        });
+
 
 
         FloatingActionButton settings = (FloatingActionButton)view.findViewById(R.id.settings);

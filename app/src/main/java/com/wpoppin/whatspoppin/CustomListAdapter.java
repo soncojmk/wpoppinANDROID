@@ -7,7 +7,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +27,10 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,11 +39,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static android.R.attr.bitmap;
+
 public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Post> Items;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+    Bitmap bitmap;
 
     public CustomListAdapter(Activity activity, List<Post> Items) {
         this.activity = activity;
@@ -84,6 +94,8 @@ public class CustomListAdapter extends BaseAdapter {
         TextView time = (TextView) convertView.findViewById(R.id.time);
         ImageButton save = (ImageButton) convertView.findViewById(R.id.save);
         ImageButton share = (ImageButton) convertView.findViewById(R.id.share);
+        final ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
+        TextView username = (TextView) convertView.findViewById(R.id.username);
 
 
         // getting movie data for the row
@@ -120,8 +132,52 @@ public class CustomListAdapter extends BaseAdapter {
             price.setText(String.valueOf(m.getPrice()));
         }
 
+        final User account = m.account;
+
+        username.setText(m.getAuthor());
+        username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(activity, UserPage.class);
+                String url = account.getUrl();
+                i.putExtra("url", url);
+                //i.putExtra("title",m.getAuthor());
+                activity.startActivity(i);
+            }
+        });
+
+        // fetching facebook's profile picture
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... params) {
+                URL imageURL = null;
+                try {
+
+                    imageURL = new URL("https://graph.facebook.com/1435767690067161/picture?type=large");
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    bitmap  = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                avatar.setImageBitmap(bitmap);
+            }
+        }.execute();
+
+
           final String s =  fixEncoding(m.getDescription());
-           description.setText("By " + m.getAuthor() + ": " + s);
+           description.setText(s);
 
 
         String dateString = m.getDate();

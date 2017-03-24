@@ -17,13 +17,13 @@ public class User {
 
     public String facebookID = "1435767690067161";
 
-    public URL profile_picture;
+    public String avatar;
 
     public String token;
 
     public int college;
 
-    public String bio;
+    public String about;
 
     public int id;
 
@@ -32,6 +32,14 @@ public class User {
     public boolean interestSet;
 
     public String url;
+
+    public User user;
+
+
+    public User getUser(){return user;}
+
+    public void setUser(User user){this.user=user;}
+
 
     public String getUrl(){return url;}
 
@@ -63,9 +71,9 @@ public class User {
 
     public void setCollege(int college){this.college = college;}
 
-    public String getBio(){return bio;}
+    public String getBio(){return about;}
 
-    public void setBio(String bio){this.bio = bio;}
+    public void setBio(String bio){this.about = bio;}
 
     public int getId(){return id;}
 
@@ -87,12 +95,12 @@ public class User {
         this.facebookID = facebookID;
     }
 
-    public URL getProfile_picture() {
-        return profile_picture;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setProfile_picture(URL profile_picture) {
-        this.profile_picture = profile_picture;
+    public void setAvatar(String profile_picture) {
+        this.avatar = profile_picture;
     }
 
     public String getToken() {

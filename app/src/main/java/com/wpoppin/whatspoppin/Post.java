@@ -25,6 +25,17 @@ public class Post {
     public String zipcode;
     public String state;
 
+    public User account;
+
+
+    public User getAccount(){
+        return account;
+    }
+
+    public void setAccount(User account){
+        this.account = account;
+    }
+
     public String getAddress() {
         return street_address;
     }

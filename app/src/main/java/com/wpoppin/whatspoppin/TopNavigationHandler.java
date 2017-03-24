@@ -44,7 +44,7 @@ import java.util.List;
 
 public class TopNavigationHandler extends Fragment {
 
-    private String endpoint = "http://www.wpoppin.com/api/events.json"; //initially for you
+    private String endpoint = "http://www.wpoppin.com/api/getusername/"; //initially for you
     private View currentView;
     private ProgressDialog pDialog;
     private CustomListAdapter adapter;
@@ -146,6 +146,13 @@ public class TopNavigationHandler extends Fragment {
         event.setCity(post.city);
         event.setZipcode(post.zipcode);
         event.setState(post.state);
+        User account = new User();
+        account = post.account;
+
+        account.setUsername(post.author);
+       // account.setBio(post.account.getBio());
+
+        event.setAccount(account);
 
         eventList.add(event);
 
@@ -261,25 +268,25 @@ public class TopNavigationHandler extends Fragment {
                     response = 0;
                     listView.removeFooterView(btnLoadMore);
                     listView.addFooterView(btnLoadMore);
-                    SetURL("http://www.wpoppin.com/api/events.json");
+                    SetURL("http://www.wpoppin.com/api/getusername/");
                 }
                 else if (v.getTag().equals("today"))
                 {
                     response = 1;
                     listView.removeFooterView(btnLoadMore);
-                    SetURL("http://www.wpoppin.com/api/events_today.json");
+                    SetURL("http://www.wpoppin.com/api/getusername/");
                 }
                 else if(v.getTag().equals("week"))
                 {
                     response = 2;
                     listView.removeFooterView(btnLoadMore);
-                    SetURL("http://www.wpoppin.com/api/events_this_week.json");
+                    SetURL("http://www.wpoppin.com/api/getusername/");
                 }
                 else if(v.getTag().equals("month"))
                 {
                     response = 3;
                     listView.removeFooterView(btnLoadMore);
-                    SetURL("http://www.wpoppin.com/api/events_this_month.json");
+                    SetURL("http://www.wpoppin.com/api/getusername/");
                 }
 
                 //Restart process to update list

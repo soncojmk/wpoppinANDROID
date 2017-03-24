@@ -68,6 +68,14 @@
             android:name=".LoginWP"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".UserPage"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".FollowRequests"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".SelectInterests"
             android:screenOrientation="portrait" />
         <activity
