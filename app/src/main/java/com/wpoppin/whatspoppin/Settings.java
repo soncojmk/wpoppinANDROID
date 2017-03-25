@@ -3,7 +3,10 @@ package com.wpoppin.whatspoppin;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -36,6 +39,11 @@ public class Settings extends AppCompatActivity {
         myToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+        final Drawable upArrow = getResources().getDrawable(R.drawable.ic_action_arrow_left);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         invite = (LinearLayout) findViewById(R.id.invite);
         invite.setOnClickListener(new View.OnClickListener() {

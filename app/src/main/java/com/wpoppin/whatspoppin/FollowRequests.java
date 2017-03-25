@@ -98,7 +98,7 @@ public class FollowRequests extends AppCompatActivity {
         }
     }
 
-    private void fetchPosts(final String token) {
+    public void fetchPosts(final String token) {
         String url = "http://www.wpoppin.com/api/accounts/1/requesting";
         StringRequest strreq = new StringRequest(Request.Method.GET,
                 url,

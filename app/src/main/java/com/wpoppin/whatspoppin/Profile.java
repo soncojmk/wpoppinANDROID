@@ -8,22 +8,41 @@ package com.wpoppin.whatspoppin;
  * Updated 3/10/2017 by Abagail Tarosky
  */
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -34,14 +53,17 @@ import com.facebook.FacebookSdk;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.wpoppin.whatspoppin.AppController.TAG;
-import static com.wpoppin.whatspoppin.PostDataToServer.UpdatePatch;
 
 public class Profile extends Fragment {
 
@@ -49,17 +71,28 @@ public class Profile extends Fragment {
     private ImageView profileImage;
     Bitmap bitmap;
     private TextView name;
+    private Spinner school_et;
+    private EditText bio_et;
     private TextView school_tv;
-    private TextView bio;
+    private TextView bio_tv;
+    Spinner mm;
+    Spinner dd;
+    Spinner yyyy;
+    Spinner hour;
+    Spinner minute;
+    Spinner am;
+    Spinner state;
 
     @Override
     public void onPause() {
         super.onPause();
         getActivity().overridePendingTransition(0, 0);
     }
+
     private View view;
 
-    public Profile(){}
+    public Profile() {
+    }
 
 
     @Override
@@ -67,38 +100,26 @@ public class Profile extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.profile, container, false);
 
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.my_toolbar); // Attaching the layout to the toolbar object
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        setHasOptionsMenu(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((AppCompatActivity) getActivity()).getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
         return view;
     }
 
+    Button notifCount;
+
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-
-        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
-
-        user=PrefUtils.getCurrentUser(getActivity());
-        profileImage= (ImageView) view.findViewById(R.id.profileImage);
-        name = (TextView) view.findViewById(R.id.username);
-        school_tv = (TextView)view.findViewById(R.id.school);
-        bio = (TextView) view.findViewById(R.id.bio);
-        bio.setText("Hi, tell us about your favorite event");
-        Button requesting = (Button) view.findViewById(R.id.requesting);
-
-        user.setUrl(url_to);
-        PrefUtils.setCurrentUser(user, getActivity());
-
-        convertToken(user.getToken());
-        bio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("USER URL TO ", url_to);
-                PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "is this still working", 1);
-                //PostDataToServer.PostEvent(getContext(), user.getToken());
-
-
-            }
-        });
-
-        requesting.setOnClickListener(new View.OnClickListener() {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.profile_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem item = menu.findItem(R.id.badge);
+        MenuItemCompat.setActionView(item, R.layout.feed_update_count);
+        notifCount = (Button) MenuItemCompat.getActionView(item);
+        notifCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), FollowRequests.class);
@@ -107,7 +128,6 @@ public class Profile extends Fragment {
                 i.putExtra("url", url_to);
 
 
-
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack(null);
@@ -115,30 +135,146 @@ public class Profile extends Fragment {
                 startActivity(i);
             }
         });
+    }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.settings) {
+            Intent i = new Intent(getActivity(), Settings.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-        FloatingActionButton settings = (FloatingActionButton)view.findViewById(R.id.settings);
+            i.putExtra("url", url_to);
 
-        settings.setOnClickListener(new View.OnClickListener() {
+
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            startActivity(i);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+
+        user = PrefUtils.getCurrentUser(getActivity());
+        profileImage = (ImageView) view.findViewById(R.id.profileImage);
+        name = (TextView) view.findViewById(R.id.username);
+        school_tv = (TextView) view.findViewById(R.id.schooltv);
+        school_et = (Spinner) view.findViewById(R.id.schoolet);
+        ArrayAdapter<String> sAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(Arrays.asList("Penn State University", "Temple")));
+        school_et.setAdapter(sAdapter);
+        bio_tv = (TextView) view.findViewById(R.id.bio_tv);
+        bio_et = (EditText) view.findViewById(R.id.bio_et);
+        bio_tv.setText("Hi, tell us about your favorite event");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("" + user.getUsername());
+        convertToken(user.getToken());
+
+        ImageButton edit = (ImageButton)view.findViewById(R.id.settings);
+        edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // custom dialog
-                Intent i = new Intent(getActivity(), Settings.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                ViewSwitcher bio = (ViewSwitcher)view.findViewById(R.id.bio_switch);
+                bio.showNext(); //or switcher.showPrevious();
 
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                startActivity(i);
+                ViewSwitcher school = (ViewSwitcher)view.findViewById(R.id.school);
+                school.showNext();
+
+                ViewSwitcher im = (ViewSwitcher)view.findViewById(R.id.image_edit_switch);
+                im.showNext();
             }
         });
+
+        ImageButton save = (ImageButton)view.findViewById(R.id.save);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String b = bio_et.getText().toString();
+                int n = school_et.getSelectedItemPosition() + 1;
+                bio_tv.setText(b);
+                if(n==1) {
+                    school_tv.setText("Penn State University");
+                }
+                else {
+                    school_tv.setText("Temple");
+                }
+
+                PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), b, n);
+
+                ViewSwitcher bio = (ViewSwitcher)view.findViewById(R.id.bio_switch);
+                bio.showNext(); //or switcher.showPrevious();
+
+                ViewSwitcher school = (ViewSwitcher)view.findViewById(R.id.school);
+                school.showNext();
+
+                ViewSwitcher im = (ViewSwitcher)view.findViewById(R.id.image_edit_switch);
+                im.showNext();
+
+            }
+        });
+
+        FloatingActionButton add = (FloatingActionButton) view.findViewById(R.id.add);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog d = new Dialog(getContext());
+                d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                d.setContentView(R.layout.profile_popup);
+                d.show();
+
+                ArrayList<String> num = new ArrayList<>();
+                for (int i = 0; i < 60; i++) {
+                    if (i < 10)
+                        num.add("0" + i);
+                    else
+                        num.add(i + "");
+                }
+
+              //  PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "heehe", 1);
+                mm = (Spinner) d.findViewById(R.id.mm);
+                ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num.subList(1, 13));
+                mm.setAdapter(categoriesAdapter);
+
+                dd = (Spinner) d.findViewById(R.id.dd);
+                ArrayAdapter<String> ddAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num.subList(1, 32));
+                dd.setAdapter(ddAdapter);
+
+                yyyy = (Spinner) d.findViewById(R.id.yyyy);
+                ArrayAdapter<String> yyyyAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, new ArrayList<String>(Arrays.asList("2017", "2018",
+                        "2019", "2020", "2021", "2022")));
+                yyyy.setAdapter(yyyyAdapter);
+
+                hour = (Spinner) d.findViewById(R.id.hour);
+                hour.setAdapter(categoriesAdapter);
+
+                minute = (Spinner) d.findViewById(R.id.minute);
+                ArrayAdapter<String> minAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num);
+                minute.setAdapter(minAdapter);
+
+                am = (Spinner) d.findViewById(R.id.am);
+                ArrayAdapter<String> amAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
+                        new ArrayList<>(Arrays.asList("pm", "am")));
+                am.setAdapter(amAdapter);
+
+                state = (Spinner) d.findViewById(R.id.state);
+                ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
+                        getResources().getStringArray(R.array.us_states));
+                state.setAdapter(stateAdapter);
+
+
+            }
+        });
+
 
         name.setText(user.username);
 
         // fetching facebook's profile picture
-        new AsyncTask<Void,Void,Void>(){
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 URL imageURL = null;
@@ -150,7 +286,7 @@ public class Profile extends Fragment {
                     e.printStackTrace();
                 }
                 try {
-                    bitmap  = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                    bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -174,8 +310,9 @@ public class Profile extends Fragment {
     String about;
     String college;
 
+
     private void convertToken(final String token) {
-        String url = "http://www.wpoppin.com/api/myaccount/";
+        final String url = "http://www.wpoppin.com/api/myaccount/";
         StringRequest strreq = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {
@@ -193,24 +330,26 @@ public class Profile extends Fragment {
                             avatar = jsonObj.getJSONObject(0).getString("avatar");
                             about = jsonObj.getJSONObject(0).getString("about");
                             college = jsonObj.getJSONObject(0).getString("college");
-                            if(college.equals("1"))
+                            school_et.setSelection(Integer.parseInt(college) - 1);
+                            if (college.equals("1"))
                                 college = "Penn State University";
                             else
                                 college = "Temple";
 
-                            if(about.equals("null"))
+                            if (about.equals("null"))
                                 about = "Click to enter a Bio";
 
                             name.setText(username);
-                            bio.setText(about);
+                            bio_et.setText(about);
+                            bio_tv.setText(about);
                             school_tv.setText(college);
 
                             getNumber(user.getToken(), url_to + "following");
                             getNumber(user.getToken(), url_to + "followers");
+                            getNumber(user.getToken(), url_to + "requesting");
 
 
-                        }catch (JSONException e)
-                        {
+                        } catch (JSONException e) {
                             Log.e(TAG, "USER " + e.toString());
                         }
                     }
@@ -252,15 +391,18 @@ public class Profile extends Fragment {
                         int num = 0;
                         try {
                             num = (new JSONArray(json)).length();
-                        }catch (Exception e)
-                        {}
-                        if(url.contains("following")) {
+                        } catch (Exception e) {
+                        }
+                        if (url.contains("following")) {
                             TextView following = (TextView) view.findViewById(R.id.following);
                             following.setText(num + "");
-                        }else
-                        {
+                        } else if (url.contains("followers")){
                             TextView followers = (TextView) view.findViewById(R.id.followers);
                             followers.setText(num + "");
+                        }
+                        else {
+                            if(notifCount != null)
+                                notifCount.setText(num + "");
                         }
                         //split the json string to get the token value then store it in local memory
 
@@ -290,6 +432,4 @@ public class Profile extends Fragment {
         AppController.getInstance().addToRequestQueue(strreq);
 
     }
-
-
 }
