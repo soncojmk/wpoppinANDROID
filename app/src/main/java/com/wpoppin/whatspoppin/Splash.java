@@ -97,6 +97,7 @@ public class Splash extends AppCompatActivity {
 
         else if(!PrefUtils.getCurrentUser(Splash.this).interestSet){
             Intent intent = new Intent(Splash.this, SelectInterests.class);
+            PostDataToServer.setMyUrl(this, PrefUtils.getCurrentUser(Splash.this).getToken());
             startActivity(intent);
             finish();
         }
@@ -104,6 +105,7 @@ public class Splash extends AppCompatActivity {
 
         else {
             Intent intent = new Intent(this, Main.class);
+            PostDataToServer.setMyUrl(this, PrefUtils.getCurrentUser(Splash.this).getToken());
             startActivity(intent);
             finish();
         }
