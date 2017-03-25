@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+
     <item
         android:id="@+id/add"
         android:title="Add Friends"
         app:showAsAction="always"
-        android:icon="@drawable/ic_group_add"/>
+        android:icon="@drawable/ic_person_add"/>
 
     <item
-        android:id="@+id/edit"
-        android:icon="@drawable/ic_action_edit"
-        android:title="Home"
-        app:showAsAction="always"/>
+        android:title="Follow Requests"
+        android:id="@+id/badge"
+        android:actionLayout="@layout/feed_update_count"
+        android:icon="@drawable/shape_notification"
+        app:showAsAction="always">
+    </item>
 
     <item
         android:id="@+id/settings"

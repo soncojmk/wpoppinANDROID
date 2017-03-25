@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -34,10 +35,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -48,6 +53,8 @@ import com.facebook.FacebookSdk;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -64,8 +71,10 @@ public class Profile extends Fragment {
     private ImageView profileImage;
     Bitmap bitmap;
     private TextView name;
+    private Spinner school_et;
+    private EditText bio_et;
     private TextView school_tv;
-    private TextView bio;
+    private TextView bio_tv;
     Spinner mm;
     Spinner dd;
     Spinner yyyy;
@@ -101,10 +110,31 @@ public class Profile extends Fragment {
         return view;
     }
 
+    Button notifCount;
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.profile_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        MenuItem item = menu.findItem(R.id.badge);
+        MenuItemCompat.setActionView(item, R.layout.feed_update_count);
+        notifCount = (Button) MenuItemCompat.getActionView(item);
+        notifCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), FollowRequests.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+                i.putExtra("url", url_to);
+
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                startActivity(i);
+            }
+        });
     }
 
 
@@ -113,6 +143,9 @@ public class Profile extends Fragment {
         if (item.getItemId() == R.id.settings) {
             Intent i = new Intent(getActivity(), Settings.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+            i.putExtra("url", url_to);
+
 
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -132,31 +165,58 @@ public class Profile extends Fragment {
         user = PrefUtils.getCurrentUser(getActivity());
         profileImage = (ImageView) view.findViewById(R.id.profileImage);
         name = (TextView) view.findViewById(R.id.username);
-        school_tv = (TextView) view.findViewById(R.id.school);
-        bio = (TextView) view.findViewById(R.id.bio);
-        bio.setText("Hi, tell us about your favorite event");
+        school_tv = (TextView) view.findViewById(R.id.schooltv);
+        school_et = (Spinner) view.findViewById(R.id.schoolet);
+        ArrayAdapter<String> sAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(Arrays.asList("Penn State University", "Temple")));
+        school_et.setAdapter(sAdapter);
+        bio_tv = (TextView) view.findViewById(R.id.bio_tv);
+        bio_et = (EditText) view.findViewById(R.id.bio_et);
+        bio_tv.setText("Hi, tell us about your favorite event");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("" + user.getUsername());
         convertToken(user.getToken());
 
-        Button requesting = (Button) view.findViewById(R.id.requesting);
-
-        requesting.setOnClickListener(new View.OnClickListener() {
+        ImageButton edit = (ImageButton)view.findViewById(R.id.settings);
+        edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), FollowRequests.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                ViewSwitcher bio = (ViewSwitcher)view.findViewById(R.id.bio_switch);
+                bio.showNext(); //or switcher.showPrevious();
 
-                i.putExtra("url", url_to);
+                ViewSwitcher school = (ViewSwitcher)view.findViewById(R.id.school);
+                school.showNext();
 
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                startActivity(i);
+                ViewSwitcher im = (ViewSwitcher)view.findViewById(R.id.image_edit_switch);
+                im.showNext();
             }
         });
 
+        ImageButton save = (ImageButton)view.findViewById(R.id.save);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String b = bio_et.getText().toString();
+                int n = school_et.getSelectedItemPosition() + 1;
+                bio_tv.setText(b);
+                if(n==1) {
+                    school_tv.setText("Penn State University");
+                }
+                else {
+                    school_tv.setText("Temple");
+                }
+
+                PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), b, n);
+
+                ViewSwitcher bio = (ViewSwitcher)view.findViewById(R.id.bio_switch);
+                bio.showNext(); //or switcher.showPrevious();
+
+                ViewSwitcher school = (ViewSwitcher)view.findViewById(R.id.school);
+                school.showNext();
+
+                ViewSwitcher im = (ViewSwitcher)view.findViewById(R.id.image_edit_switch);
+                im.showNext();
+
+            }
+        });
 
         FloatingActionButton add = (FloatingActionButton) view.findViewById(R.id.add);
         add.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +235,7 @@ public class Profile extends Fragment {
                         num.add(i + "");
                 }
 
+              //  PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "heehe", 1);
                 mm = (Spinner) d.findViewById(R.id.mm);
                 ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num.subList(1, 13));
                 mm.setAdapter(categoriesAdapter);
@@ -251,7 +312,7 @@ public class Profile extends Fragment {
 
 
     private void convertToken(final String token) {
-        String url = "http://www.wpoppin.com/api/myaccount/";
+        final String url = "http://www.wpoppin.com/api/myaccount/";
         StringRequest strreq = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {
@@ -269,6 +330,7 @@ public class Profile extends Fragment {
                             avatar = jsonObj.getJSONObject(0).getString("avatar");
                             about = jsonObj.getJSONObject(0).getString("about");
                             college = jsonObj.getJSONObject(0).getString("college");
+                            school_et.setSelection(Integer.parseInt(college) - 1);
                             if (college.equals("1"))
                                 college = "Penn State University";
                             else
@@ -278,11 +340,13 @@ public class Profile extends Fragment {
                                 about = "Click to enter a Bio";
 
                             name.setText(username);
-                            bio.setText(about);
+                            bio_et.setText(about);
+                            bio_tv.setText(about);
                             school_tv.setText(college);
 
                             getNumber(user.getToken(), url_to + "following");
                             getNumber(user.getToken(), url_to + "followers");
+                            getNumber(user.getToken(), url_to + "requesting");
 
 
                         } catch (JSONException e) {
@@ -332,9 +396,13 @@ public class Profile extends Fragment {
                         if (url.contains("following")) {
                             TextView following = (TextView) view.findViewById(R.id.following);
                             following.setText(num + "");
-                        } else {
+                        } else if (url.contains("followers")){
                             TextView followers = (TextView) view.findViewById(R.id.followers);
                             followers.setText(num + "");
+                        }
+                        else {
+                            if(notifCount != null)
+                                notifCount.setText(num + "");
                         }
                         //split the json string to get the token value then store it in local memory
 
