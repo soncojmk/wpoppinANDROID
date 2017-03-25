@@ -109,6 +109,9 @@ public class LoginWP extends AppCompatActivity {
                         user.setToken(tokenValue);
                         user.setId(Integer.parseInt(idValue));
 
+                        //set the user url
+                        PostDataToServer.setMyUrl(LoginWP.this, user.getToken());
+
                         PrefUtils.setCurrentUser(user,LoginWP.this);
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginWP.this);
                         SharedPreferences.Editor editor = preferences.edit();

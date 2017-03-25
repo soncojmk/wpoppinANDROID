@@ -168,6 +168,8 @@ public class Signup extends AppCompatActivity {
                         Log.i(TAG, "KEY" + key + " " + value);
                         user.setToken(value);
 
+                        PostDataToServer.setMyUrl(Signup.this, user.getToken());
+
                         PrefUtils.setCurrentUser(user,Signup.this);
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Signup.this);
                         SharedPreferences.Editor editor = preferences.edit();
