@@ -91,8 +91,8 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.e("USER URL TO ", url_to);
-               //PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "android gods pls work", 2);
-                PostDataToServer.PostEvent(getContext(), user.getToken());
+                PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "is this still working", 1);
+                //PostDataToServer.PostEvent(getContext(), user.getToken());
 
 
             }

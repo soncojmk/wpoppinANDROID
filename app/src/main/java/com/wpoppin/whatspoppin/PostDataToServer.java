@@ -122,67 +122,6 @@ public class PostDataToServer {
 
     }
 
-    public static List<User> getFollows(final String token, final String url) {
-        final List<User> followList = new ArrayList<>();
-        StringRequest strreq = new StringRequest(Request.Method.GET,
-                "http://www.wpoppin.com/api/account/1/requested/",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String Response) {
-                        Log.i(TAG, "REQUESTED" + Response.toString());
-                        GsonBuilder gsonBuilder = new GsonBuilder();
-
-                        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
-                        Gson gson = gsonBuilder.create();
-
-                        List<User> accounts = Arrays.asList(gson.fromJson(Response, User[].class));
-
-                        try {
-                            for (User account : accounts) {
-                                User follow = new User();
-                                follow.setUrl(account.url);
-                                follow.setBio(account.about);
-                                follow.setUser(account.user);
-                                follow.setAvatar(account.avatar);
-                                follow.setCollege(account.college);
-                                followList.add(account);
-
-                            }
-                            Log.i("followlist", followList.toString());
-
-                        } catch (Exception e) {
-                            Log.e(TAG, "USER " + e.toString());
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError e) {
-                e.printStackTrace();
-            }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                return params;
-
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                //headers.put("Content-Type", "application/json; charset=utf-8");
-                headers.put("Authorization", "Token " + token);
-                return headers;
-            }
-        };
-        AppController.getInstance().addToRequestQueue(strreq);
-        return followList;
-    }
-
-    /**/
-
 
     public static void setMyUrl(final Context context, final String token) {
         String url = "http://www.wpoppin.com/api/myaccount/";

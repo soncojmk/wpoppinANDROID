@@ -28,6 +28,7 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,9 @@ public class UserPage extends AppCompatActivity {
     private RequestQueue requestQueue;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     private User currentUserPage;
+    private List<String> myFollowing;
+    private List<String> myRequested;
+    private TextView follow;
 
 
     @Override
@@ -73,56 +77,31 @@ public class UserPage extends AppCompatActivity {
         gson = gsonBuilder.create();
         currentUserPage = new User();
 
-        TextView follow = (TextView) findViewById(R.id.follow);
+        myFollowing = new ArrayList<>();
+        myRequested = new ArrayList<>();
 
-        List<User> myFollowing = new ArrayList<>();
-        List<User> myRequested = new ArrayList<>();
+        follow = (TextView) findViewById(R.id.follow);
+        follow.setText("Follow");
+        follow.setBackgroundColor(getResources().getColor(R.color.white));
+        follow.setTextColor(getResources().getColor(R.color.orange));
 
-        myFollowing = PostDataToServer.getFollows(user.getToken(), "http://www.wpoppin.com/api/accounts/1/following/");
-        myRequested = PostDataToServer.getFollows(user.getToken(), "http://www.wpoppin.com/api/account/1/requested/");
-        Log.i("following", myFollowing.toString());
-        Log.i("requested", myRequested.toString());
+        follow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //url = url.replace(".json", "/follow");
+                follow(Request.Method.POST, user.getToken(), "http://www.wpoppin.com/api/account/1150/follow/");
+                follow.setText("Requested");
+            }
+
+        });
+
+
+//        Log.i("following", myFollowing.toString());
+  //      Log.i("requested", myRequested.toString());
 
         fetchPost();  //currentUserPage is set inside the response listener
 
-        if (myRequested.contains(currentUserPage)){
-            follow.setText("Requested");
 
-            follow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    url = url.replace(".json", "/follow");
-                    follow(Request.Method.DELETE, user.getToken(), "http://www.wpoppin.com/api/account/1150/follow/");
-
-                }
-
-            });
-        }
-
-        else if (myFollowing.contains(currentUserPage)){
-            follow.setText("Following");
-
-            follow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    url = url.replace(".json", "/follow");
-                    follow(Request.Method.DELETE, user.getToken(), "http://www.wpoppin.com/api/account/1150/follow/");
-                }
-
-            });
-        }
-        else{
-            follow.setText("Follow");
-            follow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    url = url.replace(".json", "/follow");
-                    follow(Request.Method.POST, user.getToken(), "http://www.wpoppin.com/api/account/1150/follow/");
-
-                }
-
-            });
-        }
     }
 
     private void fetchPost() {
@@ -136,14 +115,31 @@ public class UserPage extends AppCompatActivity {
             //set all the data
             Log.e("RESPONSE", response);
             User account = gson.fromJson(response, User.class);
-           // if (imageLoader == null)
-             //   imageLoader = AppController.getInstance().getImageLoader();
-            //NetworkImageView thumbNail = (NetworkImageView)findViewById(R.id.thumbnail);
-            // thumbnail image
-            //thumbNail.setImageUrl(account.getAvatar(), imageLoader);
+
             currentUserPage = account;
 
-            SetData(account);
+            profileImage= (ImageView) findViewById(R.id.profileImage);
+            name = (TextView) findViewById(R.id.username);
+            school_tv = (TextView)findViewById(R.id.school);
+            bio = (TextView) findViewById(R.id.bio);
+            //Log.i("account", account.getBio());
+            //profileImage = account.getAvatar();
+
+            name.setText(account.user.getUsername());
+            school_tv.setText(Integer.toString(account.getCollege()));
+            String about = account.getBio();
+            bio.setText(about);
+
+
+            String url_to = account.getUrl().replace(".json", "/");
+            getNumber(user.getToken(), url_to + "following");
+            //getNumber(user.getToken(), url_to + "followers");
+
+            getFollowing(user.getToken(), "http://www.wpoppin.com/api/accounts/1/following/");
+            getRequested(user.getToken(), "http://www.wpoppin.com/api/account/1/requested/");
+            Log.i("myfollowing", myFollowing.toString());
+            Log.i("myrequested", myRequested.toString());
+
         }
     };
 
@@ -155,29 +151,6 @@ public class UserPage extends AppCompatActivity {
         }
     };
 
-
-
-    private void SetData(final User account) {
-
-        profileImage= (ImageView) findViewById(R.id.profileImage);
-        name = (TextView) findViewById(R.id.username);
-        school_tv = (TextView)findViewById(R.id.school);
-        bio = (TextView) findViewById(R.id.bio);
-        //Log.i("account", account.getBio());
-        //profileImage = account.getAvatar();
-
-        name.setText(account.user.getUsername());
-        school_tv.setText(Integer.toString(account.getCollege()));
-        String about = account.getBio();
-        bio.setText(about);
-
-
-        String url_to = account.getUrl().replace(".json", "/");
-        getNumber(user.getToken(), url_to + "following");
-        getNumber(user.getToken(), url_to + "followers");
-
-
-    }
 
     private void getNumber(final String token, final String url) {
         StringRequest strreq = new StringRequest(Request.Method.GET,
@@ -195,13 +168,11 @@ public class UserPage extends AppCompatActivity {
                         if(url.contains("following")) {
                             TextView following = (TextView) findViewById(R.id.following);
                             following.setText(num + "");
-                        }else
+                        }else if(url.contains("followers"))
                         {
                             TextView followers = (TextView) findViewById(R.id.followers);
                             followers.setText(num + "");
                         }
-                        //split the json string to get the token value then store it in local memory
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -263,6 +234,154 @@ public class UserPage extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(strreq);
     }
 
+
+    private void getFollowing(final String token, final String url) {
+        StringRequest strreq = new StringRequest(Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "REQUESTED" + Response.toString());
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+
+                        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+                        Gson gson = gsonBuilder.create();
+
+                        List<User> accounts = Arrays.asList(gson.fromJson(Response, User[].class));
+
+                        try {
+                            for (User account : accounts) {
+                                User follow = new User();
+                                follow.setUrl(account.url);
+                                follow.setBio(account.about);
+                                follow.setUser(account.user);
+                                follow.setAvatar(account.avatar);
+                                follow.setCollege(account.college);
+                                myFollowing.add(account.user.getUsername());
+                                Log.i("follow", follow.user.getUsername());
+
+                            }
+                            Log.i("followlist", myFollowing.toString());
+                            Log.i("cureent", currentUserPage.user.getUsername());
+
+                            if (myFollowing.contains(currentUserPage.user.getUsername())){
+                                follow.setText("Following");
+
+                                follow.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        //url = url.replace(".json", "/follow");
+                                        follow(Request.Method.DELETE, user.getToken(), "http://www.wpoppin.com/api/account/1150/follow/");
+                                        follow.setText("Follow");
+                                    }
+
+                                });
+                            }
+
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "USER " + e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                return params;
+
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                //headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+    }
+
+
+    private void getRequested(final String token, final String url) {
+        StringRequest strreq = new StringRequest(Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "REQUESTED" + Response.toString());
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+
+                        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+                        Gson gson = gsonBuilder.create();
+
+                        List<User> accounts = Arrays.asList(gson.fromJson(Response, User[].class));
+
+                        try {
+                            for (User account : accounts) {
+                                User follow = new User();
+                                follow.setUrl(account.url);
+                                follow.setBio(account.about);
+                                follow.setUser(account.user);
+                                follow.setAvatar(account.avatar);
+                                follow.setCollege(account.college);
+                                myRequested.add(account.user.getUsername());
+                                Log.i("follow", follow.user.getUsername());
+
+                            }
+                            Log.i("followlist", myRequested.toString());
+                            Log.i("cureent", currentUserPage.user.getUsername());
+
+                            if (myRequested.contains(currentUserPage.user.getUsername())){
+                                follow.setText("Requested");
+
+                                follow.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        //url = url.replace(".json", "/follow");
+                                        follow(Request.Method.DELETE, user.getToken(), "http://www.wpoppin.com/api/account/1150/follow/");
+                                        follow.setText("Follow");
+                                    }
+
+                                });
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "USER " + e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                return params;
+
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                //headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+
+    }
 
 }
 
