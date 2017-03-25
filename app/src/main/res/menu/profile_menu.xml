@@ -2,15 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <item
         android:id="@+id/add"
         android:title="Add Friends"
         app:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_add"/>
+        android:icon="@drawable/ic_group_add"/>
 
     <item
         android:id="@+id/edit"
-        android:icon="@android:drawable/ic_menu_manage"
+        android:icon="@drawable/ic_action_edit"
         android:title="Home"
         app:showAsAction="always"/>
 

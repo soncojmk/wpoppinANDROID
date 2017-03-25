@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -78,9 +79,11 @@ public class Profile extends Fragment {
         super.onPause();
         getActivity().overridePendingTransition(0, 0);
     }
+
     private View view;
 
-    public Profile(){}
+    public Profile() {
+    }
 
 
     @Override
@@ -92,7 +95,7 @@ public class Profile extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setHasOptionsMenu(true);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ((AppCompatActivity) getActivity()).getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
         return view;
@@ -126,16 +129,36 @@ public class Profile extends Fragment {
 
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
 
-        user=PrefUtils.getCurrentUser(getActivity());
-        profileImage= (ImageView) view.findViewById(R.id.profileImage);
+        user = PrefUtils.getCurrentUser(getActivity());
+        profileImage = (ImageView) view.findViewById(R.id.profileImage);
         name = (TextView) view.findViewById(R.id.username);
-        school_tv = (TextView)view.findViewById(R.id.school);
+        school_tv = (TextView) view.findViewById(R.id.school);
         bio = (TextView) view.findViewById(R.id.bio);
         bio.setText("Hi, tell us about your favorite event");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("" + user.getUsername());
         convertToken(user.getToken());
 
-        FloatingActionButton add = (FloatingActionButton)view.findViewById(R.id.add);
+        Button requesting = (Button) view.findViewById(R.id.requesting);
+
+        requesting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), FollowRequests.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+                i.putExtra("url", url_to);
+
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                startActivity(i);
+            }
+        });
+
+
+        FloatingActionButton add = (FloatingActionButton) view.findViewById(R.id.add);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,41 +168,42 @@ public class Profile extends Fragment {
                 d.show();
 
                 ArrayList<String> num = new ArrayList<>();
-                for(int i = 0; i < 60; i++) {
-                    if(i < 10)
+                for (int i = 0; i < 60; i++) {
+                    if (i < 10)
                         num.add("0" + i);
                     else
                         num.add(i + "");
                 }
 
-                mm = (Spinner)d.findViewById(R.id.mm);
+                mm = (Spinner) d.findViewById(R.id.mm);
                 ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num.subList(1, 13));
                 mm.setAdapter(categoriesAdapter);
 
-                dd = (Spinner)d.findViewById(R.id.dd);
-                ArrayAdapter<String> ddAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num.subList(1,32));
+                dd = (Spinner) d.findViewById(R.id.dd);
+                ArrayAdapter<String> ddAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num.subList(1, 32));
                 dd.setAdapter(ddAdapter);
 
-                yyyy = (Spinner)d.findViewById(R.id.yyyy);
+                yyyy = (Spinner) d.findViewById(R.id.yyyy);
                 ArrayAdapter<String> yyyyAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, new ArrayList<String>(Arrays.asList("2017", "2018",
                         "2019", "2020", "2021", "2022")));
                 yyyy.setAdapter(yyyyAdapter);
 
-                hour = (Spinner)d.findViewById(R.id.hour);
+                hour = (Spinner) d.findViewById(R.id.hour);
                 hour.setAdapter(categoriesAdapter);
 
-                minute = (Spinner)d.findViewById(R.id.minute);
+                minute = (Spinner) d.findViewById(R.id.minute);
                 ArrayAdapter<String> minAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num);
                 minute.setAdapter(minAdapter);
 
-                am = (Spinner)d.findViewById(R.id.am);
+                am = (Spinner) d.findViewById(R.id.am);
                 ArrayAdapter<String> amAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
                         new ArrayList<>(Arrays.asList("pm", "am")));
                 am.setAdapter(amAdapter);
 
-                state = (Spinner)d.findViewById(R.id.state);
+                state = (Spinner) d.findViewById(R.id.state);
                 ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
-                        R.array.us_states);
+                        getResources().getStringArray(R.array.us_states));
+                state.setAdapter(stateAdapter);
 
 
             }
@@ -189,7 +213,7 @@ public class Profile extends Fragment {
         name.setText(user.username);
 
         // fetching facebook's profile picture
-        new AsyncTask<Void,Void,Void>(){
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 URL imageURL = null;
@@ -201,7 +225,7 @@ public class Profile extends Fragment {
                     e.printStackTrace();
                 }
                 try {
-                    bitmap  = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                    bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -225,6 +249,7 @@ public class Profile extends Fragment {
     String about;
     String college;
 
+
     private void convertToken(final String token) {
         String url = "http://www.wpoppin.com/api/myaccount/";
         StringRequest strreq = new StringRequest(Request.Method.GET,
@@ -232,8 +257,8 @@ public class Profile extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String Response) {
-                        Log.i(TAG, "USER" + Response);
-                        String json = Response;
+                        Log.i(TAG, "USER" + Response.toString());
+                        String json = Response.toString();
                         //split the json string to get the token value then store it in local memory
                         try {
                             JSONArray jsonObj = new JSONArray(json);
@@ -244,32 +269,23 @@ public class Profile extends Fragment {
                             avatar = jsonObj.getJSONObject(0).getString("avatar");
                             about = jsonObj.getJSONObject(0).getString("about");
                             college = jsonObj.getJSONObject(0).getString("college");
-                            if(college.equals("1"))
+                            if (college.equals("1"))
                                 college = "Penn State University";
                             else
                                 college = "Temple";
 
-                            if(about.equals("null"))
+                            if (about.equals("null"))
                                 about = "Click to enter a Bio";
 
                             name.setText(username);
                             bio.setText(about);
                             school_tv.setText(college);
 
-                            bio.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Log.e("USER URL TO ", url_to);
-                                    UpdatePatch(user.getToken());
-                                }
-                            });
-
                             getNumber(user.getToken(), url_to + "following");
                             getNumber(user.getToken(), url_to + "followers");
 
 
-                        }catch (JSONException e)
-                        {
+                        } catch (JSONException e) {
                             Log.e(TAG, "USER " + e.toString());
                         }
                     }
@@ -282,7 +298,7 @@ public class Profile extends Fragment {
 
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
+                Map<String, String> params = new HashMap<String, String>();
                 return params;
 
             }
@@ -290,7 +306,7 @@ public class Profile extends Fragment {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<>();
+                HashMap<String, String> headers = new HashMap<String, String>();
                 headers.put("Content-Type", "application/json; charset=utf-8");
                 headers.put("Authorization", "Token " + token);
                 return headers;
@@ -306,20 +322,17 @@ public class Profile extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String Response) {
-                        Log.i(TAG, "USER" + Response);
-                        String json = Response;
+                        Log.i(TAG, "USER" + Response.toString());
+                        String json = Response.toString();
                         int num = 0;
                         try {
                             num = (new JSONArray(json)).length();
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
+                        } catch (Exception e) {
                         }
-                        if(url.contains("following")) {
+                        if (url.contains("following")) {
                             TextView following = (TextView) view.findViewById(R.id.following);
                             following.setText(num + "");
-                        }else
-                        {
+                        } else {
                             TextView followers = (TextView) view.findViewById(R.id.followers);
                             followers.setText(num + "");
                         }
@@ -351,47 +364,4 @@ public class Profile extends Fragment {
         AppController.getInstance().addToRequestQueue(strreq);
 
     }
-
-    private void UpdatePatch(final String Password) {
-        StringRequest strreq = new StringRequest(Request.Method.POST,
-                "http://www.wpoppin.com/api/accounts/922/update_profile/",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String Response) {
-                        Log.i(TAG, "RESPONDE" + Response.toString());
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError e) {
-                e.printStackTrace();
-
-            }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("about", "asd;kfj");
-
-                return params;
-
-            }
-
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Token " + Password);
-                return headers;
-            }
-
-
-        };
-        AppController.getInstance().addToRequestQueue(strreq);
-
-
-    }
-
-
 }
