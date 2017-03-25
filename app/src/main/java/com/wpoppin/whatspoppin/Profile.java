@@ -8,21 +8,34 @@ package com.wpoppin.whatspoppin;
  * Updated 3/10/2017 by Abagail Tarosky
  */
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -37,11 +50,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.wpoppin.whatspoppin.AppController.TAG;
-import static com.wpoppin.whatspoppin.PostDataToServer.UpdatePatch;
 
 public class Profile extends Fragment {
 
@@ -51,6 +65,13 @@ public class Profile extends Fragment {
     private TextView name;
     private TextView school_tv;
     private TextView bio;
+    Spinner mm;
+    Spinner dd;
+    Spinner yyyy;
+    Spinner hour;
+    Spinner minute;
+    Spinner am;
+    Spinner state;
 
     @Override
     public void onPause() {
@@ -67,7 +88,37 @@ public class Profile extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.profile, container, false);
 
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.my_toolbar); // Attaching the layout to the toolbar object
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        setHasOptionsMenu(true);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((AppCompatActivity) getActivity()).getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.profile_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.settings) {
+            Intent i = new Intent(getActivity(), Settings.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            startActivity(i);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -81,59 +132,59 @@ public class Profile extends Fragment {
         school_tv = (TextView)view.findViewById(R.id.school);
         bio = (TextView) view.findViewById(R.id.bio);
         bio.setText("Hi, tell us about your favorite event");
-        Button requesting = (Button) view.findViewById(R.id.requesting);
-
-        user.setUrl(url_to);
-        PrefUtils.setCurrentUser(user, getActivity());
-
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("" + user.getUsername());
         convertToken(user.getToken());
-        bio.setOnClickListener(new View.OnClickListener() {
+
+        FloatingActionButton add = (FloatingActionButton)view.findViewById(R.id.add);
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("USER URL TO ", url_to);
-               //PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "android gods pls work", 2);
-                PostDataToServer.PostEvent(getContext(), user.getToken());
+                Dialog d = new Dialog(getContext());
+                d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                d.setContentView(R.layout.profile_popup);
+                d.show();
+
+                ArrayList<String> num = new ArrayList<>();
+                for(int i = 0; i < 60; i++) {
+                    if(i < 10)
+                        num.add("0" + i);
+                    else
+                        num.add(i + "");
+                }
+
+                mm = (Spinner)d.findViewById(R.id.mm);
+                ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num.subList(1, 13));
+                mm.setAdapter(categoriesAdapter);
+
+                dd = (Spinner)d.findViewById(R.id.dd);
+                ArrayAdapter<String> ddAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num.subList(1,32));
+                dd.setAdapter(ddAdapter);
+
+                yyyy = (Spinner)d.findViewById(R.id.yyyy);
+                ArrayAdapter<String> yyyyAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, new ArrayList<String>(Arrays.asList("2017", "2018",
+                        "2019", "2020", "2021", "2022")));
+                yyyy.setAdapter(yyyyAdapter);
+
+                hour = (Spinner)d.findViewById(R.id.hour);
+                hour.setAdapter(categoriesAdapter);
+
+                minute = (Spinner)d.findViewById(R.id.minute);
+                ArrayAdapter<String> minAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num);
+                minute.setAdapter(minAdapter);
+
+                am = (Spinner)d.findViewById(R.id.am);
+                ArrayAdapter<String> amAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
+                        new ArrayList<>(Arrays.asList("pm", "am")));
+                am.setAdapter(amAdapter);
+
+                state = (Spinner)d.findViewById(R.id.state);
+                ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
+                        R.array.us_states);
 
 
             }
         });
 
-        requesting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), FollowRequests.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-                i.putExtra("url", url_to);
-
-
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                startActivity(i);
-            }
-        });
-
-
-
-        FloatingActionButton settings = (FloatingActionButton)view.findViewById(R.id.settings);
-
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // custom dialog
-                Intent i = new Intent(getActivity(), Settings.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                startActivity(i);
-            }
-        });
 
         name.setText(user.username);
 
@@ -181,8 +232,8 @@ public class Profile extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String Response) {
-                        Log.i(TAG, "USER" + Response.toString());
-                        String json = Response.toString();
+                        Log.i(TAG, "USER" + Response);
+                        String json = Response;
                         //split the json string to get the token value then store it in local memory
                         try {
                             JSONArray jsonObj = new JSONArray(json);
@@ -205,6 +256,14 @@ public class Profile extends Fragment {
                             bio.setText(about);
                             school_tv.setText(college);
 
+                            bio.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Log.e("USER URL TO ", url_to);
+                                    UpdatePatch(user.getToken());
+                                }
+                            });
+
                             getNumber(user.getToken(), url_to + "following");
                             getNumber(user.getToken(), url_to + "followers");
 
@@ -223,7 +282,7 @@ public class Profile extends Fragment {
 
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 return params;
 
             }
@@ -231,7 +290,7 @@ public class Profile extends Fragment {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json; charset=utf-8");
                 headers.put("Authorization", "Token " + token);
                 return headers;
@@ -247,13 +306,15 @@ public class Profile extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String Response) {
-                        Log.i(TAG, "USER" + Response.toString());
-                        String json = Response.toString();
+                        Log.i(TAG, "USER" + Response);
+                        String json = Response;
                         int num = 0;
                         try {
                             num = (new JSONArray(json)).length();
                         }catch (Exception e)
-                        {}
+                        {
+                            e.printStackTrace();
+                        }
                         if(url.contains("following")) {
                             TextView following = (TextView) view.findViewById(R.id.following);
                             following.setText(num + "");
@@ -288,6 +349,47 @@ public class Profile extends Fragment {
             }
         };
         AppController.getInstance().addToRequestQueue(strreq);
+
+    }
+
+    private void UpdatePatch(final String Password) {
+        StringRequest strreq = new StringRequest(Request.Method.POST,
+                "http://www.wpoppin.com/api/accounts/922/update_profile/",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "RESPONDE" + Response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("about", "asd;kfj");
+
+                return params;
+
+            }
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Token " + Password);
+                return headers;
+            }
+
+
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+
 
     }
 
