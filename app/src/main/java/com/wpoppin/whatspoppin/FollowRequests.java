@@ -55,7 +55,6 @@ public class FollowRequests extends AppCompatActivity {
     private Gson gson;
     private RequestQueue requestQueue;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,11 +73,9 @@ public class FollowRequests extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         Intent i = getIntent();
-  //      url = i.getStringExtra("url");
-//        url.replace(".json", "/requesting");
+
         fetchPosts(user.getToken());
-
-
+        Log.i("urls", user.getUrl());
     }
 
     public void addAccount(User user)

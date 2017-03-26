@@ -167,6 +167,41 @@ public class PostDataToServer {
         };
         AppController.getInstance().addToRequestQueue(strreq);
     }
+
+    public static void follow (int request, final String token, final String url) {
+        StringRequest strreq = new StringRequest(request,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "USER" + Response.toString());
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                return params;
+
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                //headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+    }
+
 }
 
 

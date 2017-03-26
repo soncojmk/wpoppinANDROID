@@ -89,15 +89,13 @@ public class UserPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //url = url.replace(".json", "/follow");
-                follow(Request.Method.POST, user.getToken(), "http://www.wpoppin.com/api/account/1150/follow/");
+                Log.i("fdfdfdfdf", currentUserPage.getUrl()+"follow");
+                PostDataToServer.follow(Request.Method.POST, user.getToken(), currentUserPage.getUrl()+"follow/");
                 follow.setText("Requested");
             }
 
         });
 
-
-//        Log.i("following", myFollowing.toString());
-  //      Log.i("requested", myRequested.toString());
 
         fetchPost();  //currentUserPage is set inside the response listener
 
@@ -135,10 +133,10 @@ public class UserPage extends AppCompatActivity {
             getNumber(user.getToken(), url_to + "following");
             //getNumber(user.getToken(), url_to + "followers");
 
-            getFollowing(user.getToken(), "http://www.wpoppin.com/api/accounts/1/following/");
-            getRequested(user.getToken(), "http://www.wpoppin.com/api/account/1/requested/");
-            Log.i("myfollowing", myFollowing.toString());
-            Log.i("myrequested", myRequested.toString());
+            //Log.i("myfollowing", user.getUrl());
+            getFollowing(user.getToken(), user.getUrl() + "/following");
+            getRequested(user.getToken(), user.getUrl() + "/requested");
+            //Log.i("myrequested", myRequested.toString());
 
         }
     };
@@ -200,41 +198,6 @@ public class UserPage extends AppCompatActivity {
     }
 
 
-    private void follow (int request, final String token, final String url) {
-        StringRequest strreq = new StringRequest(request,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String Response) {
-                        Log.i(TAG, "USER" + Response.toString());
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError e) {
-                e.printStackTrace();
-            }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                return params;
-
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                //headers.put("Content-Type", "application/json; charset=utf-8");
-                headers.put("Authorization", "Token " + token);
-                return headers;
-            }
-        };
-        AppController.getInstance().addToRequestQueue(strreq);
-    }
-
-
     private void getFollowing(final String token, final String url) {
         StringRequest strreq = new StringRequest(Request.Method.GET,
                 url,
@@ -271,7 +234,7 @@ public class UserPage extends AppCompatActivity {
                                     @Override
                                     public void onClick(View v) {
                                         //url = url.replace(".json", "/follow");
-                                        follow(Request.Method.DELETE, user.getToken(), "http://www.wpoppin.com/api/account/1150/follow/");
+                                        PostDataToServer.follow(Request.Method.DELETE, user.getToken(), currentUserPage.getUrl()+"follow/");
                                         follow.setText("Follow");
                                     }
 
@@ -346,7 +309,7 @@ public class UserPage extends AppCompatActivity {
                                     @Override
                                     public void onClick(View v) {
                                         //url = url.replace(".json", "/follow");
-                                        follow(Request.Method.DELETE, user.getToken(), "http://www.wpoppin.com/api/account/1150/follow/");
+                                        PostDataToServer.follow(Request.Method.DELETE, user.getToken(), currentUserPage.getUrl()+"follow/");
                                         follow.setText("Follow");
                                     }
 

@@ -3,6 +3,7 @@ package com.wpoppin.whatspoppin;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.toolbox.ImageLoader;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public class FollowRequestsListAdapater extends BaseAdapter {
     private List<User> Items;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     Bitmap bitmap;
+    private User user;
 
     public FollowRequestsListAdapater(Activity activity, List<User> Items) {
         this.activity = activity;
@@ -62,25 +65,36 @@ public class FollowRequestsListAdapater extends BaseAdapter {
         TextView username = (TextView) convertView.findViewById(R.id.username);
         TextView about = (TextView) convertView.findViewById(R.id.about);
         TextView college = (TextView) convertView.findViewById(R.id.college);
-        Button follow = (Button) convertView.findViewById(R.id.follow);
+        final Button follow = (Button) convertView.findViewById(R.id.follow);
 
         // getting movie data for the row
         final User account = Items.get(position);
 
+        user = PrefUtils.getCurrentUser(activity);
+        Log.i("useradapter", user.getUrl());
 
         username.setText(account.user.getUsername());
         about.setText(account.getBio());
         college.setText(Integer.toString(account.getCollege()));
 
+        follow.setText("Accept Request");
+        follow.setBackgroundColor(convertView.getResources().getColor(R.color.white));
+        follow.setTextColor(convertView.getResources().getColor(R.color.colorPrimary));
+        follow.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                String url = account.getUrl() + "follow/";
+                Log.i("account", url);
+                PostDataToServer.follow(Request.Method.PUT, user.getToken(), url);
+                follow.setText("Accepted");
+                follow.setBackgroundColor(activity.getResources().getColor(R.color.colorPrimary));
+                follow.setTextColor(activity.getResources().getColor(R.color.white));
+            }
 
-
-
+            });
 
         return convertView;
     }
-
-
-
 
 }
