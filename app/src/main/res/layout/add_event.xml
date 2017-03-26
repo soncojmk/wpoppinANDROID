@@ -36,6 +36,7 @@
                 android:layout_marginBottom="10dp"
                 android:hint="Title"
                 android:inputType="textCapWords"
+                android:id="@+id/title"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textColorHint="@android:color/holo_blue_dark"
                 android:textSize="26dp" />
@@ -81,7 +82,7 @@
                     android:id="@+id/thumbnail"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text=" Upload Image (Optional)"
+                    android:text=" Upload Image"
                     android:textSize="16dp"
                     android:textColor="@color/dark_gray"
                     android:textAllCaps="false"

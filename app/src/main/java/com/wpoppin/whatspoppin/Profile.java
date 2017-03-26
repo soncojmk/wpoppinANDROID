@@ -14,6 +14,7 @@ import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +26,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,7 +57,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -63,25 +67,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.app.Activity.RESULT_OK;
 import static com.wpoppin.whatspoppin.AppController.TAG;
 
 public class Profile extends Fragment {
 
     private User user;
     private ImageView profileImage;
+    private ImageButton profileImageedit;
     Bitmap bitmap;
     private TextView name;
     private Spinner school_et;
     private EditText bio_et;
     private TextView school_tv;
     private TextView bio_tv;
-    Spinner mm;
-    Spinner dd;
-    Spinner yyyy;
-    Spinner hour;
-    Spinner minute;
-    Spinner am;
-    Spinner state;
 
     @Override
     public void onPause() {
@@ -164,6 +163,16 @@ public class Profile extends Fragment {
 
         user = PrefUtils.getCurrentUser(getActivity());
         profileImage = (ImageView) view.findViewById(R.id.profileImage);
+        profileImageedit = (ImageButton) view.findViewById(R.id.profileImagenew);
+        profileImageedit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, 100);
+            }
+        });
+
         name = (TextView) view.findViewById(R.id.username);
         school_tv = (TextView) view.findViewById(R.id.schooltv);
         school_et = (Spinner) view.findViewById(R.id.schoolet);
@@ -175,18 +184,26 @@ public class Profile extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("" + user.getUsername());
         convertToken(user.getToken());
 
+
+
         ImageButton edit = (ImageButton)view.findViewById(R.id.settings);
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("USER", "Edit");
                 ViewSwitcher bio = (ViewSwitcher)view.findViewById(R.id.bio_switch);
                 bio.showNext(); //or switcher.showPrevious();
 
                 ViewSwitcher school = (ViewSwitcher)view.findViewById(R.id.school);
                 school.showNext();
 
+                ViewSwitcher profile = (ViewSwitcher)view.findViewById(R.id.image_switch);
+                profile.showNext();
+
                 ViewSwitcher im = (ViewSwitcher)view.findViewById(R.id.image_edit_switch);
                 im.showNext();
+
+
             }
         });
 
@@ -194,6 +211,7 @@ public class Profile extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String b = bio_et.getText().toString();
                 int n = school_et.getSelectedItemPosition() + 1;
                 bio_tv.setText(b);
@@ -204,10 +222,13 @@ public class Profile extends Fragment {
                     school_tv.setText("Temple");
                 }
 
-                PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), b, n);
+                PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), b, n, imageString);
 
                 ViewSwitcher bio = (ViewSwitcher)view.findViewById(R.id.bio_switch);
                 bio.showNext(); //or switcher.showPrevious();
+
+                ViewSwitcher profile = (ViewSwitcher)view.findViewById(R.id.image_switch);
+                profile.showNext();
 
                 ViewSwitcher school = (ViewSwitcher)view.findViewById(R.id.school);
                 school.showNext();
@@ -223,6 +244,7 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), Add_Event.class);
+                i.putExtra("token", user.getToken());
                 i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -272,7 +294,36 @@ public class Profile extends Fragment {
     String about;
     String college;
 
+    String imageString = null;
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        switch(requestCode) {
+            case 100:
+                if(resultCode == RESULT_OK){
+                    try {
+                        Uri selectedImage = imageReturnedIntent.getData();
+                        InputStream imageStream = getActivity().getContentResolver().openInputStream(selectedImage);
+                        Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
+                        profileImage.setImageBitmap(yourSelectedImage);
+                        profileImageedit.setImageBitmap(yourSelectedImage);
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        yourSelectedImage.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                        byte[] byteArray = byteArrayOutputStream .toByteArray();
+                        imageString = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+        }
+    }
+
+    Bitmap bit;
     private void convertToken(final String token) {
         final String url = "http://www.wpoppin.com/api/myaccount/";
         StringRequest strreq = new StringRequest(Request.Method.GET,
@@ -301,6 +352,29 @@ public class Profile extends Fragment {
                             if (about.equals("null"))
                                 about = "Click to enter a Bio";
 
+                            new AsyncTask<Void, Void, Void>() {
+                                @Override
+                                protected Void doInBackground(Void... params) {
+                                    try {
+                                        Log.e("USER", "IL " + avatar);
+                                        bit = BitmapFactory.decodeStream((InputStream) new URL(avatar).getContent());
+
+                                    }catch (Exception e)
+                                    {
+                                        Log.e("Avatar Error", e.toString());
+                                        e.printStackTrace();
+                                    }
+                                    return null;
+                                }
+
+                                @Override
+                                protected void onPostExecute(Void aVoid) {
+                                    super.onPostExecute(aVoid);
+                                    profileImage.setImageBitmap(bit);
+                                    profileImageedit.setImageBitmap(bit);
+                                }
+                            }.execute();
+
                             name.setText(username);
                             bio_et.setText(about);
                             bio_tv.setText(about);
@@ -309,7 +383,6 @@ public class Profile extends Fragment {
                             getNumber(user.getToken(), url_to + "following");
                             getNumber(user.getToken(), url_to + "followers");
                             getNumber(user.getToken(), url_to + "requesting");
-
 
                         } catch (JSONException e) {
                             Log.e(TAG, "USER " + e.toString());
@@ -341,6 +414,11 @@ public class Profile extends Fragment {
         AppController.getInstance().addToRequestQueue(strreq);
 
     }
+
+
+
+
+
 
     private void getNumber(final String token, final String url) {
         StringRequest strreq = new StringRequest(Request.Method.GET,

@@ -1,19 +1,26 @@
 package com.wpoppin.whatspoppin;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,9 +31,20 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.wpoppin.whatspoppin.AppController.TAG;
 
 public class Add_Event extends AppCompatActivity {
 
@@ -35,6 +53,8 @@ public class Add_Event extends AppCompatActivity {
     EditText sadd;
     EditText scity;
     EditText szip;
+    EditText price;
+    EditText ticket;
 
     Spinner mm;
     Spinner dd;
@@ -43,9 +63,12 @@ public class Add_Event extends AppCompatActivity {
     Spinner minute;
     Spinner am;
 
+    String imageString;
+
     Spinner state;
 
     Button image;
+    String token;
 
     private static final int SELECT_PHOTO = 100;
 
@@ -53,7 +76,8 @@ public class Add_Event extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_event);
-
+        Intent in = getIntent();
+        token = in.getStringExtra("token");
         View d = findViewById(R.id.add_event);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -74,6 +98,14 @@ public class Add_Event extends AppCompatActivity {
             else
                 num.add(i + "");
         }
+
+        title = (EditText)d.findViewById(R.id.title);
+        desc = (EditText)d.findViewById(R.id.description);
+        sadd = (EditText)d.findViewById(R.id.street);
+        scity = (EditText)d.findViewById(R.id.city);
+        szip = (EditText)d.findViewById(R.id.zip);
+        price = (EditText)d.findViewById(R.id.money);
+        ticket = (EditText)d.findViewById(R.id.ticket);
 
         //  PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "heehe", 1);
         mm = (Spinner) d.findViewById(R.id.mm);
@@ -129,6 +161,11 @@ public class Add_Event extends AppCompatActivity {
                         InputStream imageStream = getContentResolver().openInputStream(selectedImage);
                         Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
                         image.setText(" Image Selected");
+
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        yourSelectedImage.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                        byte[] byteArray = byteArrayOutputStream .toByteArray();
+                        imageString = Base64.encodeToString(byteArray, Base64.DEFAULT);
                     }
                     catch (Exception e)
                     {
@@ -149,7 +186,7 @@ public class Add_Event extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO addd event
+                convertToken();
             }
         });
         submit.setText("Submit");
@@ -164,4 +201,54 @@ public class Add_Event extends AppCompatActivity {
         }
         return false;
     }
+
+
+    private void convertToken() {
+        StringRequest strreq = new StringRequest(Request.Method.POST,
+                "http://www.wpoppin.com/api/events/",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "RESPONDE" + Response.toString());
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("category", "1");
+                params.put("title", title.getText().toString());
+                params.put("street_address", sadd.getText().toString());
+                params.put("city", scity.getText().toString());
+                params.put("state", state.getItemAtPosition(state.getSelectedItemPosition()).toString());
+                params.put("zip_code", szip.getText().toString());
+                params.put("date", "");
+                params.put("time", (am.getSelectedItem().toString().equals("am")?hour.getSelectedItem().toString() : "" +(Integer.parseInt(hour.getSelectedItem().toString()) + 12)) + ":" + minute.getSelectedItem().toString() + ":00");
+                params.put("description", desc.getText().toString());
+                params.put("price", price.toString());
+                params.put("image", imageString);
+                params.put("ticket_link", ticket.toString());
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+    }
+
+
+
 }

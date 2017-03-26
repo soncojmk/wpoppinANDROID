@@ -37,13 +37,15 @@ import static com.wpoppin.whatspoppin.AppController.TAG;
 public class PostDataToServer {
 
 
-    public static void UpdatePatch(Context context, String url, final String token, String about, int college) {
+    public static void UpdatePatch(Context context, String url, final String token, String about, int college, String image) {
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
             String URL = url;
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("about", about);
             jsonBody.put("college", Integer.toString(college));
+            if(image != null)
+                jsonBody.put("avatar", image);
 
             //jsonBody.put("Author", "BNK");
             final String requestBody = jsonBody.toString();
