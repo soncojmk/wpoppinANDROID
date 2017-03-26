@@ -70,11 +70,9 @@
         <activity
             android:name=".UserPage"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".FollowRequests"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".SelectInterests"
             android:screenOrientation="portrait" />
@@ -93,8 +91,10 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".EventPage" />
-        <activity android:name=".Settings"
-            android:parentActivityName=".Main"></activity>
+        <activity
+            android:name=".Settings"
+            android:parentActivityName=".Main" />
+        <activity android:name=".Add_Event"></activity>
     </application>
 
 </manifest>

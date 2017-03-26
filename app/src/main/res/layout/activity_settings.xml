@@ -39,7 +39,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
                 android:background="@android:color/darker_gray"/>
 
             <LinearLayout
@@ -71,10 +71,6 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@android:color/darker_gray"/>
 
 
             <TextView
@@ -82,14 +78,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:paddingTop="20dp"
-                android:paddingBottom="5dp"
+                android:paddingBottom="2dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:text="SET INTERESTS"/>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
                 android:background="@android:color/darker_gray"/>
 
 
@@ -98,7 +94,6 @@
                 android:layout_width="match_parent"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
                 android:layout_height="40dp"
                 android:foregroundGravity="center_vertical"
                 android:gravity="center_horizontal">
@@ -115,18 +110,13 @@
                 <TextView android:layout_width="0dp"
                     android:layout_weight="9"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:gravity="center_vertical"
+                    android:layout_gravity="center"
                     android:paddingLeft="10dp"
                     android:text="Interests"
                     android:textColor="#000" />
-
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@android:color/darker_gray"/>
 
 
 
@@ -142,7 +132,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
                 android:background="@android:color/darker_gray"/>
 
 
@@ -151,7 +141,6 @@
                 android:layout_width="match_parent"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
                 android:layout_height="40dp"
                 android:foregroundGravity="center_vertical"
                 android:gravity="center_horizontal">
@@ -175,17 +164,11 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@android:color/darker_gray"/>
-
             <LinearLayout
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
                 android:layout_height="40dp"
                 android:foregroundGravity="center_vertical"
                 android:gravity="center_horizontal">
@@ -206,10 +189,6 @@
                     android:text="Logout"
                     android:textColor="#000" />
             </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@android:color/darker_gray"/>
 
         </LinearLayout>
     </ScrollView>

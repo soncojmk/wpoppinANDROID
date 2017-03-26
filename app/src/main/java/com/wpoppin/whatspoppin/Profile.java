@@ -222,51 +222,13 @@ public class Profile extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog d = new Dialog(getContext());
-                d.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                d.setContentView(R.layout.profile_popup);
-                d.show();
-
-                ArrayList<String> num = new ArrayList<>();
-                for (int i = 0; i < 60; i++) {
-                    if (i < 10)
-                        num.add("0" + i);
-                    else
-                        num.add(i + "");
-                }
-
-              //  PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), "heehe", 1);
-                mm = (Spinner) d.findViewById(R.id.mm);
-                ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num.subList(1, 13));
-                mm.setAdapter(categoriesAdapter);
-
-                dd = (Spinner) d.findViewById(R.id.dd);
-                ArrayAdapter<String> ddAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num.subList(1, 32));
-                dd.setAdapter(ddAdapter);
-
-                yyyy = (Spinner) d.findViewById(R.id.yyyy);
-                ArrayAdapter<String> yyyyAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, new ArrayList<String>(Arrays.asList("2017", "2018",
-                        "2019", "2020", "2021", "2022")));
-                yyyy.setAdapter(yyyyAdapter);
-
-                hour = (Spinner) d.findViewById(R.id.hour);
-                hour.setAdapter(categoriesAdapter);
-
-                minute = (Spinner) d.findViewById(R.id.minute);
-                ArrayAdapter<String> minAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, num);
-                minute.setAdapter(minAdapter);
-
-                am = (Spinner) d.findViewById(R.id.am);
-                ArrayAdapter<String> amAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
-                        new ArrayList<>(Arrays.asList("pm", "am")));
-                am.setAdapter(amAdapter);
-
-                state = (Spinner) d.findViewById(R.id.state);
-                ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
-                        getResources().getStringArray(R.array.us_states));
-                state.setAdapter(stateAdapter);
-
-
+                Intent i = new Intent(getActivity(), Add_Event.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                startActivity(i);
             }
         });
 
