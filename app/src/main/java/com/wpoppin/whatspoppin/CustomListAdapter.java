@@ -23,9 +23,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
+
+import org.json.JSONArray;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -34,12 +43,18 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static android.R.attr.bitmap;
+import static android.R.attr.description;
+import static com.wpoppin.whatspoppin.AppController.TAG;
 
 public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
@@ -47,6 +62,12 @@ public class CustomListAdapter extends BaseAdapter {
     private List<Post> Items;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     Bitmap bitmap;
+    private ExpandableTextView description;
+    private String s;
+    private User user;
+    private List<String> saving;
+    private ImageButton save;
+    private Post m;
 
     public CustomListAdapter(Activity activity, List<Post> Items) {
         this.activity = activity;
@@ -87,19 +108,21 @@ public class CustomListAdapter extends BaseAdapter {
         //TextView author = (TextView) convertView.findViewById(R.id.author);
         TextView title = (TextView) convertView.findViewById(R.id.title);
         TextView price = (TextView) convertView.findViewById(R.id.price);
-        ExpandableTextView description = (ExpandableTextView) convertView.findViewById(R.id.expand_text_view);
+        description = (ExpandableTextView) convertView.findViewById(R.id.expand_text_view);
         TextView date = (TextView) convertView.findViewById(R.id.date);
         TextView address = (TextView) convertView.findViewById(
                 R.id.address);
         TextView time = (TextView) convertView.findViewById(R.id.time);
-        ImageButton save = (ImageButton) convertView.findViewById(R.id.save);
+        save = (ImageButton) convertView.findViewById(R.id.save);
         ImageButton share = (ImageButton) convertView.findViewById(R.id.share);
         final ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
         TextView username = (TextView) convertView.findViewById(R.id.username);
 
+        user = PrefUtils.getCurrentUser(activity);
+
 
         // getting movie data for the row
-        final Post m = Items.get(position);
+        m = Items.get(position);
 
         // thumbnail image
         thumbNail.setImageUrl(m.getImage(), imageLoader);
@@ -176,8 +199,11 @@ public class CustomListAdapter extends BaseAdapter {
         }.execute();
 
 
-          final String s =  fixEncoding(m.getDescription());
-           description.setText(s);
+          s =  fixEncoding(m.getDescription());
+           //description.setText(s);
+
+        saving = new ArrayList<>();
+        getNumber(user.getToken(), m.getUrl() + "people_saving/");
 
 
         String dateString = m.getDate();
@@ -223,7 +249,10 @@ public class CustomListAdapter extends BaseAdapter {
             e.printStackTrace();
         }
 
+        getSaved(user.getToken(), m.getUrl() + "people_saving/");
 
+
+        /*
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -243,6 +272,7 @@ public class CustomListAdapter extends BaseAdapter {
 
             }
         });
+        */
 
         share.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -313,6 +343,134 @@ public class CustomListAdapter extends BaseAdapter {
             }
         }
         return true;
+    }
+
+    private void getNumber(final String token, final String url) {
+        StringRequest strreq = new StringRequest(Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "USER" + Response.toString());
+                        String json = Response.toString();
+                        int num = 0;
+                        try {
+                            num = (new JSONArray(json)).length();
+                        }catch (Exception e)
+                        {}
+                        description.setText(num + " " + " people save this" + s);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                return params;
+
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+    }
+
+
+    private void getSaved(final String token, final String url) {
+        StringRequest strreq = new StringRequest(Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String Response) {
+                        Log.i(TAG, "REQUESTED" + Response.toString());
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+
+                        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+                        Gson gson = gsonBuilder.create();
+
+                        List<User> accounts = Arrays.asList(gson.fromJson(Response, User[].class));
+
+
+                        try {  //adds the people saving the event to the saving list
+                            for (User account : accounts) {
+                                User follow = new User();
+                                follow.setUrl(account.url);
+                                follow.setBio(account.about);
+                                follow.setUser(account.user);
+                                follow.setAvatar(account.avatar);
+                                follow.setCollege(account.college);
+                                saving.add(account.user.getUsername());
+                                Log.i("save", follow.user.getUsername());
+
+                            }
+                            Log.i("savinglist", saving.toString());
+                            //Log.i("cureent", currentUserPage.user.getUsername());
+
+
+                            //checks whether the person saving the current user has saved the event
+                            if (saving.contains(user.getUsername())){
+                                save.setBackgroundColor(activity.getResources().getColor(R.color.colorPrimary));
+
+                                save.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        //url = url.replace(".json", "/follow");
+                                        PostDataToServer.follow(Request.Method.DELETE, user.getToken(), m.getUrl()+"save/");
+                                        save.setBackgroundColor(activity.getResources().getColor(R.color.white));
+                                    }
+                                });
+                            }
+                            else{
+                                save.setBackgroundColor(activity.getResources().getColor(R.color.white));
+                                save.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        PostDataToServer.follow(Request.Method.POST, user.getToken(), m.getUrl() + "save/");
+                                        save.setBackgroundColor(activity.getResources().getColor(R.color.colorPrimary));
+                                    }
+                                });
+
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "USER " + e.toString());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError e) {
+                e.printStackTrace();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                return params;
+
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                //headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Authorization", "Token " + token);
+                return headers;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(strreq);
+
     }
 
 }

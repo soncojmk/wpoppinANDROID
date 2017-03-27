@@ -50,7 +50,7 @@ public class PostDataToServer {
             //jsonBody.put("Author", "BNK");
             final String requestBody = jsonBody.toString();
 
-            StringRequest stringRequest = new StringRequest(Request.Method.PATCH, URL, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     Log.i("VOLLEY", response);
@@ -120,13 +120,12 @@ public class PostDataToServer {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         CustomVolleyRequest jsObjRequest = new CustomVolleyRequest(Request.Method.POST, url, params, responseListener, errorListener);
         requestQueue.add(jsObjRequest);
-
-
     }
 
 
     public static void setMyUrl(final Context context, final String token) {
         String url = "http://www.wpoppin.com/api/myaccount/";
+
         StringRequest strreq = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {

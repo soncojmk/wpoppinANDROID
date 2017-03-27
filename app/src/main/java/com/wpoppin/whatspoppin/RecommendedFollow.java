@@ -21,10 +21,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,10 +30,10 @@ import java.util.Map;
 import static com.wpoppin.whatspoppin.AppController.TAG;
 
 /**
- * Created by joseph on 3/24/2017.
+ * Created by joseph on 3/26/2017.
  */
 
-public class FollowRequests extends AppCompatActivity {
+public class RecommendedFollow extends AppCompatActivity {
 
     private User user;
     private ImageView profileImage;
@@ -51,14 +47,14 @@ public class FollowRequests extends AppCompatActivity {
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     private List<User> accountList = new ArrayList<>();
     private ListView listView;
-    private FollowRequestsListAdapater adapter;
+    private RecommendedFollowListAdapter adapter;
     private Gson gson;
     private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_follow_requests);
+        setContentView(R.layout.activity_recommended_follow);
 
 
         requestQueue = Volley.newRequestQueue(this);
@@ -68,8 +64,8 @@ public class FollowRequests extends AppCompatActivity {
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
 
-        listView = (ListView) findViewById(R.id.requesting_list);
-        adapter = new FollowRequestsListAdapater(this, accountList);
+        listView = (ListView) findViewById(R.id.recommended_list);
+        adapter = new RecommendedFollowListAdapter(this, accountList);
         listView.setAdapter(adapter);
 
         Intent i = getIntent();
@@ -96,7 +92,7 @@ public class FollowRequests extends AppCompatActivity {
     }
 
     public void fetchPosts(final String token) {
-        String url = user.getUrl() + "requesting/";
+        String url = "http://www.wpoppin.com/api/myaccount/recommended/";
         StringRequest strreq = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {
@@ -106,10 +102,12 @@ public class FollowRequests extends AppCompatActivity {
                         String json = Response.toString();
                         //split the json string to get the token value then store it in local memory
                         List<User> accounts = Arrays.asList(gson.fromJson(Response, User[].class));
+                        Log.i("accoutnss", accounts.toString());
 
                         try {
                             for (User account : accounts) {
                                 addAccount(account);
+                                Log.i("account1", account.getUrl());
 
                             }
                             adapter.notifyDataSetChanged();

@@ -153,6 +153,20 @@ public class Profile extends Fragment {
             startActivity(i);
             return true;
         }
+
+        else if (item.getItemId() == R.id.add) {
+            Intent i = new Intent(getActivity(), RecommendedFollow.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            startActivity(i);
+            return true;
+        }
+
+
         return false;
     }
 
@@ -222,7 +236,9 @@ public class Profile extends Fragment {
                     school_tv.setText("Temple");
                 }
 
-                PostDataToServer.UpdatePatch(getActivity(), url_to, user.getToken(), b, n, imageString);
+                PostDataToServer.UpdatePatch(getActivity(), url_to + "/update_profile/", user.getToken(), b, n, imageString);
+
+                Log.i("url_to", url_to);
 
                 ViewSwitcher bio = (ViewSwitcher)view.findViewById(R.id.bio_switch);
                 bio.showNext(); //or switcher.showPrevious();

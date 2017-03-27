@@ -70,6 +70,11 @@
         <activity
             android:name=".UserPage"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".RecommendedFollow"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".FollowRequests"
             android:screenOrientation="portrait" />
