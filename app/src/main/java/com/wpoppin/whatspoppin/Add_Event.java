@@ -15,6 +15,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,12 +34,19 @@ import android.widget.Spinner;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -204,49 +212,65 @@ public class Add_Event extends AppCompatActivity {
 
 
     private void convertToken() {
-        StringRequest strreq = new StringRequest(Request.Method.POST,
-                "http://www.wpoppin.com/api/events/",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String Response) {
-                        Log.i(TAG, "RESPONDE" + Response.toString());
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            String URL = "http://www.wpoppin.com/api/events/";
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("category", "1");
+            jsonBody.put("title", title.getText().toString());
+            jsonBody.put("street_address", sadd.getText().toString());
+            jsonBody.put("city", scity.getText().toString());
+            jsonBody.put("state", state.getItemAtPosition(state.getSelectedItemPosition()).toString());
+            jsonBody.put("zip_code", szip.getText().toString());
+            jsonBody.put("date", "");
+            jsonBody.put("time", (am.getSelectedItem().toString().equals("am")?hour.getSelectedItem().toString() : "" +(Integer.parseInt(hour.getSelectedItem().toString()) + 12)) + ":" + minute.getSelectedItem().toString() + ":00");
+            jsonBody.put("description", desc.getText().toString());
+            jsonBody.put("price", price.toString());
+            jsonBody.put("image", imageString);
+            jsonBody.put("ticket_link", ticket.toString());
 
+            //jsonBody.put("Author", "BNK");
+            final String requestBody = jsonBody.toString();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("VOLLEY", response);
+                    Log.i(TAG, "itworks" + response.toString());
+                    String json = response.toString();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json";
+                }
+
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new ArrayMap<String, String>();
+                    headers.put("Authorization", "Token " + token);
+                    return headers;
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError e) {
-                e.printStackTrace();
-            }
-        }) {
+                }
+            };
 
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("category", "1");
-                params.put("title", title.getText().toString());
-                params.put("street_address", sadd.getText().toString());
-                params.put("city", scity.getText().toString());
-                params.put("state", state.getItemAtPosition(state.getSelectedItemPosition()).toString());
-                params.put("zip_code", szip.getText().toString());
-                params.put("date", "");
-                params.put("time", (am.getSelectedItem().toString().equals("am")?hour.getSelectedItem().toString() : "" +(Integer.parseInt(hour.getSelectedItem().toString()) + 12)) + ":" + minute.getSelectedItem().toString() + ":00");
-                params.put("description", desc.getText().toString());
-                params.put("price", price.toString());
-                params.put("image", imageString);
-                params.put("ticket_link", ticket.toString());
-
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", "Token " + token);
-                return headers;
-            }
-        };
-        AppController.getInstance().addToRequestQueue(strreq);
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 

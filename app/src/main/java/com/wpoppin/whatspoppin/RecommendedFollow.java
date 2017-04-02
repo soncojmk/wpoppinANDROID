@@ -92,7 +92,7 @@ public class RecommendedFollow extends AppCompatActivity {
     }
 
     public void fetchPosts(final String token) {
-        String url = "http://www.wpoppin.com/api/myaccount/recommended/";
+        String url = "http://www.wpoppin.com/api/myrecommended/";
         StringRequest strreq = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {

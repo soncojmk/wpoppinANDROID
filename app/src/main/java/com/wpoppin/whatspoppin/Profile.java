@@ -81,6 +81,8 @@ public class Profile extends Fragment {
     private EditText bio_et;
     private TextView school_tv;
     private TextView bio_tv;
+    private TextView followers;
+    private TextView following;
 
     @Override
     public void onPause() {
@@ -187,6 +189,10 @@ public class Profile extends Fragment {
             }
         });
 
+
+        following = (TextView) view.findViewById(R.id.following);
+        followers = (TextView) view.findViewById(R.id.followers);
+
         name = (TextView) view.findViewById(R.id.username);
         school_tv = (TextView) view.findViewById(R.id.schooltv);
         school_et = (Spinner) view.findViewById(R.id.schoolet);
@@ -238,7 +244,8 @@ public class Profile extends Fragment {
 
                 PostDataToServer.UpdatePatch(getActivity(), url_to + "/update_profile/", user.getToken(), b, n, imageString);
 
-                Log.i("url_to", url_to);
+
+                Log.i("imagestring", imageString + "ok");
 
                 ViewSwitcher bio = (ViewSwitcher)view.findViewById(R.id.bio_switch);
                 bio.showNext(); //or switcher.showPrevious();
@@ -309,6 +316,9 @@ public class Profile extends Fragment {
     String avatar;
     String about;
     String college;
+    String num_followers;
+    String num_following;
+    String num_requesting;
 
     String imageString = null;
 
@@ -359,6 +369,10 @@ public class Profile extends Fragment {
                             avatar = jsonObj.getJSONObject(0).getString("avatar");
                             about = jsonObj.getJSONObject(0).getString("about");
                             college = jsonObj.getJSONObject(0).getString("college");
+                            num_following = jsonObj.getJSONObject(0).getString("num_following");
+                            num_followers = jsonObj.getJSONObject(0).getString("num_followers");
+                            num_requesting = jsonObj.getJSONObject(0).getString("num_requesting");
+
                             school_et.setSelection(Integer.parseInt(college) - 1);
                             if (college.equals("1"))
                                 college = "Penn State University";
@@ -395,10 +409,13 @@ public class Profile extends Fragment {
                             bio_et.setText(about);
                             bio_tv.setText(about);
                             school_tv.setText(college);
+                            followers.setText(num_followers);
+                            following.setText(num_following);
+                            notifCount.setText(num_requesting);
 
-                            getNumber(user.getToken(), url_to + "following");
-                            getNumber(user.getToken(), url_to + "followers");
-                            getNumber(user.getToken(), url_to + "requesting");
+                            //getNumber(user.getToken(), url_to + "following");
+                           // getNumber(user.getToken(), url_to + "followers");
+                           // getNumber(user.getToken(), url_to + "requesting");
 
                         } catch (JSONException e) {
                             Log.e(TAG, "USER " + e.toString());

@@ -57,6 +57,8 @@ public class UserPage extends AppCompatActivity {
     private List<String> myFollowing;
     private List<String> myRequested;
     private TextView follow;
+    private TextView followers;
+    private TextView following;
 
 
     @Override
@@ -120,8 +122,16 @@ public class UserPage extends AppCompatActivity {
             name = (TextView) findViewById(R.id.username);
             school_tv = (TextView)findViewById(R.id.school);
             bio = (TextView) findViewById(R.id.bio);
-            //Log.i("account", account.getBio());
-            //profileImage = account.getAvatar();
+            following = (TextView) findViewById(R.id.following);
+            followers = (TextView) findViewById(R.id.followers);
+
+
+            following.setText(account.getNum_following());
+            followers.setText(account.getNum_followers());
+
+
+
+
 
             name.setText(account.user.getUsername());
             school_tv.setText(Integer.toString(account.getCollege()));
@@ -130,12 +140,12 @@ public class UserPage extends AppCompatActivity {
 
 
             String url_to = account.getUrl().replace(".json", "/");
-            getNumber(user.getToken(), url_to + "following");
+            //getNumber(user.getToken(), url_to + "following");
             //getNumber(user.getToken(), url_to + "followers");
 
             //Log.i("myfollowing", user.getUrl());
-            getFollowing(user.getToken(), user.getUrl() + "/following");
-            getRequested(user.getToken(), user.getUrl() + "/requested");
+            getFollowing(user.getToken(), user.getUrl() + "/following"); //compare to see whether the current user if following the userpage
+            getRequested(user.getToken(), user.getUrl() + "/requested"); //compare to see whether the current user has requested the userpage
             //Log.i("myrequested", myRequested.toString());
 
         }

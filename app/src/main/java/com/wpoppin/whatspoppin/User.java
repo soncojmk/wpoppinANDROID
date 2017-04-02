@@ -35,6 +35,27 @@ public class User {
 
     public User user;
 
+    public String num_followers;
+
+    public String num_following;
+
+
+
+    public String getNum_followers() {
+        return num_followers;
+    }
+
+    public void setNum_followers(String num_followers) {
+        this.num_followers = num_followers;
+    }
+
+    public String getNum_following() {
+        return num_following;
+    }
+
+    public void setNum_following(String num_following) {
+        this.num_following = num_following;
+    }
 
     public User getUser(){return user;}
 
