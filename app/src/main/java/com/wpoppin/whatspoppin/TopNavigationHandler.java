@@ -148,8 +148,8 @@ public class TopNavigationHandler extends Fragment {
         event.setState(post.state);
         User account = new User();
         account = post.account;
-
-        account.setUsername(post.author);
+        if(post.author != null)
+            account.setUsername(post.author);
        // account.setBio(post.account.getBio());
 
         event.setAccount(account);
@@ -274,19 +274,19 @@ public class TopNavigationHandler extends Fragment {
                 {
                     response = 1;
                     listView.removeFooterView(btnLoadMore);
-                    SetURL("http://www.wpoppin.com/api/events_today/");
+                    SetURL("http://www.wpoppin.com/api/filteredevents/");
                 }
                 else if(v.getTag().equals("week"))
                 {
                     response = 2;
                     listView.removeFooterView(btnLoadMore);
-                    SetURL("http://www.wpoppin.com/api/events_this_week/");
+                    SetURL("http://www.wpoppin.com/api/filteredevents/");
                 }
                 else if(v.getTag().equals("month"))
                 {
                     response = 3;
                     listView.removeFooterView(btnLoadMore);
-                    SetURL("http://www.wpoppin.com/api/events_this_month/");
+                    SetURL("http://www.wpoppin.com/api/filteredevents/");
                 }
 
                 //Restart process to update list

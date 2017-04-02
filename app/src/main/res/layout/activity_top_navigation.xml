@@ -18,9 +18,9 @@
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/white"
-            android:clipToPadding="false"
-            android:dividerHeight="20.0sp">
+            android:divider="@color/background"
+            android:dividerHeight="10dp"
+            android:clipToPadding="false">
      </ListView>
 
 

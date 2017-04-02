@@ -8,21 +8,19 @@ package com.wpoppin.whatspoppin;
  * Updated 3/10/2017 by Abagail Tarosky
  */
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,28 +32,30 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.FacebookSdk;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,7 +64,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
@@ -83,6 +87,12 @@ public class Profile extends Fragment {
     private TextView bio_tv;
     private TextView followers;
     private TextView following;
+    private Gson gson;
+    private Button posted;
+    private Button saved;
+    private CustomListAdapter adapter;
+    private List<Post> posted_saved_list;
+    private ListView posted_saved_listview;
 
     @Override
     public void onPause() {
@@ -101,6 +111,7 @@ public class Profile extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.profile, container, false);
 
+        requestQueue = Volley.newRequestQueue(getActivity());
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.my_toolbar); // Attaching the layout to the toolbar object
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
@@ -120,6 +131,7 @@ public class Profile extends Fragment {
         MenuItem item = menu.findItem(R.id.badge);
         MenuItemCompat.setActionView(item, R.layout.feed_update_count);
         notifCount = (Button) MenuItemCompat.getActionView(item);
+        notifCount.setText(num_requesting + "");
         notifCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,6 +215,22 @@ public class Profile extends Fragment {
         bio_tv.setText("Hi, tell us about your favorite event");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("" + user.getUsername());
         convertToken(user.getToken());
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+        gson = gsonBuilder.create();
+        //posted and saved events
+        posted = (Button)view.findViewById(R.id.posted);
+        saved = (Button)view.findViewById(R.id.saved);
+        posted.setOnClickListener(SavedPostedOnClick());
+        saved.setOnClickListener(SavedPostedOnClick());
+
+        posted_saved_list = new ArrayList<Post>();
+        posted_saved_listview = (ListView)view.findViewById(R.id.posted_saved_listview);
+        adapter = new CustomListAdapter(getActivity(), posted_saved_list);
+        posted_saved_listview.setAdapter(adapter);
+        Log.e("USER", user.getUrl() + " ");
+        fetchPosts(user.getUrl() + "saved/");
 
 
 
@@ -310,6 +338,39 @@ public class Profile extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+
+
+    private RequestQueue requestQueue;
+    private void fetchPosts(String endpoint) {
+        Log.e("FETCH", endpoint);
+        StringRequest request = new StringRequest(Request.Method.GET, endpoint, onPostsLoaded, onPostsError);
+        requestQueue.add(request);
+    }
+
+    private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            posted_saved_list = Arrays.asList(gson.fromJson(response, Post[].class));
+            Log.e("SHOW", posted_saved_list.toString());
+            adapter = new CustomListAdapter(getActivity(), posted_saved_list);
+            posted_saved_listview.setAdapter(adapter);
+        }
+    };
+
+    private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            error.toString();
+            Log.e("Fetch Posted/Saved", error.toString());
+        }
+    };
+
+
+
+
+
+
+
     String url_to;
     String username;
     String email;
@@ -321,6 +382,26 @@ public class Profile extends Fragment {
     String num_requesting;
 
     String imageString = null;
+
+    private View.OnClickListener SavedPostedOnClick()
+    {
+        return  new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                posted.setBackgroundColor(getResources().getColor(R.color.background));
+                posted.setTextColor(getResources().getColor(R.color.black));
+                saved.setBackgroundColor(getResources().getColor(R.color.background));
+                saved.setTextColor(getResources().getColor(R.color.black));
+                v.setBackgroundColor(getResources().getColor(R.color.orange));
+                ((Button)v).setTextColor(getResources().getColor(R.color.white));
+                if((Button)v == posted)
+                    fetchPosts(user.getUrl() + "posted/");
+                else
+                    fetchPosts(user.getUrl()+ "saved/");
+            }
+        };
+    }
+
 
 
     @Override
@@ -411,11 +492,8 @@ public class Profile extends Fragment {
                             school_tv.setText(college);
                             followers.setText(num_followers);
                             following.setText(num_following);
-                            notifCount.setText(num_requesting);
-
-                            //getNumber(user.getToken(), url_to + "following");
-                           // getNumber(user.getToken(), url_to + "followers");
-                           // getNumber(user.getToken(), url_to + "requesting");
+                            if(notifCount != null)
+                                notifCount.setText(num_requesting);
 
                         } catch (JSONException e) {
                             Log.e(TAG, "USER " + e.toString());
@@ -447,11 +525,6 @@ public class Profile extends Fragment {
         AppController.getInstance().addToRequestQueue(strreq);
 
     }
-
-
-
-
-
 
     private void getNumber(final String token, final String url) {
         StringRequest strreq = new StringRequest(Request.Method.GET,

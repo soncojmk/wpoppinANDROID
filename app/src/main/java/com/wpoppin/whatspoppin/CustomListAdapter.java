@@ -98,7 +98,7 @@ public class CustomListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_view, null);
+            convertView = inflater.inflate(R.layout.event_custom_list_view, null);
 
         if (imageLoader == null)
             imageLoader = AppController.getInstance().getImageLoader();
@@ -107,15 +107,15 @@ public class CustomListAdapter extends BaseAdapter {
 
         //TextView author = (TextView) convertView.findViewById(R.id.author);
         TextView title = (TextView) convertView.findViewById(R.id.title);
-        TextView price = (TextView) convertView.findViewById(R.id.price);
-        description = (ExpandableTextView) convertView.findViewById(R.id.expand_text_view);
+       // TextView price = (TextView) convertView.findViewById(R.id.price);
+       // description = (ExpandableTextView) convertView.findViewById(R.id.expand_text_view);
         TextView date = (TextView) convertView.findViewById(R.id.date);
-        TextView address = (TextView) convertView.findViewById(
-                R.id.address);
+       // TextView address = (TextView) convertView.findViewById(
+       //         R.id.address);
         TextView time = (TextView) convertView.findViewById(R.id.time);
         save = (ImageButton) convertView.findViewById(R.id.save);
         ImageButton share = (ImageButton) convertView.findViewById(R.id.share);
-        final ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
+        final NetworkImageView avatar = (NetworkImageView) convertView.findViewById(R.id.avatar);
         TextView username = (TextView) convertView.findViewById(R.id.username);
 
         user = PrefUtils.getCurrentUser(activity);
@@ -142,18 +142,20 @@ public class CustomListAdapter extends BaseAdapter {
         final String TITLE = fixEncoding(m.getTitle());
         title.setText(TITLE);
 
+        avatar.setImageUrl(m.account.getAvatar(), imageLoader);
 
-        if(m.getPrice() == 0){
-            price.setText("Free");
-        }
 
-        else if(m.getTicket_link() != null){
-            price.setText("$" + String.valueOf(m.getPrice()));
-        }
+    //    if(m.getPrice() == 0){
+    //        price.setText("Free");
+    //    }
 
-        else {
-            price.setText(String.valueOf(m.getPrice()));
-        }
+    //    else if(m.getTicket_link() != null){
+    //        price.setText("$" + String.valueOf(m.getPrice()));
+    //    }
+
+    //    else {
+    //        price.setText(String.valueOf(m.getPrice()));
+    //    }
 
         final User account = m.account;
 
@@ -169,34 +171,6 @@ public class CustomListAdapter extends BaseAdapter {
             }
         });
 
-        // fetching facebook's profile picture
-        new AsyncTask<Void,Void,Void>(){
-            @Override
-            protected Void doInBackground(Void... params) {
-                URL imageURL = null;
-                try {
-
-                    imageURL = new URL("https://graph.facebook.com/1435767690067161/picture?type=large");
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    bitmap  = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                avatar.setImageBitmap(bitmap);
-            }
-        }.execute();
 
 
           s =  fixEncoding(m.getDescription());
@@ -236,7 +210,7 @@ public class CustomListAdapter extends BaseAdapter {
 
 
         String x = fixEncoding(m.getAddress());
-            address.setText(x);
+      //      address.setText(x);
 
 
         time.setText(outputTime);
@@ -358,7 +332,7 @@ public class CustomListAdapter extends BaseAdapter {
                             num = (new JSONArray(json)).length();
                         }catch (Exception e)
                         {}
-                        description.setText(num + " " + " people save this" + s);
+//                        description.setText(num + " " + " people save this" + s);
 
                     }
                 }, new Response.ErrorListener() {

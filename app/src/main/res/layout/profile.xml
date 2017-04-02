@@ -272,15 +272,6 @@
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content">
 
-        <Button
-            android:text="Posted Events"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/orange"
-            android:textColor="@color/background"
-            android:textAllCaps="false"
-            android:id="@+id/posted"
-            android:layout_weight="1" />
 
         <Button
             android:text="Saved Events"
@@ -288,9 +279,20 @@
             android:layout_height="wrap_content"
             android:id="@+id/saved"
             android:textAllCaps="false"
+            android:background="@color/orange"
+            android:textColor="@color/white"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="Posted Events"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@color/background"
             android:textColor="@color/black"
+            android:textAllCaps="false"
+            android:id="@+id/posted"
             android:layout_weight="1" />
+
     </LinearLayout>
 
     <android.support.design.widget.CoordinatorLayout
@@ -301,6 +303,7 @@
     <ListView
         android:layout_width="match_parent"
         android:background="@color/background"
+        android:id="@+id/posted_saved_listview"
         android:layout_height="match_parent">
 
     </ListView>
