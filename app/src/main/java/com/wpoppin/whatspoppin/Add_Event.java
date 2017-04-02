@@ -216,18 +216,13 @@ public class Add_Event extends AppCompatActivity {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             String URL = "http://www.wpoppin.com/api/events/";
             JSONObject jsonBody = new JSONObject();
-            jsonBody.put("category", "1");
-            jsonBody.put("title", title.getText().toString());
-            jsonBody.put("street_address", sadd.getText().toString());
-            jsonBody.put("city", scity.getText().toString());
-            jsonBody.put("state", state.getItemAtPosition(state.getSelectedItemPosition()).toString());
-            jsonBody.put("zip_code", szip.getText().toString());
-            jsonBody.put("date", "");
-            jsonBody.put("time", (am.getSelectedItem().toString().equals("am")?hour.getSelectedItem().toString() : "" +(Integer.parseInt(hour.getSelectedItem().toString()) + 12)) + ":" + minute.getSelectedItem().toString() + ":00");
-            jsonBody.put("description", desc.getText().toString());
-            jsonBody.put("price", price.toString());
-            jsonBody.put("image", imageString);
-            jsonBody.put("ticket_link", ticket.toString());
+            jsonBody.put("title", "this");
+            jsonBody.put("description", "description");
+            jsonBody.put("street_address", "street");
+            jsonBody.put("city", "city");
+            jsonBody.put("state", "PA");
+            jsonBody.put("zip_code", "19292");
+            jsonBody.put("price", "0");
 
             //jsonBody.put("Author", "BNK");
             final String requestBody = jsonBody.toString();
