@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.CalendarContract;
@@ -20,6 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
@@ -66,7 +69,8 @@ public class CustomListAdapter extends BaseAdapter {
     private String s;
     private User user;
     private List<String> saving;
-    private ImageButton save;
+    private LinearLayout save;
+    private ImageButton saveImage;
     private Post m;
 
     public CustomListAdapter(Activity activity, List<Post> Items) {
@@ -113,10 +117,11 @@ public class CustomListAdapter extends BaseAdapter {
        // TextView address = (TextView) convertView.findViewById(
        //         R.id.address);
         TextView time = (TextView) convertView.findViewById(R.id.time);
-        save = (ImageButton) convertView.findViewById(R.id.save);
-        ImageButton share = (ImageButton) convertView.findViewById(R.id.share);
+        save = (LinearLayout) convertView.findViewById(R.id.save);
+        LinearLayout share = (LinearLayout) convertView.findViewById(R.id.share);
         final NetworkImageView avatar = (NetworkImageView) convertView.findViewById(R.id.avatar);
         TextView username = (TextView) convertView.findViewById(R.id.username);
+        saveImage = (ImageButton)convertView.findViewById(R.id.saveimage);
 
         user = PrefUtils.getCurrentUser(activity);
 
@@ -360,6 +365,7 @@ public class CustomListAdapter extends BaseAdapter {
         AppController.getInstance().addToRequestQueue(strreq);
     }
 
+    boolean sav = false; //white
 
     private void getSaved(final String token, final String url) {
         StringRequest strreq = new StringRequest(Request.Method.GET,
@@ -391,31 +397,27 @@ public class CustomListAdapter extends BaseAdapter {
                             Log.i("savinglist", saving.toString());
                             //Log.i("cureent", currentUserPage.user.getUsername());
 
-
                             //checks whether the person saving the current user has saved the event
-                            if (saving.contains(user.getUsername())){
-                                save.setBackgroundColor(activity.getResources().getColor(R.color.colorPrimary));
-
-                                save.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        //url = url.replace(".json", "/follow");
-                                        PostDataToServer.follow(Request.Method.DELETE, user.getToken(), m.getUrl()+"save/");
-                                        save.setBackgroundColor(activity.getResources().getColor(R.color.white));
-                                    }
-                                });
+                            if (saving.contains(user.getUsername())) {
+                                saveImage.setBackgroundColor(Color.BLACK);
+                                sav = true;
                             }
-                            else{
-                                save.setBackgroundColor(activity.getResources().getColor(R.color.white));
-                                save.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        PostDataToServer.follow(Request.Method.POST, user.getToken(), m.getUrl() + "save/");
-                                        save.setBackgroundColor(activity.getResources().getColor(R.color.colorPrimary));
+                            else
+                                saveImage.setBackgroundColor(Color.WHITE);
+                            save.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    PostDataToServer.follow(Request.Method.POST, user.getToken(), m.getUrl() + "save/");
+                                    if(sav) {
+                                        sav = false;
+                                        saveImage.setBackgroundColor(activity.getResources().getColor(R.color.black));
                                     }
-                                });
-
-                            }
+                                    else {
+                                        sav = true;
+                                        saveImage.setBackgroundColor(Color.WHITE);
+                                    }
+                                }
+                            });
                         } catch (Exception e) {
                             Log.e(TAG, "USER " + e.toString());
                         }
