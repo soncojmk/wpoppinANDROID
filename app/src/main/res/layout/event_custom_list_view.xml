@@ -17,13 +17,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/avatar"
+            <FrameLayout
                 android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                android:layout_weight="1" />
+                android:background="@color/colorPrimary"
+                android:layout_height="30dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/shape_picture"/>
+
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:layout_weight="1" />
+
+
+            </FrameLayout>
 
 
             <ImageView
@@ -59,15 +72,14 @@
             android:scaleType="centerCrop" />
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#56344152"
-            android:orientation="vertical" />
-
-
     </FrameLayout>
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#56344152"
+        android:orientation="vertical" />
 
     <LinearLayout
         android:layout_width="match_parent"

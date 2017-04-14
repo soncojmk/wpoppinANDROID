@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+
 import static com.wpoppin.whatspoppin.AppController.TAG;
 
 public class CustomListAdapter extends BaseAdapter {
@@ -96,6 +97,7 @@ public class CustomListAdapter extends BaseAdapter {
 
         if (imageLoader == null)
             imageLoader = AppController.getInstance().getImageLoader();
+
         NetworkImageView thumbNail = (NetworkImageView) convertView
                 .findViewById(R.id.thumbnail);
 
