@@ -2,61 +2,43 @@ package com.wpoppin.whatspoppin;
 
 
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
-import com.google.android.gms.ads.formats.NativeAd;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import org.json.JSONArray;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static android.R.attr.bitmap;
-import static android.R.attr.description;
 import static com.wpoppin.whatspoppin.AppController.TAG;
 
 public class CustomListAdapter extends BaseAdapter {
@@ -65,17 +47,22 @@ public class CustomListAdapter extends BaseAdapter {
     private List<Post> Items;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     Bitmap bitmap;
-    private ExpandableTextView description;
-    private String s;
     private User user;
     private List<String> saving;
-    private LinearLayout save;
-    private ImageButton saveImage;
     private Post m;
+    private Gson gson;
+    static ArrayList<String> savedurl = new ArrayList<>();
 
-    public CustomListAdapter(Activity activity, List<Post> Items) {
+    public CustomListAdapter(Activity activity, List<Post> Items, String userURL) {
         this.activity = activity;
         this.Items = Items;
+
+        requestQueue = Volley.newRequestQueue(activity);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+        gson = gsonBuilder.create();
+        fetchPosts(userURL +"saved/");
+
     }
 
 
@@ -104,30 +91,36 @@ public class CustomListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.event_custom_list_view, null);
 
+
+        user = PrefUtils.getCurrentUser(activity);
+
         if (imageLoader == null)
             imageLoader = AppController.getInstance().getImageLoader();
         NetworkImageView thumbNail = (NetworkImageView) convertView
                 .findViewById(R.id.thumbnail);
 
-        //TextView author = (TextView) convertView.findViewById(R.id.author);
         TextView title = (TextView) convertView.findViewById(R.id.title);
-       // TextView price = (TextView) convertView.findViewById(R.id.price);
-       // description = (ExpandableTextView) convertView.findViewById(R.id.expand_text_view);
         TextView date = (TextView) convertView.findViewById(R.id.date);
-       // TextView address = (TextView) convertView.findViewById(
-       //         R.id.address);
         TextView time = (TextView) convertView.findViewById(R.id.time);
-        save = (LinearLayout) convertView.findViewById(R.id.save);
+        LinearLayout save = (LinearLayout) convertView.findViewById(R.id.save);
         LinearLayout share = (LinearLayout) convertView.findViewById(R.id.share);
         final NetworkImageView avatar = (NetworkImageView) convertView.findViewById(R.id.avatar);
         TextView username = (TextView) convertView.findViewById(R.id.username);
-        saveImage = (ImageButton)convertView.findViewById(R.id.saveimage);
+        final ImageButton saveImage = (ImageButton)convertView.findViewById(R.id.saveimage);
 
         user = PrefUtils.getCurrentUser(activity);
 
 
         // getting movie data for the row
         m = Items.get(position);
+
+        //data for m
+        final String titles = m.getTitle();
+        final String urls = m.getUrl();
+        final String TITLE = fixEncoding(m.getTitle());
+        final User account = m.account;
+        final String s =  fixEncoding(m.getDescription());
+        final String token = PrefUtils.getCurrentUser(activity.getBaseContext()).getToken();
 
         // thumbnail image
         thumbNail.setImageUrl(m.getImage(), imageLoader);
@@ -136,33 +129,22 @@ public class CustomListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(activity, EventPage.class);
-                String url = m.getUrl();
-                i.putExtra("url", url);
-                i.putExtra("title",m.getTitle());
+                i.putExtra("url", urls);
+                i.putExtra("title",titles);
                 activity.startActivity(i);
             }
         });
 
-      //  author.setText("By " + m.getAuthor());
-        final String TITLE = fixEncoding(m.getTitle());
+      //  author.setText("By " + m.getAuthor()))
         title.setText(TITLE);
 
-        avatar.setImageUrl(m.account.getAvatar(), imageLoader);
+        try {
+            avatar.setImageUrl(m.account.getAvatar(), imageLoader);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
-
-    //    if(m.getPrice() == 0){
-    //        price.setText("Free");
-    //    }
-
-    //    else if(m.getTicket_link() != null){
-    //        price.setText("$" + String.valueOf(m.getPrice()));
-    //    }
-
-    //    else {
-    //        price.setText(String.valueOf(m.getPrice()));
-    //    }
-
-        final User account = m.account;
 
         username.setText(m.getAuthor());
         username.setOnClickListener(new View.OnClickListener() {
@@ -171,19 +153,37 @@ public class CustomListAdapter extends BaseAdapter {
                 Intent i = new Intent(activity, UserPage.class);
                 String url = account.getUrl();
                 i.putExtra("url", url);
-                //i.putExtra("title",m.getAuthor());
                 activity.startActivity(i);
             }
         });
 
-
-
-          s =  fixEncoding(m.getDescription());
-           //description.setText(s);
-
-        saving = new ArrayList<>();
-        getNumber(user.getToken(), m.getUrl() + "people_saving/");
-
+        if(savedurl.contains(m.getUrl()))
+        {
+            saveImage.setImageResource(R.drawable.ic_bookmark);
+        }
+        else
+        {
+            saveImage.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+        }
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PostDataToServer.follow(Request.Method.POST, token, urls+ "save/");
+                if(savedurl.contains(urls))
+                {
+                    Log.e("REMOVE", urls);
+                    saveImage.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+                    savedurl.remove(savedurl.indexOf(urls));
+                }
+                else
+                {
+                    Log.e("SAVE", urls);
+                    saveImage.setImageResource(R.drawable.ic_bookmark);
+                    savedurl.add(urls);
+                }
+                notifyDataSetChanged();
+            }
+        });
 
         String dateString = m.getDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -215,8 +215,6 @@ public class CustomListAdapter extends BaseAdapter {
 
 
         String x = fixEncoding(m.getAddress());
-      //      address.setText(x);
-
 
         time.setText(outputTime);
 
@@ -227,31 +225,6 @@ public class CustomListAdapter extends BaseAdapter {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        getSaved(user.getToken(), m.getUrl() + "people_saving/");
-
-
-        /*
-        save.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                Calendar beginTime = sdf.getCalendar();
-                Intent intent = new Intent(Intent.ACTION_EDIT);
-                intent.setType("vnd.android.cursor.item/event");
-
-                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
-                //intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,endTime);
-                intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-                intent.putExtra(CalendarContract.Events.TITLE, TITLE);
-                intent.putExtra(CalendarContract.Events.DESCRIPTION, s);
-                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, m.getAddress() +", " + m.getCity() + ", " + m.getState());
-                intent.putExtra(CalendarContract.Events.RRULE, false);
-
-                v.getContext().startActivity(intent);
-
-            }
-        });
-        */
 
         share.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -265,9 +238,6 @@ public class CustomListAdapter extends BaseAdapter {
 
             }
         });
-
-        // routine to add reminders with the event
-        // + ", " + m.getCity() + ", " + m.getState()
 
         return convertView;
     }
@@ -365,7 +335,6 @@ public class CustomListAdapter extends BaseAdapter {
         AppController.getInstance().addToRequestQueue(strreq);
     }
 
-    boolean sav = false; //white
 
     private void getSaved(final String token, final String url) {
         StringRequest strreq = new StringRequest(Request.Method.GET,
@@ -391,35 +360,15 @@ public class CustomListAdapter extends BaseAdapter {
                                 follow.setAvatar(account.avatar);
                                 follow.setCollege(account.college);
                                 saving.add(account.user.getUsername());
-                                Log.i("save", follow.user.getUsername());
+                                //Log.i("save", follow.user.getUsername());
 
                             }
-                            Log.i("savinglist", saving.toString());
+                            //Log.i("savinglist", saving.toString());
                             //Log.i("cureent", currentUserPage.user.getUsername());
 
-                            //checks whether the person saving the current user has saved the event
-                            if (saving.contains(user.getUsername())) {
-                                saveImage.setBackgroundColor(Color.BLACK);
-                                sav = true;
-                            }
-                            else
-                                saveImage.setBackgroundColor(Color.WHITE);
-                            save.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    PostDataToServer.follow(Request.Method.POST, user.getToken(), m.getUrl() + "save/");
-                                    if(sav) {
-                                        sav = false;
-                                        saveImage.setBackgroundColor(activity.getResources().getColor(R.color.black));
-                                    }
-                                    else {
-                                        sav = true;
-                                        saveImage.setBackgroundColor(Color.WHITE);
-                                    }
-                                }
-                            });
+
                         } catch (Exception e) {
-                            Log.e(TAG, "USER " + e.toString());
+                            Log.e(TAG, "ERROR USER " + e.toString());
                         }
 
                     }
@@ -448,5 +397,34 @@ public class CustomListAdapter extends BaseAdapter {
         AppController.getInstance().addToRequestQueue(strreq);
 
     }
+    private RequestQueue requestQueue;
+    private void fetchPosts(String endpoint) {
+        Log.e("FETCH", endpoint);
+        StringRequest request = new StringRequest(Request.Method.GET, endpoint, onPostsLoaded, onPostsError);
+        requestQueue.add(request);
+    }
+
+    private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            List<Post> posted_saved_list = Arrays.asList(gson.fromJson(response, Post[].class));
+            Log.e("SHOW", posted_saved_list.toString());
+            for(Post p : posted_saved_list)
+            {
+                savedurl.add(p.getUrl());
+                Log.e("PK", p.getUrl() + " url");
+            }
+        }
+    };
+
+    private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            error.toString();
+            Log.e("Fetch Posted/Saved", error.toString());
+        }
+    };
+
+
 
 }

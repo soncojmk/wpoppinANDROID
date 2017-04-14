@@ -67,7 +67,7 @@ public class ExploreSelectionHandler extends Fragment {
         gson = gsonBuilder.create();
 
         listView = (ListView) currentView.findViewById(R.id.listView);
-        adapter = new CustomListAdapter(getActivity(), eventList);
+        adapter = new CustomListAdapter(getActivity(), eventList, PrefUtils.getCurrentUser(getContext()).getUrl());
         listView.setAdapter(adapter);
 
         pDialog = new ProgressDialog(getActivity());

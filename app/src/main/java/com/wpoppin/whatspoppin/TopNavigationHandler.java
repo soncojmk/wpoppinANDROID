@@ -176,7 +176,7 @@ public class TopNavigationHandler extends Fragment {
         gson = gsonBuilder.create();
 
         listView = (ListView) currentView.findViewById(R.id.listView);
-        adapter = new CustomListAdapter(getActivity(), eventList);
+        adapter = new CustomListAdapter(getActivity(), eventList, PrefUtils.getCurrentUser(getContext()).getUrl());
         listView.setAdapter(adapter);
 
 
@@ -240,6 +240,8 @@ public class TopNavigationHandler extends Fragment {
             noInternetSQL();
         super.onActivityCreated(savedInstanceState);
     }
+
+
 
     //If one of the top buttons is selected
     private View.OnClickListener buttonNavigation()

@@ -227,7 +227,7 @@ public class Profile extends Fragment {
 
         posted_saved_list = new ArrayList<Post>();
         posted_saved_listview = (ListView)view.findViewById(R.id.posted_saved_listview);
-        adapter = new CustomListAdapter(getActivity(), posted_saved_list);
+        adapter = new CustomListAdapter(getActivity(), posted_saved_list, PrefUtils.getCurrentUser(getContext()).getUrl());
         posted_saved_listview.setAdapter(adapter);
         Log.e("USER", user.getUrl() + " ");
         fetchPosts(user.getUrl() + "saved/");
@@ -352,7 +352,7 @@ public class Profile extends Fragment {
         public void onResponse(String response) {
             posted_saved_list = Arrays.asList(gson.fromJson(response, Post[].class));
             Log.e("SHOW", posted_saved_list.toString());
-            adapter = new CustomListAdapter(getActivity(), posted_saved_list);
+            adapter = new CustomListAdapter(getActivity(), posted_saved_list, PrefUtils.getCurrentUser(getContext()).getUrl());
             posted_saved_listview.setAdapter(adapter);
         }
     };
