@@ -1,27 +1,30 @@
+   <!--
     <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:id="@+id/horizontalScroll"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:fadingEdgeLength="20dp"
-        android:scrollbars="none" >
+        android:scrollbars="none" > -->
         <LinearLayout
             android:id="@+id/linerHorizScrolView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="horizontal"
 
             android:paddingRight="5dip"
             android:background="@color/background"
-            android:weightSum="1" >
+            android:weightSum="2" >
 
 
 
             <Button
                 android:id="@+id/for_you"
-                android:layout_width="100dip"
+                android:layout_width="0dp"
                 android:layout_height="40dip"
+                android:layout_weight="1"
                 android:clickable="true"
                 android:tag="foryou"
                 android:gravity="bottom|center_horizontal"
@@ -50,7 +53,7 @@
                 android:background="@color/white"
                 />
 
-                -->
+
 
             <Button
                 android:id="@+id/today"
@@ -100,10 +103,25 @@
                 android:textSize="9dip"
                 android:textStyle="bold"
                 android:background="@color/white"/>
+            -->
 
+            <Button
+                android:id="@+id/featured"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dip"
+                android:clickable="true"
+                android:gravity="bottom|center_horizontal"
+                android:paddingBottom="15dip"
+                android:text="Featured"
+                android:tag="month"
+                android:textColor="#707070"
+                android:textColorHighlight="#ffffff"
+                android:textSize="9dip"
+                android:textStyle="bold"
+                android:background="@color/white"/>
 
-
-        </LinearLayout></HorizontalScrollView>
+        </LinearLayout> <!--</HorizontalScrollView> -->
 
 
 

@@ -8,20 +8,18 @@
 
     <include
         android:id="@+id/day"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         layout="@layout/day"/>
 
 
-    <ListView
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main">
 
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/background"
-            android:dividerHeight="10dp"
-            android:clipToPadding="false">
-     </ListView>
+    </FrameLayout>
+
 
 
 </LinearLayout>

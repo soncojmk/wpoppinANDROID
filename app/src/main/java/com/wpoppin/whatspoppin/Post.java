@@ -76,11 +76,16 @@ public class Post {
 
     public int getPrice() {return price;}
 
-    public String getImage(){
+    public String getImage() {
+        try {
+            String largeImage = image.replace(".jpg", ".large.jpg");
 
-        String largeImage = image.replace(".jpg", ".large.jpg");
-
-        return largeImage;
+            return largeImage;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public String getDescription(){

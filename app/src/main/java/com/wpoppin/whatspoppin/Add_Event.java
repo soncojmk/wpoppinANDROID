@@ -1,5 +1,7 @@
 package com.wpoppin.whatspoppin;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,6 +33,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -182,7 +185,6 @@ public class Add_Event extends AppCompatActivity {
                 }
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -216,28 +218,34 @@ public class Add_Event extends AppCompatActivity {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             String URL = "http://www.wpoppin.com/api/events/";
             JSONObject jsonBody = new JSONObject();
-            jsonBody.put("title", "this");
-            jsonBody.put("description", "description");
+/*
+            jsonBody.put("title", title.getText().toString());
+            jsonBody.put("description", desc.getText().toString());
             jsonBody.put("street_address", "street");
             jsonBody.put("city", "city");
             jsonBody.put("state", "PA");
             jsonBody.put("zip_code", "19292");
             jsonBody.put("price", "0");
+            jsonBody.put("date", "2017-03-03");
+            jsonBody.put("time", "12:00:00");*/
 
-            /*
-             jsonBody.put("category", "1");
+
+
+            jsonBody.put("category", "1");
+           // jsonBody.put("author", PrefUtils.getCurrentUser(getBaseContext()).getUsername());
             jsonBody.put("title", title.getText().toString());
+            jsonBody.put("description", desc.getText().toString());
             jsonBody.put("street_address", sadd.getText().toString());
             jsonBody.put("city", scity.getText().toString());
             jsonBody.put("state", "PA");//state.getItemAtPosition(state.getSelectedItemPosition()).toString());
             jsonBody.put("zip_code", szip.getText().toString());
-            jsonBody.put("date", "");
-            jsonBody.put("time", (am.getSelectedItem().toString().equals("am")?hour.getSelectedItem().toString() : "" +(Integer.parseInt(hour.getSelectedItem().toString()) + 12)) + ":" + minute.getSelectedItem().toString() + ":00");
-            jsonBody.put("description", desc.getText().toString());
-            jsonBody.put("price", price.toString());
-            jsonBody.put("image", imageString);
-            jsonBody.put("ticket_link", ticket.toString());
-             */
+            jsonBody.put("price", price.getText().toString());
+            jsonBody.put("date", "2017-03-03");
+            jsonBody.put("time", "12:00:00"); //(am.getSelectedItem().toString().equals("am")?hour.getSelectedItem().toString() : "" +(Integer.parseInt(hour.getSelectedItem().toString()) + 12)) + ":" + minute.getSelectedItem().toString() + ":00");
+
+        //    jsonBody.put("image", imageString);
+            //jsonBody.put("ticket_link", "");
+
 
             //jsonBody.put("Author", "BNK");
             final String requestBody = jsonBody.toString();
@@ -248,10 +256,13 @@ public class Add_Event extends AppCompatActivity {
                     Log.i("VOLLEY", response);
                     Log.i(TAG, "itworks" + response.toString());
                     String json = response.toString();
+
+                    onBackPressed();
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getBaseContext(), "Post Failed", Toast.LENGTH_LONG).show();
                     Log.e("VOLLEY", error.toString());
                 }
             }) {
@@ -279,6 +290,7 @@ public class Add_Event extends AppCompatActivity {
 
             requestQueue.add(stringRequest);
         } catch (JSONException e) {
+            Toast.makeText(getBaseContext(), "Post Failed", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }

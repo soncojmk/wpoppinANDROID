@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -26,6 +27,7 @@ public class Main extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottombar);
+
 
         Fragment fragment = new TopNavigationHandler();
         replaceFragment(fragment);
@@ -56,13 +58,28 @@ public class Main extends AppCompatActivity {
         }
 
         public void replaceFragment(Fragment fragment) {
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment);
+            Log.e("HERE Main", "Replace Frag");
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame, fragment);
             getFragmentManager().popBackStack();
 
+
             fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.e("BACK MAIN", "onBackPressed");
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            //super.onBackPressed();
+            //additional code
+        } else {
+            getFragmentManager().popBackStack();
+        }
+
     }
 
     private void updateNavigationBarState(int actionId){

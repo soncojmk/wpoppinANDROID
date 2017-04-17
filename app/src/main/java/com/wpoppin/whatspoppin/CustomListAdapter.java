@@ -57,12 +57,16 @@ public class CustomListAdapter extends BaseAdapter {
     public CustomListAdapter(Activity activity, List<Post> Items, String userURL) {
         this.activity = activity;
         this.Items = Items;
-
-        requestQueue = Volley.newRequestQueue(activity);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
-        gson = gsonBuilder.create();
-        fetchPosts(userURL +"saved/");
+        try {
+            requestQueue = Volley.newRequestQueue(activity);
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+            gson = gsonBuilder.create();
+            fetchPosts(userURL + "saved/");
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
     }
 
@@ -110,9 +114,6 @@ public class CustomListAdapter extends BaseAdapter {
         TextView username = (TextView) convertView.findViewById(R.id.username);
         final ImageButton saveImage = (ImageButton)convertView.findViewById(R.id.saveimage);
 
-        user = PrefUtils.getCurrentUser(activity);
-
-
         // getting movie data for the row
         m = Items.get(position);
 
@@ -122,7 +123,7 @@ public class CustomListAdapter extends BaseAdapter {
         final String TITLE = fixEncoding(m.getTitle());
         final User account = m.account;
         final String s =  fixEncoding(m.getDescription());
-        final String token = PrefUtils.getCurrentUser(activity.getBaseContext()).getToken();
+        final String token = user.getToken();
 
         // thumbnail image
         thumbNail.setImageUrl(m.getImage(), imageLoader);
@@ -414,7 +415,6 @@ public class CustomListAdapter extends BaseAdapter {
             for(Post p : posted_saved_list)
             {
                 savedurl.add(p.getUrl());
-                Log.e("PK", p.getUrl() + " url");
             }
         }
     };

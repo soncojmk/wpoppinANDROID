@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -117,6 +118,7 @@ public class LoginWP extends AppCompatActivity {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putString("username",user.username);
                         editor.apply();
+
                         startActivity(new Intent(LoginWP.this, SelectInterests.class));
                         finish();
 
