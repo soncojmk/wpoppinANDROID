@@ -171,20 +171,21 @@ public class CustomListAdapter extends BaseAdapter {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PostDataToServer.follow(Request.Method.POST, token, urls+ "save/");
                 if(savedurl.contains(urls))
                 {
-                    Log.e("REMOVE", urls);
-                    saveImage.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
                     savedurl.remove(savedurl.indexOf(urls));
+                    PostDataToServer.follow(Request.Method.DELETE, token, urls+ "save/");
+                    Log.e("ADAP REMOVE", urls);
+                    saveImage.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
                 }
                 else
                 {
-                    Log.e("SAVE", urls);
-                    saveImage.setImageResource(R.drawable.ic_bookmark);
                     savedurl.add(urls);
+                    PostDataToServer.follow(Request.Method.POST, token, urls+ "save/");
+                    Log.e("ADAP SAVE", urls);
+                    saveImage.setImageResource(R.drawable.ic_bookmark);
                 }
-                notifyDataSetChanged();
+               // notifyDataSetChanged();
             }
         });
 
@@ -195,6 +196,9 @@ public class CustomListAdapter extends BaseAdapter {
             convertedDate = dateFormat.parse(dateString);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
         SimpleDateFormat formatter = new SimpleDateFormat("  EE'\n'MMM d");
@@ -208,6 +212,9 @@ public class CustomListAdapter extends BaseAdapter {
              dateObj = sdf.parse(timeString);
 
         } catch ( ParseException e) {
+            e.printStackTrace();
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
 

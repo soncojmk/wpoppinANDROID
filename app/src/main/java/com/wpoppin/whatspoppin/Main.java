@@ -5,30 +5,25 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 
-/**
- * Created by joseph on 1/13/2017.
- */
 
 public class Main extends AppCompatActivity {
 
-    private int current;
+    static ArrayList<Integer> backbutton = new ArrayList<>();
     private BottomNavigationView bottomNavigation;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottombar);
 
-
+        backbutton.add(0);
         Fragment fragment = new TopNavigationHandler();
         replaceFragment(fragment);
 
@@ -38,15 +33,19 @@ public class Main extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.home) {
+                    backbutton.add(0);
                     Fragment json = new TopNavigationHandler();
                     replaceFragment(json);
                 } else if (item.getItemId() == R.id.explore) {
+                    backbutton.add(1);
                     Fragment json = new Explore();
                     replaceFragment(json);
-                }  else if (item.getItemId() == R.id.stories) {
+                } else if (item.getItemId() == R.id.stories) {
+                    backbutton.add(2);
                     Fragment json = new Stories();
                     replaceFragment(json);
                 } else if (item.getItemId() == R.id.profile) {
+                    backbutton.add(3);
                     Fragment json = new Profile();
                     replaceFragment(json);
                 }
@@ -55,36 +54,51 @@ public class Main extends AppCompatActivity {
                 return true;
             }
         });
-        }
+    }
 
-        public void replaceFragment(Fragment fragment) {
-            Log.e("HERE Main", "Replace Frag");
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.frame, fragment);
-            getFragmentManager().popBackStack();
-
-
-            fragmentTransaction.commit();
+    public void replaceFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame, fragment)
+                .commit();
     }
 
     @Override
     public void onBackPressed() {
-        Log.e("BACK MAIN", "onBackPressed");
-        int count = getFragmentManager().getBackStackEntryCount();
-
-        if (count == 0) {
-            //super.onBackPressed();
-            //additional code
-        } else {
-            getFragmentManager().popBackStack();
+        if (backbutton.size() <= 1) {
+            finish();
+            return;
         }
-
+        int back = backbutton.get(backbutton.size() - 2);
+        Log.e("Back", back + "");
+        backbutton.remove(backbutton.size() - 1);
+        Fragment json;
+        switch (back) {
+            case 0:
+                json = new TopNavigationHandler();
+                updateNavigationBarState(R.id.home);
+                break;
+            case 1:
+                json = new Explore();
+                updateNavigationBarState(R.id.explore);
+                break;
+            case 2:
+                json = new Stories();
+                updateNavigationBarState(R.id.stories);
+                break;
+            case 3:
+                json = new Profile();
+                updateNavigationBarState(R.id.profile);
+                break;
+            default:
+                json = new TopNavigationHandler();
+                updateNavigationBarState(R.id.home);
+                break;
+        }
+        replaceFragment(json);
     }
 
-    private void updateNavigationBarState(int actionId){
+    private void updateNavigationBarState(int actionId) {
         Menu menu = bottomNavigation.getMenu();
-
         for (int i = 0, size = menu.size(); i < size; i++) {
             MenuItem item = menu.getItem(i);
             item.setChecked(item.getItemId() == actionId);

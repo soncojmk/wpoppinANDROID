@@ -15,4 +15,8 @@
     <color name="black">#000</color>
     <color name="colorPrimaryLight">#14236b8e</color>
     <color name="colorPrimaryDark">#1b526c</color>
+    <color name="userBlue">#0bd6df</color>
+    <color name="userPurple">#a70093</color>
+    <color name="userOrange">#f18000</color>
+    <color name="userGreen">#00f2b6</color>
 </resources>

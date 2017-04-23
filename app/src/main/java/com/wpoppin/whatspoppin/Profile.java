@@ -395,7 +395,7 @@ public class Profile extends Fragment {
                 v.setBackgroundColor(getResources().getColor(R.color.orange));
                 ((Button)v).setTextColor(getResources().getColor(R.color.white));
                 if((Button)v == posted)
-                    fetchPosts(user.getUrl() + "posted/");
+                    fetchPosts(user.getUrl()+ "posted/");
                 else
                     fetchPosts(user.getUrl()+ "saved/");
             }

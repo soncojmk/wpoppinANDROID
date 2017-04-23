@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -46,27 +48,25 @@ public class TopNavigationHandler extends Fragment {
 
     private View currentView;
 
-    private Button for_you;
-    private Button featured;
+    private ImageButton for_you;
+    private ImageButton featured;
+    private ImageButton notifications;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
-        for_you = (Button)currentView.findViewById(R.id.for_you);
-        featured = (Button)currentView.findViewById(R.id.featured);
+        for_you = (ImageButton) currentView.findViewById(R.id.for_you);
+        featured = (ImageButton) currentView.findViewById(R.id.featured);
+        notifications = (ImageButton) currentView.findViewById(R.id.notification);
 
         //Initially on for you
-        for_you.setBackgroundColor(getResources().getColor(R.color.orange));
-        for_you.setTextColor(getResources().getColor(R.color.white));
         replaceFragment(new For_You());
 
         for_you.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                featured.setBackgroundColor(getResources().getColor(R.color.white));
-                featured.setTextColor(getResources().getColor(R.color.black));
-                for_you.setBackgroundColor(getResources().getColor(R.color.orange));
-                for_you.setTextColor(getResources().getColor(R.color.white));
+                for_you.setColorFilter(getResources().getColor(R.color.userPurple));
+                featured.setColorFilter(getResources().getColor(R.color.black));
+                notifications.setColorFilter(getResources().getColor(R.color.black));
                 replaceFragment(new For_You());
 
             }
@@ -74,11 +74,19 @@ public class TopNavigationHandler extends Fragment {
         featured.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for_you.setBackgroundColor(getResources().getColor(R.color.white));
-                for_you.setTextColor(getResources().getColor(R.color.black));
-                featured.setBackgroundColor(getResources().getColor(R.color.orange));
-                featured.setTextColor(getResources().getColor(R.color.white));
+                featured.setColorFilter(getResources().getColor(R.color.userPurple));
+                for_you.setColorFilter(getResources().getColor(R.color.black));
+                notifications.setColorFilter(getResources().getColor(R.color.black));
                 replaceFragment(new Featured());
+            }
+        });
+        notifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notifications.setColorFilter(getResources().getColor(R.color.userPurple));
+                for_you.setColorFilter(getResources().getColor(R.color.black));
+                featured.setColorFilter(getResources().getColor(R.color.black));
+                // todo replaceFragment(new Featured());
             }
         });
         super.onActivityCreated(savedInstanceState);
@@ -98,7 +106,6 @@ public class TopNavigationHandler extends Fragment {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main, fragment);
-        getFragmentManager().popBackStack();
         fragmentTransaction.commit();
     }
 

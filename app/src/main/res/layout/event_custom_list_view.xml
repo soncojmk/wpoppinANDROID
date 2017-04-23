@@ -19,7 +19,7 @@
 
             <FrameLayout
                 android:layout_width="30dp"
-                android:background="@color/colorPrimary"
+                android:background="@color/userGreen"
                 android:layout_height="30dp">
 
                 <ImageView
