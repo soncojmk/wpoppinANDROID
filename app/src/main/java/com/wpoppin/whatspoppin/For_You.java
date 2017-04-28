@@ -182,10 +182,7 @@ public class For_You extends Fragment {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        if(eventList.size() != 0) {
-            pDialog.dismiss();
-        }
-        else if(activeNetworkInfo != null && activeNetworkInfo.isConnected())
+        if(activeNetworkInfo != null && activeNetworkInfo.isConnected())
             fetchPosts();
         else
             noInternetSQL();

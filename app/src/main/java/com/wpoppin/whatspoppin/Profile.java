@@ -190,6 +190,8 @@ public class Profile extends Fragment {
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
 
         user = PrefUtils.getCurrentUser(getActivity());
+
+        //allow them to change their profile
         profileImage = (ImageView) view.findViewById(R.id.profileImage);
         profileImageedit = (ImageButton) view.findViewById(R.id.profileImagenew);
         profileImageedit.setOnClickListener(new View.OnClickListener() {
@@ -404,6 +406,7 @@ public class Profile extends Fragment {
 
 
 
+    //GET THE IMAGE RESULT FROM PROFILE CHANGE
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);

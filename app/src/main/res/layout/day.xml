@@ -18,7 +18,7 @@
         android:clickable="true"
         android:gravity="bottom|center_horizontal"
         android:src="@drawable/ic_action_news"
-        android:tint="@color/userPurple" />
+        android:tint="@color/dark_gray" />
 
     <ImageButton
         android:id="@+id/featured"
@@ -28,7 +28,8 @@
         android:background="@color/white"
         android:clickable="true"
         android:gravity="bottom|center_horizontal"
-        android:src="@drawable/ic_trending_up" />
+        android:src="@drawable/ic_trending_up"
+        android:tint="@color/dark_gray" />
 
     <ImageButton
         android:id="@+id/notification"
@@ -38,7 +39,8 @@
         android:background="@color/white"
         android:clickable="true"
         android:gravity="bottom|center_horizontal"
-        android:src="@drawable/ic_action_bell" />
+        android:src="@drawable/ic_action_bell"
+        android:tint="@color/dark_gray" />
 
 </LinearLayout>
 

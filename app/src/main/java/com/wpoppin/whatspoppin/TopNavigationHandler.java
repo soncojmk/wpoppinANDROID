@@ -58,15 +58,16 @@ public class TopNavigationHandler extends Fragment {
         featured = (ImageButton) currentView.findViewById(R.id.featured);
         notifications = (ImageButton) currentView.findViewById(R.id.notification);
 
+        for_you.setColorFilter(getResources().getColor(R.color.black));
         //Initially on for you
         replaceFragment(new For_You());
 
         for_you.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for_you.setColorFilter(getResources().getColor(R.color.userPurple));
-                featured.setColorFilter(getResources().getColor(R.color.black));
-                notifications.setColorFilter(getResources().getColor(R.color.black));
+                for_you.setColorFilter(getResources().getColor(R.color.black));
+                featured.setColorFilter(getResources().getColor(R.color.dark_gray));
+                notifications.setColorFilter(getResources().getColor(R.color.dark_gray));
                 replaceFragment(new For_You());
 
             }
@@ -74,18 +75,18 @@ public class TopNavigationHandler extends Fragment {
         featured.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                featured.setColorFilter(getResources().getColor(R.color.userPurple));
-                for_you.setColorFilter(getResources().getColor(R.color.black));
-                notifications.setColorFilter(getResources().getColor(R.color.black));
+                featured.setColorFilter(getResources().getColor(R.color.black));
+                for_you.setColorFilter(getResources().getColor(R.color.dark_gray));
+                notifications.setColorFilter(getResources().getColor(R.color.dark_gray));
                 replaceFragment(new Featured());
             }
         });
         notifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notifications.setColorFilter(getResources().getColor(R.color.userPurple));
-                for_you.setColorFilter(getResources().getColor(R.color.black));
-                featured.setColorFilter(getResources().getColor(R.color.black));
+                notifications.setColorFilter(getResources().getColor(R.color.black));
+                for_you.setColorFilter(getResources().getColor(R.color.dark_gray));
+                featured.setColorFilter(getResources().getColor(R.color.dark_gray));
                 // todo replaceFragment(new Featured());
             }
         });
