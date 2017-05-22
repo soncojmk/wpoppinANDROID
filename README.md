@@ -35,6 +35,9 @@ API Endpoints
         api/devices --> Add a user's registration_id to our database. Link a user to a device 
                     --> (need to send token with request)
                     -->  Needed in order to allow device specific notifications on events like following, commenting...
+                    
+         REFERENCE THIS LINK TO GET THE REGISTRATION_ID: https://firebase.google.com/docs/cloud-messaging/android/first-message
+         --> Then send the link, with a post request with the user token to api/devices
         
 All other API endpoints that don't have any internal/hidden endpoints and are fairly straight forward to use are in the link below
 --> http://wpoppin.com/api/   (the links are pretty self explanatory0
