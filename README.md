@@ -31,6 +31,11 @@ API Endpoints
         api/events/<event_id>/save (DELETE) --> Unsave an event (need to send token with request)
         api/events/<event_id>/people_saving (GET) --> get a list of users saving an event
         
+    Notifications:
+        api/devices --> Add a user's registration_id to our database. Link a user to a device 
+                    --> (need to send token with request)
+                    -->  Needed in order to allow device specific notifications on events like following, commenting...
+        
 All other API endpoints that don't have any internal/hidden endpoints and are fairly straight forward to use are in the link below
 --> http://wpoppin.com/api/   (the links are pretty self explanatory0
 ```
