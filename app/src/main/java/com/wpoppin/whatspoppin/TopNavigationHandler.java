@@ -1,42 +1,15 @@
 package com.wpoppin.whatspoppin;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.media.Image;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Abby on 2/21/2017.
@@ -49,13 +22,13 @@ public class TopNavigationHandler extends Fragment {
     private View currentView;
 
     private ImageButton for_you;
-    private ImageButton featured;
+    private ImageButton explore;
     private ImageButton notifications;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         for_you = (ImageButton) currentView.findViewById(R.id.for_you);
-        featured = (ImageButton) currentView.findViewById(R.id.featured);
+        explore = (ImageButton) currentView.findViewById(R.id.explore);
         notifications = (ImageButton) currentView.findViewById(R.id.notification);
 
         for_you.setColorFilter(getResources().getColor(R.color.black));
@@ -66,16 +39,16 @@ public class TopNavigationHandler extends Fragment {
             @Override
             public void onClick(View v) {
                 for_you.setColorFilter(getResources().getColor(R.color.black));
-                featured.setColorFilter(getResources().getColor(R.color.dark_gray));
+                explore.setColorFilter(getResources().getColor(R.color.dark_gray));
                 notifications.setColorFilter(getResources().getColor(R.color.dark_gray));
                 replaceFragment(new For_You());
 
             }
         });
-        featured.setOnClickListener(new View.OnClickListener() {
+        explore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                featured.setColorFilter(getResources().getColor(R.color.black));
+                explore.setColorFilter(getResources().getColor(R.color.black));
                 for_you.setColorFilter(getResources().getColor(R.color.dark_gray));
                 notifications.setColorFilter(getResources().getColor(R.color.dark_gray));
                 replaceFragment(new Featured());
@@ -86,8 +59,8 @@ public class TopNavigationHandler extends Fragment {
             public void onClick(View v) {
                 notifications.setColorFilter(getResources().getColor(R.color.black));
                 for_you.setColorFilter(getResources().getColor(R.color.dark_gray));
-                featured.setColorFilter(getResources().getColor(R.color.dark_gray));
-                // todo replaceFragment(new Featured());
+                explore.setColorFilter(getResources().getColor(R.color.dark_gray));
+                replaceFragment(new NotificationsFeedPage());
             }
         });
         super.onActivityCreated(savedInstanceState);

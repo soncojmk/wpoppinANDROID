@@ -21,7 +21,7 @@
         android:tint="@color/dark_gray" />
 
     <ImageButton
-        android:id="@+id/featured"
+        android:id="@+id/explore"
         android:layout_width="0dp"
         android:layout_height="40dip"
         android:layout_weight="1"

@@ -15,7 +15,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -64,11 +63,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
@@ -91,7 +87,7 @@ public class Profile extends Fragment {
     private Button posted;
     private Button saved;
     private CustomListAdapter adapter;
-    private List<Post> posted_saved_list;
+    private List<EventClass> posted_saved_list;
     private ListView posted_saved_listview;
 
     @Override
@@ -227,7 +223,7 @@ public class Profile extends Fragment {
         posted.setOnClickListener(SavedPostedOnClick());
         saved.setOnClickListener(SavedPostedOnClick());
 
-        posted_saved_list = new ArrayList<Post>();
+        posted_saved_list = new ArrayList<EventClass>();
         posted_saved_listview = (ListView)view.findViewById(R.id.posted_saved_listview);
         adapter = new CustomListAdapter(getActivity(), posted_saved_list, PrefUtils.getCurrentUser(getContext()).getUrl());
         posted_saved_listview.setAdapter(adapter);
@@ -352,7 +348,7 @@ public class Profile extends Fragment {
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
-            posted_saved_list = Arrays.asList(gson.fromJson(response, Post[].class));
+            posted_saved_list = Arrays.asList(gson.fromJson(response, EventClass[].class));
             Log.e("SHOW", posted_saved_list.toString());
             adapter = new CustomListAdapter(getActivity(), posted_saved_list, PrefUtils.getCurrentUser(getContext()).getUrl());
             posted_saved_listview.setAdapter(adapter);

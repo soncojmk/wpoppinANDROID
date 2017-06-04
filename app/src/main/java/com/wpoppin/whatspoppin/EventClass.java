@@ -2,10 +2,10 @@ package com.wpoppin.whatspoppin;
 
 
 /*
-This is the Post class that the objects pulled from our API are saved to
+This is the EventClass class that the objects pulled from our API are saved to
  */
 
-public class Post {
+public class EventClass {
 
 
     public long pk;

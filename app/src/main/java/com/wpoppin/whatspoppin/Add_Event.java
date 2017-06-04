@@ -262,7 +262,7 @@ public class Add_Event extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getBaseContext(), "Post Failed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "EventClass Failed", Toast.LENGTH_LONG).show();
                     Log.e("VOLLEY", error.toString());
                 }
             }) {
@@ -290,7 +290,7 @@ public class Add_Event extends AppCompatActivity {
 
             requestQueue.add(stringRequest);
         } catch (JSONException e) {
-            Toast.makeText(getBaseContext(), "Post Failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "EventClass Failed", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }

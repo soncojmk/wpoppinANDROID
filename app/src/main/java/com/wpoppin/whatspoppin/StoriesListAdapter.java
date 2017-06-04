@@ -3,8 +3,6 @@ package com.wpoppin.whatspoppin;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.CalendarContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +14,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import static com.wpoppin.whatspoppin.CustomListAdapter.fixEncoding;
@@ -32,10 +25,10 @@ import static com.wpoppin.whatspoppin.CustomListAdapter.fixEncoding;
 public class StoriesListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Post> Items;
+    private List<EventClass> Items;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public StoriesListAdapter(Activity activity, List<Post> Items) {
+    public StoriesListAdapter(Activity activity, List<EventClass> Items) {
         this.activity = activity;
         this.Items = Items;
     }
@@ -78,7 +71,7 @@ public class StoriesListAdapter extends BaseAdapter {
 
 
         // getting movie data for the row
-        final Post m = Items.get(position);
+        final EventClass m = Items.get(position);
 
         // thumbnail image
         thumbNail.setImageUrl(m.getImage(), imageLoader);

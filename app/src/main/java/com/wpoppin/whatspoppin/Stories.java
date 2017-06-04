@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,7 @@ public class Stories extends Fragment {
     private TextView description;
     private TextView date;
     private ProgressDialog pDialog;
-    private List<Post> eventList = new ArrayList<Post>();
+    private List<EventClass> eventList = new ArrayList<EventClass>();
     private ListView listView;
     private View sports;
     private Toolbar toolbar;
@@ -135,16 +134,16 @@ public class Stories extends Fragment {
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
-            List<Post> posts = Arrays.asList(gson.fromJson(response, Post[].class));
+            List<EventClass> posts = Arrays.asList(gson.fromJson(response, EventClass[].class));
            // Log.i("JSON", posts.size() + " posts loaded.");
 
             hidePDialog();
 
 
             try {
-                for (Post post : posts) {
+                for (EventClass post : posts) {
                     data += post.author + ": " + post.title + ": " + post.image + "\n";
-                    Post event = new Post();
+                    EventClass event = new EventClass();
 
                     event.setUrl(post.url);
                     event.setAuthor(post.author);

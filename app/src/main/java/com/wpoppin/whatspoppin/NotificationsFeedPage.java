@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,19 +30,20 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by Abby on 4/16/2017.
+ * Created by joseph on 6/3/2017.
  */
 
-public class For_You extends Fragment {
-    private String endpoint = "http://www.wpoppin.com/api/filteredevents/"; //initially for you
+public class NotificationsFeedPage extends Fragment {
+    private String endpoint = "http://www.wpoppin.com/api/notificationfeed/";
     private View currentView;
     private ProgressDialog pDialog;
-    private CustomListAdapter adapter;
+    private NotificationListAdapter adapter;
     private Gson gson;
     private RequestQueue requestQueue;
-    private static List<EventClass> eventList = new ArrayList<>();
+    private static List<NotificationClass> notificationList = new ArrayList<>();
     private ListView listView;
     private ArrayList<Integer> interest = new ArrayList<>();
 
@@ -63,24 +65,22 @@ public class For_You extends Fragment {
 
     /**
      * Get list based off of what tab is selected
-     * @param posts loaded from website
+     * @param notifications loaded from website
      */
-    public void customResponsePerPage(List<EventClass> posts) {
+    public void customResponsePerPage(List<NotificationClass> notifications) {
 
-        for (EventClass post : posts) {
-            if (interest.contains(Integer.parseInt(post.getCategory()))) {
-                addEvent(post);
-            }
+        for (NotificationClass notification : notifications) {
+                addNotification(notification);
         }
     }
 
     public void noInternetSQL()
     {
         String saved = db.getRequest("foryou");
-        List<EventClass> posts = null;
+        List<NotificationClass> posts = null;
         if(saved != null) {
             try {
-                posts = Arrays.asList(gson.fromJson(saved, EventClass[].class));
+                posts = Arrays.asList(gson.fromJson(saved, NotificationClass[].class));
             } catch (Exception e)
             {
                 db.deleteRequest("foryou");
@@ -97,33 +97,16 @@ public class For_You extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    public void addEvent(EventClass post)
+    public void addNotification (NotificationClass notification)
     {
-        EventClass event = new EventClass();
-        event.setUrl(post.url);
-        event.setCategory(post.category);
-        event.setAuthor(post.author);
-        event.setTitle(post.title);
-        event.setPrice(post.price);
-        event.setThumbnailUrl(post.image);
-        event.setDescription(post.description);
-        event.setDate(post.date);
-        event.setTime(post.time);
-        event.setTicket_link(post.ticket_link);
-        event.setAddress(post.street_address);
-        event.setCity(post.city);
-        event.setZipcode(post.zipcode);
-        event.setState(post.state);
-        User account = new User();
-        account = post.account;
-        if(post.author != null)
-            account.setUsername(post.author);
-        // account.setBio(post.account.getBio());
+        NotificationClass newNotification = new NotificationClass();
+        newNotification.setActor(notification.actor);
+        newNotification.setUnread(notification.unread);
+        newNotification.setAction_object_event(notification.action_object_event);
+        newNotification.setActor_account(notification.actor_account);
+        newNotification.setVerb(notification.verb);
 
-        event.setAccount(account);
-
-        eventList.add(event);
-
+        notificationList.add(newNotification);
     }
 
 
@@ -143,8 +126,8 @@ public class For_You extends Fragment {
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
 
-        listView = (ListView) currentView.findViewById(R.id.listView);
-        adapter = new CustomListAdapter(getActivity(), eventList, PrefUtils.getCurrentUser(getContext()).getUrl());
+        listView = (ListView) currentView.findViewById(R.id.notifications_list);
+        adapter = new NotificationListAdapter(getActivity(), notificationList, PrefUtils.getCurrentUser(getContext()).getUrl());
         listView.setAdapter(adapter);
 
 
@@ -169,7 +152,7 @@ public class For_You extends Fragment {
                 startActivity(intent);
             }
         });
-        listView.addFooterView(btnLoadMore);
+       // listView.addFooterView(btnLoadMore);
 
 
 
@@ -192,7 +175,7 @@ public class For_You extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        currentView = inflater.inflate(R.layout.activity_for_you, container, false);
+        currentView = inflater.inflate(R.layout.activity_notifications_feed, container, false);
         return currentView;
     }
 
@@ -206,7 +189,21 @@ public class For_You extends Fragment {
 
 
     private void fetchPosts() {
-        StringRequest request = new StringRequest(Request.Method.GET, endpoint, onPostsLoaded, onPostsError);
+        final User user = PrefUtils.getCurrentUser(getActivity());
+        StringRequest request = new StringRequest(Request.Method.GET, endpoint, onPostsLoaded, onPostsError) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new ArrayMap<String, String>();
+                headers.put("Authorization", "Token " + user.getToken());
+                return headers;
+            }
+        };
+
         requestQueue.add(request);
     }
 
@@ -215,7 +212,7 @@ public class For_You extends Fragment {
         public void onResponse(String response) {
             db.deleteRequest("foryou");
             db.addRequest("foryou", response);
-            List<EventClass> posts = Arrays.asList(gson.fromJson(response, EventClass[].class));
+            List<NotificationClass> posts = Arrays.asList(gson.fromJson(response, NotificationClass[].class));
             hidePDialog();
             customResponsePerPage(posts);
             adapter.notifyDataSetChanged();

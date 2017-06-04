@@ -10,7 +10,7 @@
         android:id="@+id/day"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/day"/>
+        layout="@layout/top_navigation_menu"/>
 
     <View
         android:layout_width="match_parent"

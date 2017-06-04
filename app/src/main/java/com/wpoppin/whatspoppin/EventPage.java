@@ -2,20 +2,12 @@ package com.wpoppin.whatspoppin;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.os.Debug;
 import android.provider.CalendarContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -28,18 +20,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
-import static android.R.attr.level;
 import static com.wpoppin.whatspoppin.CustomListAdapter.fixEncoding;
 
 public class EventPage extends AppCompatActivity {
@@ -90,7 +77,7 @@ public class EventPage extends AppCompatActivity {
             //set all the data
             Log.e("RESPONSE", response);
             pDialog.dismiss();
-            Post post = gson.fromJson(response, Post.class);
+            EventClass post = gson.fromJson(response, EventClass.class);
             if (imageLoader == null)
                 imageLoader = AppController.getInstance().getImageLoader();
             NetworkImageView thumbNail = (NetworkImageView)findViewById(R.id.thumbnail);
@@ -102,7 +89,7 @@ public class EventPage extends AppCompatActivity {
     };
 
 
-    private void SetData(final Post m)
+    private void SetData(final EventClass m)
     {
         TextView title = (TextView)findViewById(R.id.title);
         TextView price = (TextView)findViewById(R.id.price);

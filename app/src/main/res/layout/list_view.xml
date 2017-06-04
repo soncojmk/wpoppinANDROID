@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/date"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@android:color/holo_blue_light"
+                    android:textColor="#a70093"
                     android:textStyle="bold"
                     android:layout_marginLeft="3dp"
                     android:textSize="18sp" />
@@ -80,7 +80,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
+                        android:textColor="#a70093"
                         android:textSize="15sp"
                         android:id="@+id/time"/>
 

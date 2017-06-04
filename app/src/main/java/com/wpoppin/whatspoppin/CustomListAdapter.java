@@ -45,16 +45,16 @@ import static com.wpoppin.whatspoppin.AppController.TAG;
 public class CustomListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Post> Items;
+    private List<EventClass> Items;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     Bitmap bitmap;
     private User user;
     private List<String> saving;
-    private Post m;
+    private EventClass m;
     private Gson gson;
     static ArrayList<String> savedurl = new ArrayList<>();
 
-    public CustomListAdapter(Activity activity, List<Post> Items, String userURL) {
+    public CustomListAdapter(Activity activity, List<EventClass> Items, String userURL) {
         this.activity = activity;
         this.Items = Items;
         try {
@@ -222,11 +222,13 @@ public class CustomListAdapter extends BaseAdapter {
         final String intentTime = new SimpleDateFormat("HH:mm:ss").format(dateObj);
 
         date.setText(newFormat);
+        date.setTextColor(convertView.getResources().getColor(R.color.userPurple));
 
 
         String x = fixEncoding(m.getAddress());
 
         time.setText(outputTime);
+        time.setTextColor(convertView.getResources().getColor(R.color.userPurple));
 
         final String calendarObject = m.getDate() + " " + m.getTime();
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
@@ -417,9 +419,9 @@ public class CustomListAdapter extends BaseAdapter {
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
-            List<Post> posted_saved_list = Arrays.asList(gson.fromJson(response, Post[].class));
+            List<EventClass> posted_saved_list = Arrays.asList(gson.fromJson(response, EventClass[].class));
             Log.e("SHOW", posted_saved_list.toString());
-            for(Post p : posted_saved_list)
+            for(EventClass p : posted_saved_list)
             {
                 savedurl.add(p.getUrl());
             }

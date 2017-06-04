@@ -42,7 +42,7 @@ public class ExploreSelectionHandler extends Fragment {
     private CustomListAdapter adapter;
     private Gson gson;
     private RequestQueue requestQueue;
-    private List<Post> eventList = new ArrayList<Post>();
+    private List<EventClass> eventList = new ArrayList<EventClass>();
     private ListView listView;
     private String data;
 
@@ -141,11 +141,11 @@ public class ExploreSelectionHandler extends Fragment {
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
-            List<Post> posts = Arrays.asList(gson.fromJson(response, Post[].class));
+            List<EventClass> posts = Arrays.asList(gson.fromJson(response, EventClass[].class));
             hidePDialog();
 
-            for (Post post : posts) {
-                Post event = new Post();
+            for (EventClass post : posts) {
+                EventClass event = new EventClass();
                 event.setUrl(post.url);
                 event.setCategory(post.category);
                 event.setAuthor(post.author);
